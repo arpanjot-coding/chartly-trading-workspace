@@ -1,0 +1,18 @@
+name: Feature request
+description: Suggest an improvement to a Chartly workflow
+labels: [enhancement]
+body:
+  - type: textarea
+    id: workflow
+    attributes:
+      label: What are you trying to do?
+      description: Describe your workflow and where it gets difficult.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What would make it better?
+      description: Describe the outcome you need and any workaround you use today.
+    validations:
+      required: true

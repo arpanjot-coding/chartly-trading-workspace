@@ -1,0 +1,29 @@
+name: Bug report
+description: Report a reproducible problem in Chartly
+labels: [bug]
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include the screen, what you expected, and what you saw.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Use sample data where possible. Keep credentials, account details, and private trades out of screenshots and logs.
+      placeholder: |
+        1. Open…
+        2. Choose…
+        3. Observe…
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Version and environment
+      description: Include the Chartly commit or version, operating system, and browser. Add the provider name if a connection is involved.
+    validations:
+      required: true
