@@ -19,21 +19,6 @@ updates:
     cooldown:
       default-days: 7
 
-  # Root NPM (Tailwind CSS)
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    groups:
-      npm-root:
-        update-types: ["minor", "patch"]
-    open-pull-requests-limit: 3
-    commit-message:
-      prefix: "deps(css):"
-    cooldown:
-      default-days: 7
-
   # Frontend NPM (React)
   - package-ecosystem: "npm"
     directory: "/frontend"
