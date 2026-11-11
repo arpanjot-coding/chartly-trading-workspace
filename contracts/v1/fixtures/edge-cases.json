@@ -1,0 +1,1270 @@
+[
+  {
+    "id": "complete-v1-metadata-and-manual-journal",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/full-v1.json",
+    "replace": [],
+    "append": []
+  },
+  {
+    "id": "manual-trade-cannot-hide-in-connected-book",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "journal.manual_book_required",
+        "path": "/61/value/bookId"
+      },
+      {
+        "code": "journal.book_mismatch",
+        "path": "/62/value/manualTradeId"
+      }
+    ],
+    "baseFile": "fixtures/full-v1.json",
+    "replace": [
+      {
+        "index": 61,
+        "record": {
+          "type": "ManualTrade",
+          "value": {
+            "schemaVersion": 1,
+            "id": "manual_trade_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "bookId": "book_connected_001",
+            "symbolLabel": "BTC/USD (manually entered)",
+            "side": "buy",
+            "quantity": {
+              "value": "0.1",
+              "unit": "base_asset"
+            },
+            "openedAt": "2026-11-02T10:00:00Z",
+            "status": "open",
+            "notes": "Manual assertion, not a broker fill"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "confirmed-account-trade-stays-in-its-book",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "journal.book_mismatch",
+        "path": "/63/value/tradeId"
+      }
+    ],
+    "baseFile": "fixtures/full-v1.json",
+    "replace": [
+      {
+        "index": 63,
+        "record": {
+          "type": "JournalEntry",
+          "value": {
+            "schemaVersion": 1,
+            "id": "entry_connected_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "bookId": "book_manual_001",
+            "tradeId": "trade_demo_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "entry-is-one-manual-or-account-trade",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "journal.exactly_one_trade",
+        "path": "/62/value/tradeId"
+      }
+    ],
+    "baseFile": "fixtures/full-v1.json",
+    "replace": [
+      {
+        "index": 62,
+        "record": {
+          "type": "JournalEntry",
+          "value": {
+            "schemaVersion": 1,
+            "id": "entry_manual_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "bookId": "book_manual_001",
+            "manualTradeId": "manual_trade_001",
+            "tradeId": "trade_demo_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "journal-membership-once",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "journal.duplicate_membership",
+        "path": "/68/value/manualTradeId"
+      }
+    ],
+    "baseFile": "fixtures/full-v1.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "JournalEntry",
+        "value": {
+          "schemaVersion": 1,
+          "id": "entry_manual_002",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "bookId": "book_manual_001",
+          "manualTradeId": "manual_trade_001"
+        }
+      }
+    ]
+  },
+  {
+    "id": "decimal-cannot-end-with-newline",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "schema.pattern",
+        "path": "/9/value/value"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 9,
+        "record": {
+          "type": "Quantity",
+          "value": {
+            "schemaVersion": 1,
+            "id": "quantity_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "instrumentId": "instrument_btc_001",
+            "value": "1\n",
+            "unit": "base_asset"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "boolean-is-not-a-contract-version",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "contract.unsupported_version",
+        "path": "/2/value/schemaVersion"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 2,
+        "record": {
+          "type": "JournalBook",
+          "value": {
+            "schemaVersion": true,
+            "id": "book_manual_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Manual book",
+            "kind": "manual",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "Europe/London"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "fractional-second-ordering",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "time.reversed",
+        "path": "/5/value/updatedAt"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 5,
+        "record": {
+          "type": "Profile",
+          "value": {
+            "schemaVersion": 1,
+            "id": "profile_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00.001Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Review",
+            "kind": "journal",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "Europe/London",
+            "primaryBookId": "book_manual_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "references-do-not-cross-owners",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "scope.owner_mismatch",
+        "path": "/11/value/primaryBookId"
+      },
+      {
+        "code": "scope.owner_mismatch",
+        "path": "/11/value/workspaceId"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "LocalOwner",
+        "value": {
+          "schemaVersion": 1,
+          "id": "owner_second_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "name": "Local owner"
+        }
+      },
+      {
+        "type": "Profile",
+        "value": {
+          "schemaVersion": 1,
+          "id": "profile_second_001",
+          "ownerId": "owner_second_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "name": "Review",
+          "kind": "journal",
+          "state": "active",
+          "currency": "USD",
+          "timezone": "Europe/London",
+          "primaryBookId": "book_manual_001"
+        }
+      }
+    ]
+  },
+  {
+    "id": "book-reference-cannot-cross-workspaces",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "scope.workspace_mismatch",
+        "path": "/11/value/primaryBookId"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "Workspace",
+        "value": {
+          "schemaVersion": 1,
+          "id": "workspace_second_001",
+          "ownerId": "owner_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "name": "Local workspace",
+          "currency": "USD",
+          "timezone": "Europe/London"
+        }
+      },
+      {
+        "type": "Profile",
+        "value": {
+          "schemaVersion": 1,
+          "id": "profile_second_001",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_second_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "name": "Review",
+          "kind": "journal",
+          "state": "active",
+          "currency": "USD",
+          "timezone": "Europe/London",
+          "primaryBookId": "book_manual_001"
+        }
+      }
+    ]
+  },
+  {
+    "id": "duplicate-opaque-id-rejected",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "identity.duplicate_id",
+        "path": "/10/value/id"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "Profile",
+        "value": {
+          "schemaVersion": 1,
+          "id": "profile_local_001",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "name": "Review",
+          "kind": "journal",
+          "state": "active",
+          "currency": "USD",
+          "timezone": "Europe/London",
+          "primaryBookId": "book_manual_001"
+        }
+      }
+    ]
+  },
+  {
+    "id": "fractional-fx-lot-metadata",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 8,
+        "record": {
+          "type": "Instrument",
+          "value": {
+            "schemaVersion": 1,
+            "id": "instrument_btc_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "assetClass": "fx",
+            "name": "BTC/USD",
+            "baseCurrency": "BTC",
+            "quoteCurrency": "USD",
+            "quantityUnit": "lot",
+            "quantityStep": "0.01",
+            "priceTick": "0.01",
+            "multiplier": "1",
+            "calendarId": "continuous_24_7",
+            "timezone": "UTC",
+            "quantityScale": 2,
+            "priceScale": 2
+          }
+        }
+      },
+      {
+        "index": 9,
+        "record": {
+          "type": "Quantity",
+          "value": {
+            "schemaVersion": 1,
+            "id": "quantity_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "instrumentId": "instrument_btc_001",
+            "value": "0.01",
+            "unit": "lot"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "integer-futures-contract-metadata",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 8,
+        "record": {
+          "type": "Instrument",
+          "value": {
+            "schemaVersion": 1,
+            "id": "instrument_btc_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "assetClass": "future",
+            "name": "BTC/USD",
+            "baseCurrency": "BTC",
+            "quoteCurrency": "USD",
+            "quantityUnit": "contract",
+            "quantityStep": "1",
+            "priceTick": "0.01",
+            "multiplier": "1",
+            "calendarId": "continuous_24_7",
+            "timezone": "UTC",
+            "quantityScale": 0,
+            "priceScale": 2
+          }
+        }
+      },
+      {
+        "index": 9,
+        "record": {
+          "type": "Quantity",
+          "value": {
+            "schemaVersion": 1,
+            "id": "quantity_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "instrumentId": "instrument_btc_001",
+            "value": "2",
+            "unit": "contract"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "fractional-integer-contract-rejected",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "quantity.invalid_step",
+        "path": "/9/value/value"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 8,
+        "record": {
+          "type": "Instrument",
+          "value": {
+            "schemaVersion": 1,
+            "id": "instrument_btc_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "assetClass": "future",
+            "name": "BTC/USD",
+            "baseCurrency": "BTC",
+            "quoteCurrency": "USD",
+            "quantityUnit": "contract",
+            "quantityStep": "1",
+            "priceTick": "0.01",
+            "multiplier": "1",
+            "calendarId": "continuous_24_7",
+            "timezone": "UTC",
+            "quantityScale": 0,
+            "priceScale": 2
+          }
+        }
+      },
+      {
+        "index": 9,
+        "record": {
+          "type": "Quantity",
+          "value": {
+            "schemaVersion": 1,
+            "id": "quantity_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "instrumentId": "instrument_btc_001",
+            "value": "0.5",
+            "unit": "contract"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "native-event-id-is-account-scoped",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [
+      {
+        "index": 22,
+        "record": {
+          "type": "Decision",
+          "value": {
+            "schemaVersion": 1,
+            "id": "decision_demo_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "hypothesis": "Fixture only",
+            "accountIds": [
+              "account_external_001",
+              "account_external_002"
+            ]
+          }
+        }
+      }
+    ],
+    "append": [
+      {
+        "type": "Account",
+        "value": {
+          "schemaVersion": 1,
+          "id": "account_external_002",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "kind": "external",
+          "mode": "broker_demo",
+          "providerId": "provider-one",
+          "venue": "demo-server",
+          "externalIdentity": "67890",
+          "currency": "USD",
+          "identityState": "verified",
+          "state": "active"
+        }
+      },
+      {
+        "type": "SourceConnection",
+        "value": {
+          "schemaVersion": 1,
+          "id": "source_local_002",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "providerId": "provider-one",
+          "adapterVersion": "1.0.0",
+          "kind": "remote",
+          "accountId": "account_external_002",
+          "configurationState": "configured",
+          "health": "unknown"
+        }
+      },
+      {
+        "type": "ExecutionFill",
+        "value": {
+          "schemaVersion": 1,
+          "id": "fill_second_account_001",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "accountId": "account_external_002",
+          "sourceId": "source_local_002",
+          "instrumentId": "instrument_btc_001",
+          "providerId": "provider-one",
+          "externalEventId": "native-fill-1",
+          "nativeOrderId": "native-order-1",
+          "side": "buy",
+          "quantity": {
+            "value": "0.04",
+            "unit": "base_asset"
+          },
+          "price": "50000.00",
+          "currency": "USD",
+          "occurredAt": "2026-11-02T10:00:00Z",
+          "receivedAt": "2026-11-02T10:00:00Z",
+          "decisionId": "decision_demo_001"
+        }
+      }
+    ]
+  },
+  {
+    "id": "duplicate-fill-source-event",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "execution.duplicate_source_event",
+        "path": "/61/value/accountId"
+      }
+    ],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "ExecutionFill",
+        "value": {
+          "schemaVersion": 1,
+          "id": "fill_duplicate_001",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "accountId": "account_external_001",
+          "sourceId": "source_local_001",
+          "instrumentId": "instrument_btc_001",
+          "providerId": "provider-one",
+          "externalEventId": "native-fill-1",
+          "nativeOrderId": "native-order-1",
+          "side": "buy",
+          "quantity": {
+            "value": "0.04",
+            "unit": "base_asset"
+          },
+          "price": "50000.00",
+          "currency": "USD",
+          "occurredAt": "2026-11-02T10:00:00Z",
+          "receivedAt": "2026-11-02T10:00:00Z",
+          "decisionId": "decision_demo_001"
+        }
+      }
+    ]
+  },
+  {
+    "id": "amended-fact-retains-original",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "FactObservation",
+        "value": {
+          "schemaVersion": 1,
+          "id": "fact_amended_001",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "issuerId": "issuer_us_001",
+          "documentVersionId": "document_company_001",
+          "metricId": "revenue",
+          "value": "123400000.00",
+          "unit": "currency",
+          "currency": "USD",
+          "periodKind": "duration",
+          "periodStart": "2025-07-01",
+          "periodEnd": "2025-09-30",
+          "fiscalYear": 2025,
+          "fiscalPeriod": "Q1",
+          "reportingBasis": "US-GAAP",
+          "citation": "page:4/table:income/row:revenue",
+          "publishedAt": "2025-11-01T10:00:00Z",
+          "availableAt": "2025-11-01T10:05:00Z",
+          "retrievedAt": "2026-11-02T10:00:00Z",
+          "revisesFactId": "fact_company_001"
+        }
+      }
+    ]
+  },
+  {
+    "id": "amendment-cannot-change-metric-identity",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "research.revision_mismatch",
+        "path": "/61/value/revisesFactId"
+      }
+    ],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "FactObservation",
+        "value": {
+          "schemaVersion": 1,
+          "id": "fact_amended_001",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "issuerId": "issuer_us_001",
+          "documentVersionId": "document_company_001",
+          "metricId": "assets",
+          "value": "123400000.00",
+          "unit": "currency",
+          "currency": "USD",
+          "periodKind": "duration",
+          "periodStart": "2025-07-01",
+          "periodEnd": "2025-09-30",
+          "fiscalYear": 2025,
+          "fiscalPeriod": "Q1",
+          "reportingBasis": "US-GAAP",
+          "citation": "page:4/table:income/row:revenue",
+          "publishedAt": "2025-11-01T10:00:00Z",
+          "availableAt": "2025-11-01T10:05:00Z",
+          "retrievedAt": "2026-11-02T10:00:00Z",
+          "revisesFactId": "fact_company_001"
+        }
+      }
+    ]
+  },
+  {
+    "id": "fee-correction-retains-original",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "FeeAdjustment",
+        "value": {
+          "schemaVersion": 1,
+          "id": "fee_corrected_001",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "accountId": "account_external_001",
+          "fillId": "fill_demo_001",
+          "amount": {
+            "value": "0.50",
+            "currency": "USD"
+          },
+          "kind": "commission",
+          "sourceId": "source_local_001",
+          "externalEventId": "fee-correction-2"
+        }
+      }
+    ]
+  },
+  {
+    "id": "out-of-order-observations-remain-representable",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [],
+    "append": [],
+    "reverseBase": true
+  },
+  {
+    "id": "dependency-cycle-not-a-valid-lock",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "artifact.dependency_cycle",
+        "path": "/38/value/dependencies/0/revisionId"
+      }
+    ],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [
+      {
+        "index": 34,
+        "record": {
+          "type": "ArtifactRevision",
+          "value": {
+            "schemaVersion": 1,
+            "id": "revision_indicator_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "projectId": "project_indicator_001",
+            "kind": "indicator",
+            "checksum": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "sourceArtifactId": "artifact_source_001",
+            "language": "openscript",
+            "compilerVersion": "0.8.1",
+            "dependencies": [
+              {
+                "revisionId": "revision_strategy_001",
+                "checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              }
+            ],
+            "validationReceiptId": "receipt_compile_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "same-source-symbol-cannot-overlap",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "symbol.overlapping_alias",
+        "path": "/61/value/validFrom"
+      }
+    ],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "ProviderSymbol",
+        "value": {
+          "schemaVersion": 1,
+          "id": "symbol_reused_002",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "sourceId": "source_local_001",
+          "instrumentId": "instrument_btc_001",
+          "symbol": "BTCUSD",
+          "validFrom": "2026-01-01T00:00:00Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "ticker-reuse-in-nonoverlapping-windows",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [
+      {
+        "index": 13,
+        "record": {
+          "type": "ProviderSymbol",
+          "value": {
+            "schemaVersion": 1,
+            "id": "symbol_provider_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "sourceId": "source_local_001",
+            "instrumentId": "instrument_btc_001",
+            "symbol": "BTCUSD",
+            "validFrom": "2026-01-01T00:00:00Z",
+            "validTo": "2026-07-01T00:00:00Z"
+          }
+        }
+      }
+    ],
+    "append": [
+      {
+        "type": "ProviderSymbol",
+        "value": {
+          "schemaVersion": 1,
+          "id": "symbol_reused_002",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "sourceId": "source_local_001",
+          "instrumentId": "instrument_btc_001",
+          "symbol": "BTCUSD",
+          "validFrom": "2026-07-01T00:00:00Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "same-fill-cannot-be-counted-twice-in-trade",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "schema.uniqueItems",
+        "path": "/27/value/fillIds"
+      }
+    ],
+    "baseFile": "fixtures/full-v1.json",
+    "replace": [
+      {
+        "index": 27,
+        "record": {
+          "type": "TradeAggregate",
+          "value": {
+            "schemaVersion": 1,
+            "id": "trade_demo_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "accountId": "account_external_001",
+            "instrumentId": "instrument_btc_001",
+            "fillIds": [
+              "fill_demo_001",
+              "fill_demo_001"
+            ],
+            "aggregationPolicy": "hedging_position",
+            "status": "open",
+            "openedAt": "2026-11-02T10:00:00Z",
+            "feesKnown": false
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "checkpoint-within-pinned-run",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "run.playhead_outside_range",
+        "path": "/32/value/playhead"
+      }
+    ],
+    "baseFile": "fixtures/full-v1.json",
+    "replace": [
+      {
+        "index": 32,
+        "record": {
+          "type": "Checkpoint",
+          "value": {
+            "schemaVersion": 1,
+            "id": "checkpoint_paper_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "runId": "run_paper_001",
+            "playhead": "2027-01-01T00:00:00Z",
+            "ledgerSequence": 0,
+            "stateChecksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "stateArtifactId": "artifact_state_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "two-observations-one-canonical-execution",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [
+      {
+        "index": 51,
+        "record": {
+          "type": "CanonicalExecution",
+          "value": {
+            "schemaVersion": 1,
+            "id": "canonical_demo_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "accountId": "account_external_001",
+            "fillId": "fill_demo_001",
+            "observationIds": [
+              "observation_demo_001",
+              "observation_demo_002"
+            ],
+            "reconciliationPolicyId": "policy_reconcile_001",
+            "identityState": "verified"
+          }
+        }
+      }
+    ],
+    "append": [
+      {
+        "type": "SourceObservation",
+        "value": {
+          "schemaVersion": 1,
+          "id": "observation_demo_002",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "accountId": "account_external_001",
+          "sourceId": "source_local_001",
+          "providerId": "provider-one",
+          "externalEventId": "statement-row-5",
+          "payloadChecksum": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "rawArtifactId": "artifact_raw_001",
+          "occurredAt": "2026-11-02T10:00:00Z",
+          "receivedAt": "2026-11-02T10:00:00Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "native-currencies-and-zero-remain-explicit",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "FactObservation",
+        "value": {
+          "schemaVersion": 1,
+          "id": "fact_eur_001",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "issuerId": "issuer_us_001",
+          "documentVersionId": "document_company_001",
+          "metricId": "revenue",
+          "value": "0",
+          "unit": "currency",
+          "currency": "EUR",
+          "periodKind": "duration",
+          "periodStart": "2025-07-01",
+          "periodEnd": "2025-09-30",
+          "fiscalYear": 2025,
+          "fiscalPeriod": "Q1",
+          "reportingBasis": "US-GAAP",
+          "citation": "page:4/table:income/row:revenue",
+          "publishedAt": "2025-11-01T10:00:00Z",
+          "availableAt": "2025-11-01T10:05:00Z",
+          "retrievedAt": "2026-11-02T10:00:00Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": "dst-calendar-bounds-are-explicit-instants",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/full-v1.json",
+    "replace": [
+      {
+        "index": 57,
+        "record": {
+          "type": "ScopedQuery",
+          "value": {
+            "schemaVersion": 1,
+            "id": "query_demo_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "accountIds": [],
+            "bookIds": [],
+            "profileIds": [],
+            "rangeStart": "2026-10-24T23:00:00Z",
+            "rangeEnd": "2026-10-26T00:00:00Z",
+            "timezone": "Europe/London",
+            "currencyPolicy": "native_only",
+            "reviewStatus": "all",
+            "pageSize": 50
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "instrument-identity-without-trading-economics",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/full-v1.json",
+    "replace": [
+      {
+        "index": 8,
+        "record": {
+          "type": "Instrument",
+          "value": {
+            "schemaVersion": 1,
+            "id": "instrument_btc_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "assetClass": "spot",
+            "name": "BTC/USD",
+            "baseCurrency": "BTC",
+            "quoteCurrency": "USD"
+          }
+        }
+      }
+    ],
+    "append": [],
+    "takeBase": 9
+  },
+  {
+    "id": "quantity-cannot-assume-missing-economics",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "instrument.economics_unavailable",
+        "path": "/9/value/instrumentId"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 8,
+        "record": {
+          "type": "Instrument",
+          "value": {
+            "schemaVersion": 1,
+            "id": "instrument_btc_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "assetClass": "spot",
+            "name": "BTC/USD",
+            "baseCurrency": "BTC",
+            "quoteCurrency": "USD"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "research-events-need-no-account",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "EventEnvelope",
+        "value": {
+          "schemaVersion": 1,
+          "id": "event_research_001",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "contextKind": "research",
+          "eventId": "event_fact_001",
+          "correlationId": "correlation_fact_001",
+          "sourceId": "source_file_001",
+          "producerVersion": "fixture-1",
+          "occurredAt": "2026-11-02T10:00:00Z",
+          "receivedAt": "2026-11-02T10:00:00Z",
+          "payloadType": "FactObservation",
+          "payloadId": "fact_company_001"
+        }
+      }
+    ]
+  },
+  {
+    "id": "account-payload-cannot-hide-as-research-event",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "envelope.account_context_required",
+        "path": "/61/value/contextKind"
+      },
+      {
+        "code": "envelope.scope_mismatch",
+        "path": "/61/value/payloadId"
+      }
+    ],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "EventEnvelope",
+        "value": {
+          "schemaVersion": 1,
+          "id": "event_research_001",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "contextKind": "research",
+          "eventId": "event_fact_001",
+          "correlationId": "correlation_fact_001",
+          "sourceId": "source_file_001",
+          "producerVersion": "fixture-1",
+          "occurredAt": "2026-11-02T10:00:00Z",
+          "receivedAt": "2026-11-02T10:00:00Z",
+          "payloadType": "ExecutionFill",
+          "payloadId": "fill_demo_001"
+        }
+      }
+    ]
+  },
+  {
+    "id": "history-provider-can-differ-from-account-custodian",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 6,
+        "record": {
+          "type": "SourceConnection",
+          "value": {
+            "schemaVersion": 1,
+            "id": "source_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "providerId": "independent-history-service",
+            "adapterVersion": "1.0.0",
+            "kind": "remote",
+            "accountId": "account_external_001",
+            "configurationState": "configured",
+            "health": "unknown"
+          }
+        }
+      }
+    ],
+    "append": []
+  }
+]

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Connections and local data workflow architecture</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f5f3;color:#171717;font:15px/1.45 system-ui}main{max-width:1150px;margin:20px auto;padding:24px;background:#fff;border:1px solid #aaa}h1{margin:0 0 8px;font-size:25px}p{margin:8px 0 14px;color:#555}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.box{border:1px solid #aaa;padding:12px 14px}.box b{display:block;margin-bottom:5px}.wide{margin:12px 0;border-left:4px solid #222}.arrow{text-align:center;color:#555;margin:7px}.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}small{display:block;color:#555}footer{border-top:1px solid #aaa;margin-top:14px;padding-top:10px;color:#555;font-size:13px}@media(max-width:700px){main{margin:8px;padding:16px}.row,.three{grid-template-columns:1fr}}</style>
+<main>
+<h1>One workspace; separate source and account authority</h1>
+<p>Connections workflow follow-up · 3 November 2026 · Existing chart and journal UI</p>
+<div class="row">
+<div class="box"><b>Personal PC entry</b><small>Explicit local mode → same-origin CSRF bootstrap → direct loopback/Host check, no proxy headers → stable separate installation owner.</small></div>
+<div class="box"><b>Named account entry</b><small>Password and required MFA → verified durable account proof. Existing private workspaces remain isolated from the personal installation owner.</small></div>
+</div>
+<div class="arrow">↓ verified cookie owner + captured expected-principal + bounded request</div>
+<div class="box wide"><b>Workspace and Settings → Connections &amp; Data</b><small>New live profile opens its Connections. Browser profiles use explicit preview → save; original copy stays. Account preferences, Developer API and Playground accept verified app identity without inventing broker authority.</small></div>
+<div class="three">
+<div class="box"><b>Account connections</b><small>Choose platform → save setup → verify actual account → explicitly link its book. MT5 attaches to the selected running terminal; read-only account/raw history scope. Clock and canonical accounting remain unverified.</small></div>
+<div class="box"><b>History &amp; data</b><small>CSV or Kraken public instruments/closed candles → owned preview → actual coverage/quality → explicit immutable save. Exact decimals, checksum and source receipt retained; final unfinished candle excluded.</small></div>
+<div class="box"><b>Developer API tools</b><small>Owner-scoped keys and explicit requests. Actual routing/provider observations remain distinct from account connections and paper trading. Local entry starts no legacy broker socket.</small></div>
+</div>
+<div class="arrow">↓ bounded allowlisted workers · provider reads outside SQL · owner/revision rechecked on publication</div>
+<div class="row">
+<div class="box"><b>One account → one connected journal book</b><small>Raw observations and confirmed journal facts stay distinct. Manual books remain independent. Corrections and partial coverage are retained; missing history does not delete records.</small></div>
+<div class="box"><b>One immutable version → existing chart</b><small>Saved native interval, UTC bounds, structural quality and checksum follow the chart. Return restores the exact dataset version and Connections/profile context. Replay uses explicit saved history.</small></div>
+</div>
+<footer>No automatic trading, broker login, password entry, order or copier is started by local access or a catalog selection. Planned provider integrations remain P08–P10; execution remains P11. The encrypted connector vault and existing recovery boundaries remain in place.</footer>
+</main></html>

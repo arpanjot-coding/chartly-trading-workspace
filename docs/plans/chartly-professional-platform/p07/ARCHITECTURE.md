@@ -1,0 +1,15 @@
+# P07 connector architecture
+
+The original Workspace, profile Connections and Settings → Connections & Data remain the presentation base. Their configuration forms are distinct from an observed account and measured health. [Plan](IMPLEMENTATION_PLAN.md), [API](../../../api/local-connectors.md), [history/recovery](HISTORY_STORAGE_RECOVERY.md), [adapter maintenance](adapters/README.md).
+
+The local cookie/CSRF boundary validates scope and a bounded action. Credential writes encrypt directly in the small authenticated API path, so plaintext does not enter worker temp files. Other connector work uses the existing bounded, reaped process worker. Static adapter factories separate account observation, history, market data and future execution responsibilities; P07 has no trading dispatcher. Only the local operator may attach the shared native terminal.
+
+A provider observation binds exact provider/version/server/account/environment/currency and permissions. The registry retains intent separately, derives freshness from observation time and invalidates effective capabilities after restoration, expiry, changed configuration or identity. Readiness comes from trusted conformance results bound to the observed adapter/account; no client enum can promote it. Existing account/book IDs and reviews are retained. Ambiguous matches are explicit conflicts.
+
+History reads occur outside the SQL write transaction. Before publication, expected revision, identity, configuration and credential generation are checked again. One transaction retains source observations/corrections, native continuation, actual coverage, P03 normalized confirmed facts and the command receipt. Lost responses replay the same receipt and publish the current owned workspace. Missing pages do not delete earlier records. Confirmed closed facts alone project to the account book; raw deals, transfers, partial fills and unknown orders remain observations. Corrections require the retained financial-change review.
+
+The encrypted vault is a separate nonportable table. Portable connector records contain only opaque references and bounded history/certification metadata. Restore/Undo preserves provenance, rebinds local canonical account/book scope, clears secrets and active linkage, and requires revalidation. It never starts playback, polling, copying or trading.
+
+An explicit checkpoint suggestion bounds backfill windows and overlap; it does not assert coverage or run automatically. A native transport cursor can finish while UTC coverage remains unknown. MT5's actual read-only access is proven, but the measured provider clock skew remains unverified: no automatic offset, UTC chart-feed claim or fabricated journal conversion is introduced. Kraken public reachability and blocked brokerage account prerequisites remain distinct from authenticated certification.
+
+Resource checks cover scoped SQL/worker cleanup, bounded data, repeated error/retry paths and actual SDK attachment/shutdown. The architecture [HTML](architecture.html) is rendered to [PNG](evidence/architecture.png) for visual review before final acceptance.

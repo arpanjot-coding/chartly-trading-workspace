@@ -1,0 +1,114 @@
+{
+  "package": "P01",
+  "scope": "bounded v1 domain and compatibility contracts",
+  "status": "complete",
+  "packageComplete": true,
+  "date": "2026-11-02",
+  "owner": "Codex",
+  "productFeatureCompletionImplied": false,
+  "tests": {
+    "backend": 522,
+    "frontend": 343,
+    "p00Design": 32,
+    "node": "22.23.4",
+    "python": "3.14.7",
+    "productionBuild": "passed",
+    "generatedTypes": "passed",
+    "ruff": "passed",
+    "biome": "passed"
+  },
+  "tasks": [
+    {
+      "id": "P01-T01",
+      "state": "done",
+      "evidence": [
+        "IMPLEMENTATION_EVIDENCE.md",
+        "../../../../contracts/v1/README.md"
+      ]
+    },
+    {
+      "id": "P01-T02",
+      "state": "done",
+      "evidence": [
+        "IMPLEMENTATION_EVIDENCE.md",
+        "../../../../contracts/v1/README.md"
+      ]
+    },
+    {
+      "id": "P01-T03",
+      "state": "done",
+      "evidence": [
+        "IMPLEMENTATION_EVIDENCE.md",
+        "../../../../contracts/v1/README.md"
+      ]
+    },
+    {
+      "id": "P01-T04",
+      "state": "done",
+      "evidence": [
+        "IMPLEMENTATION_EVIDENCE.md",
+        "../../../../contracts/v1/README.md"
+      ]
+    },
+    {
+      "id": "P01-T05",
+      "state": "done",
+      "evidence": [
+        "IMPLEMENTATION_EVIDENCE.md",
+        "../../../../contracts/v1/README.md"
+      ]
+    },
+    {
+      "id": "P01-T06",
+      "state": "done",
+      "evidence": [
+        "IMPLEMENTATION_EVIDENCE.md",
+        "../../../../contracts/v1/README.md"
+      ]
+    },
+    {
+      "id": "P01-T07",
+      "state": "done",
+      "evidence": [
+        "IMPLEMENTATION_EVIDENCE.md",
+        "../../../../contracts/v1/README.md"
+      ]
+    },
+    {
+      "id": "P01-T08",
+      "state": "done",
+      "evidence": [
+        "IMPLEMENTATION_EVIDENCE.md",
+        "../../../../contracts/v1/README.md"
+      ]
+    }
+  ],
+  "artifactHashes": {
+    "../../../../contracts/v1/fixture-manifest.json": "2294d549883b761689325953ca46dc6426d3dfa99e1c0f90ad2592f5802bfe0a",
+    "../../../../contracts/v1/fixtures/connected-journeys.json": "02f4e6c82825b2db2109c7ff75285d6ecc61dbce6472ce0a3498511f4e2e1996",
+    "../../../../contracts/v1/fixtures/core-cases.json": "3c8a419c0b0df19c10fa43765335ab327104d1444fe5e05721042fbc25c3cf55",
+    "../../../../contracts/v1/fixtures/edge-cases.json": "ecfdbec298fb487b54343225d0328377f6056666bb0ece38d72e3ad2e0dcca3c",
+    "../../../../contracts/v1/fixtures/extended-cases.json": "285d14ff6f80a39c3d27e9e7b880c46f7a3b404d644ddde5d81e56f4ea9425d9",
+    "../../../../contracts/v1/fixtures/full-v1.json": "55ad9ac2d4d8e9225fd92c0f1dde9e8311001650494a9c1bb6bf763afd0c6a9a",
+    "../../../../contracts/v1/fixtures/legacy-cases.json": "7ef3ee53f6516003e9fd154e3200cf6fb644d8c55726ca9c01b20de3bc8468e5",
+    "../../../../contracts/v1/fixtures/local-core.json": "69275a60da78035d40e0d25aade4772932f0bb1d11ae6bf4d9cddce0426a2f6d",
+    "../../../../contracts/v1/HANDOFF_SEQUENCES.md": "6a150a95847b13da52b817f49705db019b629102acf329e2762573e6898e46e6",
+    "../../../../contracts/v1/legacy-policy.json": "d25b97b7ce99d663687a7397e008b293a782082e28cad08efcf9899964e9c1b0",
+    "../../../../contracts/v1/LEGACY_MAPPING.md": "2d7ede27baee303d6790a86c251bf262949069c1c901da8578bccee1d12fba1c",
+    "../../../../contracts/v1/README.md": "ac97d76b138925fef21f4b61055b902717b4dbb809152d6820d75f274720ffb6",
+    "../../../../contracts/v1/rules.json": "ba59961752aaf70fe12f82df39809a669abc296e63e34ffd80f7832a4e557b88",
+    "../../../../contracts/v1/schemas/domain.schema.json": "cec45e9e9e28a04541b8173940b51cc4d9f3093a8607230c591da30abdfd40b1",
+    "../../../../contracts/v1/timezones.json": "d7852214ebf65f40e689461feb7bb0a284052676638abf73782b4b33ea2a9291",
+    "../../../../contracts/generate_types.py": "e550dff9d4a069b5a98225827dcb3c906f8dff243a2beeb273de3991bc5dee3c",
+    "../../../../services/domain/validation.py": "ba4606e62d9db0d2c8857372cf61056444fc33b5fae63703602b046a36eec92b",
+    "../../../../services/domain/legacy.py": "46767e4e28eac4eb287171483c4d0ad8394a0039918b0eef10a427c69f452a7d",
+    "../../../../services/domain/__init__.py": "77241a3558d02682353abefab107cab8f93a6b8bccd1588f8ea1bff9ce41a731",
+    "../../../../frontend/src/lib/domain/validation.ts": "1c4330e99633cea329e19c46f35feb20d28003bc3c6eedc8ca28b1fb6ca7d996",
+    "../../../../frontend/src/lib/domain/types.generated.ts": "3706bd70dec9d1b6ea9a3aa24d38a1c058385a51b59b6ce3ae66bf2a342e5151",
+    "../../../../frontend/src/lib/domain/legacy.ts": "a038caa8ccc9b28b0d50cb491dbd64450baa9d20b6aa27c5dac7d80de94ce603",
+    "../../../../frontend/src/lib/domain/validation.test.ts": "5c12eea335ec36928fba321f004edb33bee0391f89cc0701d8ea5f9bbc9241a3",
+    "../../../../frontend/src/lib/domain/legacy.test.ts": "b662adc7d5d9715ae9ac97ec1493d0444a7bd62c4914ddb9738e7140e744bd54",
+    "../../../../test/test_domain_contracts.py": "21c942abec0876d12263dcc301ef6984d9498ea344357322280fb2f8fc4e657a",
+    "../../../../test/test_domain_legacy.py": "28e60744ed6e41bec1870d228d377e27d6353efc76b263e395ebf874be0ca7df"
+  }
+}

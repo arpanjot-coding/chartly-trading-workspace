@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "fixtures/core-cases.json",
+    "fixtures/extended-cases.json",
+    "fixtures/edge-cases.json"
+  ],
+  "note": "Expected outcomes are authored independently of either validator."
+}

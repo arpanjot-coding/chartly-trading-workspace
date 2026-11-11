@@ -1,0 +1,30 @@
+meta {
+  name: PlaceGTTOrder
+  type: http
+  seq: 64
+}
+
+post {
+  url: http://127.0.0.1:5000/api/v1/placegttorder
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "apikey": "{{api_key}}",
+      "strategy": "My GTT Strategy",
+      "trigger_type": "SINGLE",
+      "exchange": "NSE",
+      "symbol": "IDEA",
+      "action": "BUY",
+      "product": "CNC",
+      "quantity": 1,
+      "pricetype": "LIMIT",
+      "price": "0",
+      "triggerprice_sl": "0",
+      "stoploss": "",
+      "triggerprice_tg": "0",
+      "target": ""
+  }
+}

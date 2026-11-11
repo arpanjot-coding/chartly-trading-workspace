@@ -1,0 +1,1151 @@
+[
+  {
+    "id": "connected-worked-journeys",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [],
+    "append": []
+  },
+  {
+    "id": "limit-order-needs-limit",
+    "operation": "record",
+    "type": "OrderIntent",
+    "expected": [
+      {
+        "code": "order.price_required",
+        "path": "/limitPrice"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "intent_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "instrumentId": "instrument_btc_001",
+      "destinationId": "destination_demo_001",
+      "mode": "broker_demo",
+      "side": "buy",
+      "orderType": "limit",
+      "quantity": {
+        "value": "0.1",
+        "unit": "base_asset"
+      },
+      "idempotencyKey": "decision-one/demo/account-one"
+    }
+  },
+  {
+    "id": "historical-order-cannot-target-broker",
+    "operation": "record",
+    "type": "OrderIntent",
+    "expected": [
+      {
+        "code": "mode.paper_run_required",
+        "path": "/runId"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "intent_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "instrumentId": "instrument_btc_001",
+      "destinationId": "destination_demo_001",
+      "mode": "paper_replay",
+      "side": "buy",
+      "orderType": "market",
+      "quantity": {
+        "value": "0.1",
+        "unit": "base_asset"
+      },
+      "idempotencyKey": "decision-one/demo/account-one"
+    }
+  },
+  {
+    "id": "ack-is-not-a-fill",
+    "operation": "record",
+    "type": "BrokerAcknowledgement",
+    "expected": [
+      {
+        "code": "schema.enum",
+        "path": "/outcome"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "ack_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "commandId": "command_demo_001",
+      "accountId": "account_external_001",
+      "outcome": "filled",
+      "nativeOrderId": "native-order-1",
+      "observedAt": "2026-11-02T10:00:00Z"
+    }
+  },
+  {
+    "id": "open-trade-has-no-close-time",
+    "operation": "record",
+    "type": "TradeAggregate",
+    "expected": [
+      {
+        "code": "trade.open_close_time",
+        "path": "/closedAt"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "trade_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "instrumentId": "instrument_btc_001",
+      "fillIds": [
+        "fill_demo_001",
+        "fill_demo_002"
+      ],
+      "aggregationPolicy": "hedging_position",
+      "status": "open",
+      "openedAt": "2026-11-02T10:00:00Z",
+      "feesKnown": false,
+      "closedAt": "2026-11-02T10:00:00Z"
+    }
+  },
+  {
+    "id": "closed-trade-needs-close-time",
+    "operation": "record",
+    "type": "TradeAggregate",
+    "expected": [
+      {
+        "code": "trade.close_time_required",
+        "path": "/closedAt"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "trade_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "instrumentId": "instrument_btc_001",
+      "fillIds": [
+        "fill_demo_001",
+        "fill_demo_002"
+      ],
+      "aggregationPolicy": "hedging_position",
+      "status": "closed",
+      "openedAt": "2026-11-02T10:00:00Z",
+      "feesKnown": false
+    }
+  },
+  {
+    "id": "unknown-fees-not-zero-net",
+    "operation": "record",
+    "type": "TradeAggregate",
+    "expected": [
+      {
+        "code": "trade.unknown_fees",
+        "path": "/netPnl"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "trade_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "instrumentId": "instrument_btc_001",
+      "fillIds": [
+        "fill_demo_001",
+        "fill_demo_002"
+      ],
+      "aggregationPolicy": "hedging_position",
+      "status": "open",
+      "openedAt": "2026-11-02T10:00:00Z",
+      "feesKnown": false,
+      "netPnl": {
+        "value": "100",
+        "currency": "USD"
+      }
+    }
+  },
+  {
+    "id": "experiment-warmup-not-future",
+    "operation": "record",
+    "type": "Experiment",
+    "expected": [
+      {
+        "code": "experiment.invalid_warmup",
+        "path": "/warmupStart"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "experiment_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "artifactRevisionId": "revision_strategy_001",
+      "parameterSetId": "parameters_strategy_001",
+      "datasetVersionId": "dataset_btc_001",
+      "instrumentId": "instrument_btc_001",
+      "engine": {
+        "name": "fixture-engine",
+        "version": "1",
+        "capabilityId": "engine_support_001"
+      },
+      "rangeStart": "2026-01-01T00:00:00Z",
+      "rangeEnd": "2026-02-01T00:00:00Z",
+      "warmupStart": "2026-02-01T00:00:00Z",
+      "startingCash": {
+        "value": "10000.00",
+        "currency": "USD"
+      },
+      "costModelId": "cost_model_001",
+      "fillPolicyId": "fill_policy_001",
+      "seed": 42
+    }
+  },
+  {
+    "id": "immutable-tested-revision",
+    "operation": "replacement",
+    "type": "ArtifactRevision",
+    "expected": [
+      {
+        "code": "revision.immutable",
+        "path": ""
+      }
+    ],
+    "previous": {
+      "schemaVersion": 1,
+      "id": "revision_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "projectId": "project_strategy_001",
+      "kind": "strategy",
+      "checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sourceArtifactId": "artifact_source_002",
+      "language": "openscript",
+      "compilerVersion": "0.8.1",
+      "dependencies": [
+        {
+          "revisionId": "revision_indicator_001",
+          "checksum": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "validationReceiptId": "receipt_compile_002"
+    },
+    "proposed": {
+      "schemaVersion": 1,
+      "id": "revision_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 2,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "projectId": "project_strategy_001",
+      "kind": "strategy",
+      "checksum": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sourceArtifactId": "artifact_source_002",
+      "language": "openscript",
+      "compilerVersion": "0.8.1",
+      "dependencies": [
+        {
+          "revisionId": "revision_indicator_001",
+          "checksum": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "validationReceiptId": "receipt_compile_002"
+    }
+  },
+  {
+    "id": "immutable-source-fact",
+    "operation": "replacement",
+    "type": "FactObservation",
+    "expected": [
+      {
+        "code": "revision.immutable",
+        "path": ""
+      }
+    ],
+    "previous": {
+      "schemaVersion": 1,
+      "id": "fact_company_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "issuerId": "issuer_us_001",
+      "documentVersionId": "document_company_001",
+      "metricId": "revenue",
+      "value": "123456789.00",
+      "unit": "currency",
+      "currency": "USD",
+      "periodKind": "duration",
+      "periodStart": "2025-07-01",
+      "periodEnd": "2025-09-30",
+      "fiscalYear": 2025,
+      "fiscalPeriod": "Q1",
+      "reportingBasis": "US-GAAP",
+      "citation": "page:4/table:income/row:revenue",
+      "publishedAt": "2025-11-01T10:00:00Z",
+      "availableAt": "2025-11-01T10:05:00Z",
+      "retrievedAt": "2026-11-02T10:00:00Z"
+    },
+    "proposed": {
+      "schemaVersion": 1,
+      "id": "fact_company_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 2,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "issuerId": "issuer_us_001",
+      "documentVersionId": "document_company_001",
+      "metricId": "revenue",
+      "value": "0",
+      "unit": "currency",
+      "currency": "USD",
+      "periodKind": "duration",
+      "periodStart": "2025-07-01",
+      "periodEnd": "2025-09-30",
+      "fiscalYear": 2025,
+      "fiscalPeriod": "Q1",
+      "reportingBasis": "US-GAAP",
+      "citation": "page:4/table:income/row:revenue",
+      "publishedAt": "2025-11-01T10:00:00Z",
+      "availableAt": "2025-11-01T10:05:00Z",
+      "retrievedAt": "2026-11-02T10:00:00Z"
+    }
+  },
+  {
+    "id": "immutable-run-manifest",
+    "operation": "replacement",
+    "type": "RunManifest",
+    "expected": [
+      {
+        "code": "revision.immutable",
+        "path": ""
+      }
+    ],
+    "previous": {
+      "schemaVersion": 1,
+      "id": "run_paper_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "projectId": "practice_project_001",
+      "accountId": "account_paper_001",
+      "bookId": "book_paper_001",
+      "datasetVersionId": "dataset_btc_001",
+      "instrumentId": "instrument_btc_001",
+      "mode": "paper_replay",
+      "engine": {
+        "name": "fixture-engine",
+        "version": "1",
+        "capabilityId": "engine_support_001"
+      },
+      "startingCash": {
+        "value": "10000.00",
+        "currency": "USD"
+      },
+      "rangeStart": "2026-01-01T00:00:00Z",
+      "rangeEnd": "2026-02-01T00:00:00Z",
+      "costModelId": "cost_model_001",
+      "fillPolicyId": "fill_policy_001",
+      "seed": 7
+    },
+    "proposed": {
+      "schemaVersion": 1,
+      "id": "run_paper_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 2,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "projectId": "practice_project_001",
+      "accountId": "account_paper_001",
+      "bookId": "book_paper_001",
+      "datasetVersionId": "dataset_btc_001",
+      "instrumentId": "instrument_btc_001",
+      "mode": "paper_replay",
+      "engine": {
+        "name": "fixture-engine",
+        "version": "1",
+        "capabilityId": "engine_support_001"
+      },
+      "startingCash": {
+        "value": "10000.00",
+        "currency": "USD"
+      },
+      "rangeStart": "2026-01-01T00:00:00Z",
+      "rangeEnd": "2026-02-01T00:00:00Z",
+      "costModelId": "cost_model_001",
+      "fillPolicyId": "fill_policy_001",
+      "seed": 99
+    }
+  },
+  {
+    "id": "dataset-range-reversed",
+    "operation": "record",
+    "type": "DatasetVersion",
+    "expected": [
+      {
+        "code": "time.invalid_range",
+        "path": "/rangeEnd"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "dataset_btc_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "instrumentId": "instrument_btc_001",
+      "sourceId": "source_file_001",
+      "checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "interval": "1m",
+      "rangeStart": "2026-01-01T00:00:00Z",
+      "rangeEnd": "2026-01-01T00:00:00Z",
+      "priceBasis": "raw",
+      "timezone": "UTC",
+      "calendarId": "continuous_24_7",
+      "quality": "verified",
+      "coverageReceiptId": "receipt_data_001"
+    }
+  },
+  {
+    "id": "holdout-must-follow-validation",
+    "operation": "record",
+    "type": "EvaluationSplit",
+    "expected": [
+      {
+        "code": "experiment.overlapping_split",
+        "path": "/holdoutStart"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "split_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "experimentId": "experiment_strategy_001",
+      "trainingStart": "2026-01-01T00:00:00Z",
+      "trainingEnd": "2026-01-10T00:00:00Z",
+      "validationStart": "2026-01-10T00:00:00Z",
+      "validationEnd": "2026-01-20T00:00:00Z",
+      "holdoutStart": "2026-01-01T00:00:00Z",
+      "holdoutEnd": "2026-02-01T00:00:00Z"
+    }
+  },
+  {
+    "id": "duration-fact-needs-start",
+    "operation": "record",
+    "type": "FactObservation",
+    "expected": [
+      {
+        "code": "research.period_start_required",
+        "path": "/periodStart"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "fact_company_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "issuerId": "issuer_us_001",
+      "documentVersionId": "document_company_001",
+      "metricId": "revenue",
+      "value": "123456789.00",
+      "unit": "currency",
+      "currency": "USD",
+      "periodKind": "duration",
+      "periodEnd": "2025-09-30",
+      "fiscalYear": 2025,
+      "fiscalPeriod": "Q1",
+      "reportingBasis": "US-GAAP",
+      "citation": "page:4/table:income/row:revenue",
+      "publishedAt": "2025-11-01T10:00:00Z",
+      "availableAt": "2025-11-01T10:05:00Z",
+      "retrievedAt": "2026-11-02T10:00:00Z"
+    }
+  },
+  {
+    "id": "instant-fact-has-one-date",
+    "operation": "record",
+    "type": "FactObservation",
+    "expected": [
+      {
+        "code": "research.instant_period",
+        "path": "/periodStart"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "fact_company_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "issuerId": "issuer_us_001",
+      "documentVersionId": "document_company_001",
+      "metricId": "revenue",
+      "value": "123456789.00",
+      "unit": "currency",
+      "currency": "USD",
+      "periodKind": "instant",
+      "periodStart": "2025-07-01",
+      "periodEnd": "2025-09-30",
+      "fiscalYear": 2025,
+      "fiscalPeriod": "Q1",
+      "reportingBasis": "US-GAAP",
+      "citation": "page:4/table:income/row:revenue",
+      "publishedAt": "2025-11-01T10:00:00Z",
+      "availableAt": "2025-11-01T10:05:00Z",
+      "retrievedAt": "2026-11-02T10:00:00Z"
+    }
+  },
+  {
+    "id": "invalid-trading-date",
+    "operation": "record",
+    "type": "FactObservation",
+    "expected": [
+      {
+        "code": "schema.format",
+        "path": "/periodEnd"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "fact_company_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "issuerId": "issuer_us_001",
+      "documentVersionId": "document_company_001",
+      "metricId": "revenue",
+      "value": "123456789.00",
+      "unit": "currency",
+      "currency": "USD",
+      "periodKind": "duration",
+      "periodStart": "2025-07-01",
+      "periodEnd": "2025-02-30",
+      "fiscalYear": 2025,
+      "fiscalPeriod": "Q1",
+      "reportingBasis": "US-GAAP",
+      "citation": "page:4/table:income/row:revenue",
+      "publishedAt": "2025-11-01T10:00:00Z",
+      "availableAt": "2025-11-01T10:05:00Z",
+      "retrievedAt": "2026-11-02T10:00:00Z"
+    }
+  },
+  {
+    "id": "facts-need-provenance",
+    "operation": "record",
+    "type": "FactObservation",
+    "expected": [
+      {
+        "code": "schema.required",
+        "path": "/citation"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "fact_company_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "issuerId": "issuer_us_001",
+      "documentVersionId": "document_company_001",
+      "metricId": "revenue",
+      "value": "123456789.00",
+      "unit": "currency",
+      "currency": "USD",
+      "periodKind": "duration",
+      "periodStart": "2025-07-01",
+      "periodEnd": "2025-09-30",
+      "fiscalYear": 2025,
+      "fiscalPeriod": "Q1",
+      "reportingBasis": "US-GAAP",
+      "publishedAt": "2025-11-01T10:00:00Z",
+      "availableAt": "2025-11-01T10:05:00Z",
+      "retrievedAt": "2026-11-02T10:00:00Z"
+    }
+  },
+  {
+    "id": "published-before-available",
+    "operation": "record",
+    "type": "DocumentVersion",
+    "expected": [
+      {
+        "code": "research.availability_order",
+        "path": "/availableAt"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "document_company_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "issuerId": "issuer_us_001",
+      "sourceId": "source_file_001",
+      "nativeDocumentId": "filing-2025",
+      "checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "publishedAt": "2025-11-01T10:00:00Z",
+      "availableAt": "2024-01-01T00:00:00Z",
+      "retrievedAt": "2026-11-02T10:00:00Z",
+      "sourceUrl": "https://example.org/fixture-filing"
+    }
+  },
+  {
+    "id": "no-overwriting-unavailable-metric",
+    "operation": "record",
+    "type": "DerivedMetric",
+    "expected": [
+      {
+        "code": "metric.value_or_unavailable",
+        "path": "/value"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "metric_company_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "issuerId": "issuer_us_001",
+      "inputFactIds": [
+        "fact_company_001"
+      ],
+      "formulaId": "revenue_growth",
+      "formulaVersion": "1",
+      "unavailableReason": "missing_input",
+      "unit": "ratio",
+      "availableAt": "2025-11-01T10:05:00Z",
+      "value": "0"
+    }
+  },
+  {
+    "id": "empty-sample-cannot-show-zero-ratio",
+    "operation": "record",
+    "type": "MetricResult",
+    "expected": [
+      {
+        "code": "metric.empty_sample",
+        "path": "/value"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "result_metric_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "queryId": "query_demo_001",
+      "metricId": "profit_factor",
+      "unit": "ratio",
+      "sampleSize": 0,
+      "formulaVersion": "1",
+      "denominatorPolicy": "closed-trades-only; zero-loss denominator unavailable",
+      "scope": "account",
+      "value": "0"
+    }
+  },
+  {
+    "id": "partial-coverage-not-complete",
+    "operation": "record",
+    "type": "SourceCoverage",
+    "expected": [
+      {
+        "code": "coverage.unproven_complete",
+        "path": "/status"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "coverage_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountSourceLinkId": "source_link_001",
+      "rangeStart": "2026-01-01T00:00:00Z",
+      "rangeEnd": "2026-02-01T00:00:00Z",
+      "status": "complete",
+      "gaps": [
+        {
+          "start": "2026-01-15T00:00:00Z",
+          "end": "2026-01-16T00:00:00Z"
+        }
+      ]
+    }
+  },
+  {
+    "id": "resolved-conflict-needs-receipt",
+    "operation": "record",
+    "type": "ReconciliationConflict",
+    "expected": [
+      {
+        "code": "reconciliation.receipt_required",
+        "path": "/resolutionReceiptId"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "conflict_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "observationIds": [
+        "observation_demo_001"
+      ],
+      "kind": "amount",
+      "status": "resolved"
+    }
+  },
+  {
+    "id": "conversion-needs-dated-provenance",
+    "operation": "record",
+    "type": "ScopedQuery",
+    "expected": [
+      {
+        "code": "query.conversion_provenance",
+        "path": "/asOf"
+      },
+      {
+        "code": "query.conversion_provenance",
+        "path": "/conversionSourceId"
+      },
+      {
+        "code": "query.conversion_provenance",
+        "path": "/reportingCurrency"
+      }
+    ],
+    "value": {
+      "schemaVersion": 1,
+      "id": "query_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountIds": [],
+      "bookIds": [],
+      "profileIds": [],
+      "rangeStart": "2026-01-01T00:00:00Z",
+      "rangeEnd": "2026-02-01T00:00:00Z",
+      "timezone": "Europe/London",
+      "currencyPolicy": "converted",
+      "reviewStatus": "all",
+      "pageSize": 50
+    }
+  },
+  {
+    "id": "fill-source-provider-check",
+    "operation": "collection",
+    "type": "ExecutionFill",
+    "expected": [
+      {
+        "code": "source.provider_mismatch",
+        "path": "/23/value/providerId"
+      }
+    ],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [
+      {
+        "index": 23,
+        "record": {
+          "type": "ExecutionFill",
+          "value": {
+            "schemaVersion": 1,
+            "id": "fill_demo_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "accountId": "account_external_001",
+            "sourceId": "source_local_001",
+            "instrumentId": "instrument_btc_001",
+            "providerId": "wrong-provider",
+            "externalEventId": "native-fill-1",
+            "nativeOrderId": "native-order-1",
+            "side": "buy",
+            "quantity": {
+              "value": "0.04",
+              "unit": "base_asset"
+            },
+            "price": "50000.00",
+            "currency": "USD",
+            "occurredAt": "2026-11-02T10:00:00Z",
+            "receivedAt": "2026-11-02T10:00:00Z",
+            "decisionId": "decision_demo_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "payload-is-scope-checked",
+    "operation": "collection",
+    "type": "CommandEnvelope",
+    "expected": [
+      {
+        "code": "reference.missing",
+        "path": "/60/value/payloadId"
+      }
+    ],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [
+      {
+        "index": 60,
+        "record": {
+          "type": "CommandEnvelope",
+          "value": {
+            "schemaVersion": 1,
+            "id": "envelope_demo_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "commandId": "command_native_001",
+            "correlationId": "correlation_demo_001",
+            "accountId": "account_external_001",
+            "mode": "broker_demo",
+            "producerVersion": "fixture-1",
+            "occurredAt": "2026-11-02T10:00:00Z",
+            "idempotencyKey": "demo-command-one",
+            "payloadType": "OrderIntent",
+            "payloadId": "intent_missing_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "fill-price-matches-tick",
+    "operation": "collection",
+    "type": "ExecutionFill",
+    "expected": [
+      {
+        "code": "price.invalid_tick",
+        "path": "/23/value/price"
+      }
+    ],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [
+      {
+        "index": 23,
+        "record": {
+          "type": "ExecutionFill",
+          "value": {
+            "schemaVersion": 1,
+            "id": "fill_demo_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "accountId": "account_external_001",
+            "sourceId": "source_local_001",
+            "instrumentId": "instrument_btc_001",
+            "providerId": "provider-one",
+            "externalEventId": "native-fill-1",
+            "nativeOrderId": "native-order-1",
+            "side": "buy",
+            "quantity": {
+              "value": "0.04",
+              "unit": "base_asset"
+            },
+            "price": "50000.001",
+            "currency": "USD",
+            "occurredAt": "2026-11-02T10:00:00Z",
+            "receivedAt": "2026-11-02T10:00:00Z",
+            "decisionId": "decision_demo_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "wrong-parameter-revision",
+    "operation": "collection",
+    "type": "Experiment",
+    "expected": [
+      {
+        "code": "artifact.parameter_revision_mismatch",
+        "path": "/40/value/parameterSetId"
+      },
+      {
+        "code": "artifact.evidence_mismatch",
+        "path": "/44/value/experimentIds"
+      }
+    ],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [
+      {
+        "index": 40,
+        "record": {
+          "type": "Experiment",
+          "value": {
+            "schemaVersion": 1,
+            "id": "experiment_strategy_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "artifactRevisionId": "revision_strategy_001",
+            "parameterSetId": "parameters_indicator_001",
+            "datasetVersionId": "dataset_btc_001",
+            "instrumentId": "instrument_btc_001",
+            "engine": {
+              "name": "fixture-engine",
+              "version": "1",
+              "capabilityId": "engine_support_001"
+            },
+            "rangeStart": "2026-01-01T00:00:00Z",
+            "rangeEnd": "2026-02-01T00:00:00Z",
+            "warmupStart": "2026-01-01T00:00:00Z",
+            "startingCash": {
+              "value": "10000.00",
+              "currency": "USD"
+            },
+            "costModelId": "cost_model_001",
+            "fillPolicyId": "fill_policy_001",
+            "seed": 42
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "future-research-excluded",
+    "operation": "collection",
+    "type": "NotebookSnapshot",
+    "expected": [
+      {
+        "code": "research.future_evidence",
+        "path": "/49/value/derivedMetricIds"
+      },
+      {
+        "code": "research.future_evidence",
+        "path": "/49/value/documentVersionIds"
+      },
+      {
+        "code": "research.future_evidence",
+        "path": "/49/value/factIds"
+      }
+    ],
+    "baseFile": "fixtures/connected-journeys.json",
+    "replace": [
+      {
+        "index": 49,
+        "record": {
+          "type": "NotebookSnapshot",
+          "value": {
+            "schemaVersion": 1,
+            "id": "notebook_company_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "title": "Company investigation",
+            "asOf": "2025-10-01T00:00:00Z",
+            "documentVersionIds": [
+              "document_company_001"
+            ],
+            "factIds": [
+              "fact_company_001"
+            ],
+            "derivedMetricIds": [
+              "metric_company_001"
+            ],
+            "notes": "Original evidence retained",
+            "annotationKind": "user",
+            "checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "order-unknown-submitted-28",
+    "operation": "transition",
+    "machine": "order",
+    "before": "unknown",
+    "after": "submitted",
+    "context": {},
+    "expected": [
+      {
+        "code": "transition.forbidden",
+        "path": ""
+      }
+    ]
+  },
+  {
+    "id": "order-unknown-reconciling-29",
+    "operation": "transition",
+    "machine": "order",
+    "before": "unknown",
+    "after": "reconciling",
+    "context": {},
+    "expected": []
+  },
+  {
+    "id": "order-reconciling-part_filled-30",
+    "operation": "transition",
+    "machine": "order",
+    "before": "reconciling",
+    "after": "part_filled",
+    "context": {},
+    "expected": []
+  },
+  {
+    "id": "order-cancel_requested-filled-31",
+    "operation": "transition",
+    "machine": "order",
+    "before": "cancel_requested",
+    "after": "filled",
+    "context": {},
+    "expected": []
+  },
+  {
+    "id": "order-filled-submitted-32",
+    "operation": "transition",
+    "machine": "order",
+    "before": "filled",
+    "after": "submitted",
+    "context": {},
+    "expected": [
+      {
+        "code": "transition.forbidden",
+        "path": ""
+      }
+    ]
+  },
+  {
+    "id": "run-draft-ready-33",
+    "operation": "transition",
+    "machine": "run",
+    "before": "draft",
+    "after": "ready",
+    "context": {},
+    "expected": [
+      {
+        "code": "transition.manifest_required",
+        "path": ""
+      }
+    ]
+  },
+  {
+    "id": "run-draft-ready-34",
+    "operation": "transition",
+    "machine": "run",
+    "before": "draft",
+    "after": "ready",
+    "context": {
+      "manifestValid": true
+    },
+    "expected": []
+  },
+  {
+    "id": "arming-disarmed-armed-35",
+    "operation": "transition",
+    "machine": "arming",
+    "before": "disarmed",
+    "after": "armed",
+    "context": {},
+    "expected": [
+      {
+        "code": "transition.approval_required",
+        "path": ""
+      }
+    ]
+  },
+  {
+    "id": "arming-disarmed-armed-36",
+    "operation": "transition",
+    "machine": "arming",
+    "before": "disarmed",
+    "after": "armed",
+    "context": {
+      "eligible": true,
+      "approved": true
+    },
+    "expected": []
+  },
+  {
+    "id": "order-invented-filled-37",
+    "operation": "transition",
+    "machine": "order",
+    "before": "invented",
+    "after": "filled",
+    "context": {},
+    "expected": [
+      {
+        "code": "transition.unknown_state",
+        "path": ""
+      }
+    ]
+  }
+]

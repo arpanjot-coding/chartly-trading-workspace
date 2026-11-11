@@ -1,0 +1,18 @@
+{
+  "provider": "fixture-csv",
+  "name": "Example daily research data",
+  "symbol": "EXAMPLE",
+  "exchange": "FIXTURE",
+  "interval": "1m",
+  "priceBasis": "raw",
+  "adjustment": "none",
+  "volumeMeaning": "units",
+  "allowNegativePrices": false,
+  "currency": "USD",
+  "calendar": {
+    "id": "declared-us-regular",
+    "timezone": "America/New_York",
+    "sessions": [{"weekdays": [0,1,2,3,4], "open": "09:30", "close": "16:00"}],
+    "exceptions": {"2026-12-25": []}
+  }
+}

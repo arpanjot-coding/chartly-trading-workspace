@@ -1,0 +1,4995 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chartly.local/contracts/v1/domain.schema.json",
+  "$defs": {
+    "Id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{7,127}(?![\\s\\S])"
+    },
+    "Instant": {
+      "type": "string",
+      "format": "utc-instant"
+    },
+    "Timezone": {
+      "type": "string",
+      "format": "iana-timezone"
+    },
+    "Decimal": {
+      "type": "string",
+      "pattern": "^-?(0|[1-9][0-9]{0,37})(\\.[0-9]{1,18})?(?![\\s\\S])"
+    },
+    "Currency": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{2,11}(?![\\s\\S])"
+    },
+    "Alias": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "namespace",
+        "key"
+      ],
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      }
+    },
+    "Capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "unsupported",
+            "unknown"
+          ]
+        },
+        "evidenceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "verifiedAt": {
+          "$ref": "#/$defs/Instant"
+        }
+      }
+    },
+    "LocalOwner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "name"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      }
+    },
+    "Workspace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "name",
+        "currency",
+        "timezone"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "timezone": {
+          "$ref": "#/$defs/Timezone"
+        }
+      }
+    },
+    "Profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "name",
+        "kind",
+        "state",
+        "currency",
+        "timezone"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "journal",
+            "paper",
+            "connected"
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "active",
+            "archived"
+          ]
+        },
+        "primaryBookId": {
+          "$ref": "#/$defs/Id"
+        },
+        "primaryAccountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "timezone": {
+          "$ref": "#/$defs/Timezone"
+        },
+        "chartDocumentIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "uniqueItems": true
+        },
+        "bookIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "uniqueItems": true,
+          "maxItems": 1000
+        },
+        "executionDestinationIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "uniqueItems": true,
+          "maxItems": 1000
+        },
+        "dataSourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "runId": {
+          "$ref": "#/$defs/Id"
+        }
+      }
+    },
+    "Account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "kind",
+        "mode",
+        "currency",
+        "identityState",
+        "state"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "external",
+            "simulated"
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "paper_replay",
+            "paper_live",
+            "broker_demo",
+            "broker_live"
+          ]
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "providerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "venue": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "externalIdentity": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "identityState": {
+          "type": "string",
+          "enum": [
+            "unverified",
+            "verified"
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "active",
+            "archived"
+          ]
+        }
+      }
+    },
+    "JournalBook": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "name",
+        "kind",
+        "state",
+        "currency",
+        "timezone"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "manual",
+            "connected",
+            "paper"
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "active",
+            "archived"
+          ]
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "timezone": {
+          "$ref": "#/$defs/Timezone"
+        }
+      }
+    },
+    "SourceConnection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "providerId",
+        "adapterVersion",
+        "kind",
+        "configurationState",
+        "health"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "providerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "adapterVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "file",
+            "remote",
+            "terminal",
+            "local"
+          ]
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "credentialRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "configurationState": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "configured"
+          ]
+        },
+        "health": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "offline",
+            "healthy",
+            "degraded",
+            "expired"
+          ]
+        },
+        "observedAt": {
+          "$ref": "#/$defs/Instant"
+        }
+      }
+    },
+    "CapabilityManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "sourceId",
+        "environment",
+        "adapterVersion",
+        "capabilities"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "sourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "environment": {
+          "type": "string",
+          "enum": [
+            "data_only",
+            "paper_replay",
+            "paper_live",
+            "broker_demo",
+            "broker_live"
+          ]
+        },
+        "adapterVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "capabilities": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+            "marketHistory": {
+              "$ref": "#/$defs/Capability"
+            },
+            "marketLive": {
+              "$ref": "#/$defs/Capability"
+            },
+            "accountHistory": {
+              "$ref": "#/$defs/Capability"
+            },
+            "accountRead": {
+              "$ref": "#/$defs/Capability"
+            },
+            "orderSubmit": {
+              "$ref": "#/$defs/Capability"
+            },
+            "orderCancel": {
+              "$ref": "#/$defs/Capability"
+            },
+            "protectiveOrders": {
+              "$ref": "#/$defs/Capability"
+            },
+            "researchRead": {
+              "$ref": "#/$defs/Capability"
+            }
+          }
+        }
+      }
+    },
+    "Instrument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "assetClass",
+        "name",
+        "quoteCurrency"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "assetClass": {
+          "type": "string",
+          "enum": [
+            "spot",
+            "equity",
+            "fx",
+            "future",
+            "option",
+            "fund"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "baseCurrency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "quoteCurrency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "quantityUnit": {
+          "type": "string",
+          "enum": [
+            "base_asset",
+            "share",
+            "contract",
+            "lot"
+          ]
+        },
+        "quantityStep": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "priceTick": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "multiplier": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "calendarId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "timezone": {
+          "$ref": "#/$defs/Timezone"
+        },
+        "quantityScale": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18
+        },
+        "priceScale": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18
+        },
+        "assetId": {
+          "$ref": "#/$defs/Asset"
+        }
+      }
+    },
+    "Issuer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "name",
+        "country",
+        "identifiers"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}(?![\\s\\S])"
+        },
+        "identifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "Listing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "instrumentId",
+        "venue",
+        "symbol",
+        "currency",
+        "validFrom"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "issuerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "venue": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "validFrom": {
+          "$ref": "#/$defs/Instant"
+        },
+        "validTo": {
+          "$ref": "#/$defs/Instant"
+        }
+      }
+    },
+    "ProviderSymbol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "sourceId",
+        "instrumentId",
+        "symbol",
+        "validFrom"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "sourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "validFrom": {
+          "$ref": "#/$defs/Instant"
+        },
+        "validTo": {
+          "$ref": "#/$defs/Instant"
+        }
+      }
+    },
+    "Quantity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "instrumentId",
+        "value",
+        "unit"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "value": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "unit": {
+          "type": "string",
+          "enum": [
+            "base_asset",
+            "share",
+            "contract",
+            "lot"
+          ]
+        }
+      }
+    },
+    "ChartDocumentReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "storageNamespace",
+        "nativeDocumentId",
+        "catalogRevision"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "storageNamespace": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "nativeDocumentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "catalogRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "profileId": {
+          "$ref": "#/$defs/Id"
+        },
+        "bookId": {
+          "$ref": "#/$defs/Id"
+        }
+      }
+    },
+    "Money": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        }
+      },
+      "required": [
+        "value",
+        "currency"
+      ]
+    },
+    "MeasuredQuantity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "unit": {
+          "type": "string",
+          "enum": [
+            "base_asset",
+            "share",
+            "contract",
+            "lot"
+          ]
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ]
+    },
+    "LocalDate": {
+      "type": "string",
+      "format": "trading-date"
+    },
+    "Dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "revisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "checksum": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        }
+      },
+      "required": [
+        "revisionId",
+        "checksum"
+      ]
+    },
+    "Engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "capabilityId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "capabilityId"
+      ]
+    },
+    "ExecutionDestination": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "manifestId": {
+          "$ref": "#/$defs/Id"
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "nativeSymbol": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "paper_replay",
+            "paper_live",
+            "broker_demo",
+            "broker_live"
+          ]
+        },
+        "riskPolicyId": {
+          "$ref": "#/$defs/Id"
+        },
+        "arming": {
+          "type": "string",
+          "enum": [
+            "disarmed",
+            "armed"
+          ]
+        },
+        "eligibility": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "eligible",
+            "ineligible"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountId",
+        "sourceId",
+        "manifestId",
+        "instrumentId",
+        "nativeSymbol",
+        "mode",
+        "riskPolicyId",
+        "arming",
+        "eligibility"
+      ]
+    },
+    "OrderIntent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "destinationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "runId": {
+          "$ref": "#/$defs/Id"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "paper_replay",
+            "paper_live",
+            "broker_demo",
+            "broker_live"
+          ]
+        },
+        "side": {
+          "type": "string",
+          "enum": [
+            "buy",
+            "sell"
+          ]
+        },
+        "orderType": {
+          "type": "string",
+          "enum": [
+            "market",
+            "limit",
+            "stop"
+          ]
+        },
+        "quantity": {
+          "$ref": "#/$defs/MeasuredQuantity"
+        },
+        "limitPrice": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "stopPrice": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "decisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountId",
+        "instrumentId",
+        "mode",
+        "side",
+        "orderType",
+        "quantity",
+        "idempotencyKey"
+      ]
+    },
+    "ChildCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "intentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "destinationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "paper_replay",
+            "paper_live",
+            "broker_demo",
+            "broker_live"
+          ]
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "submitted",
+            "acknowledged",
+            "part_filled",
+            "filled",
+            "cancel_requested",
+            "cancelled",
+            "rejected",
+            "unknown",
+            "reconciling"
+          ]
+        },
+        "nativeOrderId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "intentId",
+        "accountId",
+        "destinationId",
+        "mode",
+        "idempotencyKey",
+        "status"
+      ]
+    },
+    "BrokerAcknowledgement": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "commandId": {
+          "$ref": "#/$defs/Id"
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "accepted",
+            "rejected",
+            "unknown"
+          ]
+        },
+        "nativeOrderId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "observedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "commandId",
+        "accountId",
+        "outcome",
+        "observedAt"
+      ]
+    },
+    "ExecutionFill": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "providerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "externalEventId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "nativeOrderId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "nativePositionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "side": {
+          "type": "string",
+          "enum": [
+            "buy",
+            "sell"
+          ]
+        },
+        "quantity": {
+          "$ref": "#/$defs/MeasuredQuantity"
+        },
+        "price": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "occurredAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "receivedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "correctsFillId": {
+          "$ref": "#/$defs/Id"
+        },
+        "decisionId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountId",
+        "sourceId",
+        "instrumentId",
+        "providerId",
+        "externalEventId",
+        "side",
+        "quantity",
+        "price",
+        "currency",
+        "occurredAt",
+        "receivedAt"
+      ]
+    },
+    "FeeAdjustment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "fillId": {
+          "$ref": "#/$defs/Id"
+        },
+        "amount": {
+          "$ref": "#/$defs/Money"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "commission",
+            "swap",
+            "funding",
+            "borrow",
+            "other"
+          ]
+        },
+        "sourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "externalEventId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountId",
+        "fillId",
+        "amount",
+        "kind",
+        "sourceId",
+        "externalEventId"
+      ]
+    },
+    "CashMovement": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "amount": {
+          "$ref": "#/$defs/Money"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "deposit",
+            "withdrawal",
+            "transfer",
+            "interest",
+            "dividend",
+            "adjustment"
+          ]
+        },
+        "occurredAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "sourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "externalEventId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountId",
+        "amount",
+        "kind",
+        "occurredAt",
+        "sourceId",
+        "externalEventId"
+      ]
+    },
+    "TradeAggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "fillIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "aggregationPolicy": {
+          "type": "string",
+          "enum": [
+            "hedging_position",
+            "netting_fifo",
+            "explicit_manual"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "open",
+            "closed"
+          ]
+        },
+        "openedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "closedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "netPnl": {
+          "$ref": "#/$defs/Money"
+        },
+        "feesKnown": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountId",
+        "instrumentId",
+        "fillIds",
+        "aggregationPolicy",
+        "status",
+        "openedAt",
+        "feesKnown"
+      ]
+    },
+    "Decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "hypothesis": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "accountIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "artifactRevisionId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "hypothesis",
+        "accountIds"
+      ]
+    },
+    "Review": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "bookId": {
+          "$ref": "#/$defs/Id"
+        },
+        "tradeId": {
+          "$ref": "#/$defs/Id"
+        },
+        "decisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 200000
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "maxItems": 10000
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "reviewed"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "bookId",
+        "notes",
+        "tags",
+        "status"
+      ]
+    },
+    "DatasetVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "checksum": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "interval": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "rangeStart": {
+          "$ref": "#/$defs/Instant"
+        },
+        "rangeEnd": {
+          "$ref": "#/$defs/Instant"
+        },
+        "priceBasis": {
+          "type": "string",
+          "enum": [
+            "raw",
+            "split_adjusted",
+            "total_return"
+          ]
+        },
+        "timezone": {
+          "$ref": "#/$defs/Timezone"
+        },
+        "calendarId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "quality": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "partial",
+            "invalid"
+          ]
+        },
+        "coverageReceiptId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "instrumentId",
+        "sourceId",
+        "checksum",
+        "interval",
+        "rangeStart",
+        "rangeEnd",
+        "priceBasis",
+        "timezone",
+        "calendarId",
+        "quality",
+        "coverageReceiptId"
+      ]
+    },
+    "PracticeProject": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "hypothesis": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "profileId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "name",
+        "hypothesis"
+      ]
+    },
+    "RunManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "projectId": {
+          "$ref": "#/$defs/Id"
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "bookId": {
+          "$ref": "#/$defs/Id"
+        },
+        "datasetVersionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "paper_replay"
+          ]
+        },
+        "engine": {
+          "$ref": "#/$defs/Engine"
+        },
+        "startingCash": {
+          "$ref": "#/$defs/Money"
+        },
+        "rangeStart": {
+          "$ref": "#/$defs/Instant"
+        },
+        "rangeEnd": {
+          "$ref": "#/$defs/Instant"
+        },
+        "costModelId": {
+          "$ref": "#/$defs/Id"
+        },
+        "fillPolicyId": {
+          "$ref": "#/$defs/Id"
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "projectId",
+        "accountId",
+        "bookId",
+        "datasetVersionId",
+        "instrumentId",
+        "mode",
+        "engine",
+        "startingCash",
+        "rangeStart",
+        "rangeEnd",
+        "costModelId",
+        "fillPolicyId",
+        "seed"
+      ]
+    },
+    "Checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "runId": {
+          "$ref": "#/$defs/Id"
+        },
+        "playhead": {
+          "$ref": "#/$defs/Instant"
+        },
+        "ledgerSequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "stateChecksum": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "stateArtifactId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "runId",
+        "playhead",
+        "ledgerSequence",
+        "stateChecksum",
+        "stateArtifactId"
+      ]
+    },
+    "ArtifactProject": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "indicator",
+            "strategy"
+          ]
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "active",
+            "archived"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "name",
+        "kind",
+        "language",
+        "state"
+      ]
+    },
+    "ArtifactRevision": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "projectId": {
+          "$ref": "#/$defs/Id"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "indicator",
+            "strategy"
+          ]
+        },
+        "checksum": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "sourceArtifactId": {
+          "$ref": "#/$defs/Id"
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "compilerVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Dependency"
+          },
+          "maxItems": 10000
+        },
+        "validationReceiptId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "projectId",
+        "kind",
+        "checksum",
+        "sourceArtifactId",
+        "language",
+        "compilerVersion",
+        "dependencies",
+        "validationReceiptId"
+      ]
+    },
+    "ParameterSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "artifactRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "values": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "boolean",
+              "null"
+            ]
+          },
+          "maxProperties": 200
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "default",
+            "manual",
+            "search_selected"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "artifactRevisionId",
+        "values",
+        "origin"
+      ]
+    },
+    "IndicatorAttachment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "chartDocumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "artifactRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "parameterSetId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "chartDocumentId",
+        "artifactRevisionId",
+        "parameterSetId"
+      ]
+    },
+    "Experiment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "artifactRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "parameterSetId": {
+          "$ref": "#/$defs/Id"
+        },
+        "datasetVersionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "engine": {
+          "$ref": "#/$defs/Engine"
+        },
+        "rangeStart": {
+          "$ref": "#/$defs/Instant"
+        },
+        "rangeEnd": {
+          "$ref": "#/$defs/Instant"
+        },
+        "warmupStart": {
+          "$ref": "#/$defs/Instant"
+        },
+        "startingCash": {
+          "$ref": "#/$defs/Money"
+        },
+        "costModelId": {
+          "$ref": "#/$defs/Id"
+        },
+        "fillPolicyId": {
+          "$ref": "#/$defs/Id"
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "artifactRevisionId",
+        "parameterSetId",
+        "datasetVersionId",
+        "instrumentId",
+        "engine",
+        "rangeStart",
+        "rangeEnd",
+        "warmupStart",
+        "startingCash",
+        "costModelId",
+        "fillPolicyId",
+        "seed"
+      ]
+    },
+    "Trial": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "experimentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "parameterSetId": {
+          "$ref": "#/$defs/Id"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "running",
+            "completed",
+            "partial",
+            "failed",
+            "cancelled"
+          ]
+        },
+        "resultArtifactId": {
+          "$ref": "#/$defs/Id"
+        },
+        "failureCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "experimentId",
+        "parameterSetId",
+        "status"
+      ]
+    },
+    "EvaluationSplit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "experimentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "trainingStart": {
+          "$ref": "#/$defs/Instant"
+        },
+        "trainingEnd": {
+          "$ref": "#/$defs/Instant"
+        },
+        "validationStart": {
+          "$ref": "#/$defs/Instant"
+        },
+        "validationEnd": {
+          "$ref": "#/$defs/Instant"
+        },
+        "holdoutStart": {
+          "$ref": "#/$defs/Instant"
+        },
+        "holdoutEnd": {
+          "$ref": "#/$defs/Instant"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "experimentId",
+        "trainingStart",
+        "trainingEnd",
+        "validationStart",
+        "validationEnd",
+        "holdoutStart",
+        "holdoutEnd"
+      ]
+    },
+    "StressScenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "experimentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "costs",
+            "gaps",
+            "latency",
+            "resampling"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "causal_rerun",
+            "returns_transform"
+          ]
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "maxProperties": 100
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "experimentId",
+        "kind",
+        "method",
+        "parameters",
+        "seed"
+      ]
+    },
+    "ValidationRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "artifactRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "parameterSetId": {
+          "$ref": "#/$defs/Id"
+        },
+        "experimentIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "reject",
+            "research_only",
+            "paper_candidate",
+            "demo_candidate",
+            "live_candidate"
+          ]
+        },
+        "limitations": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "artifactRevisionId",
+        "parameterSetId",
+        "experimentIds",
+        "decision",
+        "limitations"
+      ]
+    },
+    "DeploymentRevision": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "artifactRevisionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "parameterSetId": {
+          "$ref": "#/$defs/Id"
+        },
+        "destinationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "validationRecordId": {
+          "$ref": "#/$defs/Id"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "paper_replay",
+            "paper_live",
+            "broker_demo",
+            "broker_live"
+          ]
+        },
+        "runtimeVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "artifactRevisionId",
+        "parameterSetId",
+        "destinationId",
+        "validationRecordId",
+        "mode",
+        "runtimeVersion"
+      ]
+    },
+    "DocumentVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "issuerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "nativeDocumentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "checksum": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "publishedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "availableAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "retrievedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "sourceUrl": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "amendsDocumentId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "issuerId",
+        "sourceId",
+        "nativeDocumentId",
+        "checksum",
+        "publishedAt",
+        "availableAt",
+        "retrievedAt",
+        "sourceUrl"
+      ]
+    },
+    "FactObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "issuerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "documentVersionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "metricId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "value": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "periodKind": {
+          "type": "string",
+          "enum": [
+            "instant",
+            "duration"
+          ]
+        },
+        "periodStart": {
+          "$ref": "#/$defs/LocalDate"
+        },
+        "periodEnd": {
+          "$ref": "#/$defs/LocalDate"
+        },
+        "fiscalYear": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9999
+        },
+        "fiscalPeriod": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "reportingBasis": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "citation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "publishedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "availableAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "retrievedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "revisesFactId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "issuerId",
+        "documentVersionId",
+        "metricId",
+        "value",
+        "unit",
+        "periodKind",
+        "periodEnd",
+        "fiscalYear",
+        "fiscalPeriod",
+        "reportingBasis",
+        "citation",
+        "publishedAt",
+        "availableAt",
+        "retrievedAt"
+      ]
+    },
+    "DerivedMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "issuerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "inputFactIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "formulaId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "formulaVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "value": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "unavailableReason": {
+          "type": "string",
+          "enum": [
+            "missing_input",
+            "zero_denominator",
+            "unsupported_basis",
+            "incompatible_units"
+          ]
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "availableAt": {
+          "$ref": "#/$defs/Instant"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "issuerId",
+        "inputFactIds",
+        "formulaId",
+        "formulaVersion",
+        "unit",
+        "availableAt"
+      ]
+    },
+    "NotebookSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "asOf": {
+          "$ref": "#/$defs/Instant"
+        },
+        "documentVersionIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "factIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "derivedMetricIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 200000
+        },
+        "annotationKind": {
+          "type": "string",
+          "enum": [
+            "user",
+            "ai_assisted"
+          ]
+        },
+        "checksum": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "title",
+        "asOf",
+        "documentVersionIds",
+        "factIds",
+        "derivedMetricIds",
+        "notes",
+        "annotationKind",
+        "checksum"
+      ]
+    },
+    "SourceObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "providerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "externalEventId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "payloadChecksum": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "rawArtifactId": {
+          "$ref": "#/$defs/Id"
+        },
+        "occurredAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "receivedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "correctsObservationId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountId",
+        "sourceId",
+        "providerId",
+        "externalEventId",
+        "payloadChecksum",
+        "rawArtifactId",
+        "occurredAt",
+        "receivedAt"
+      ]
+    },
+    "CanonicalExecution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "fillId": {
+          "$ref": "#/$defs/Id"
+        },
+        "observationIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "reconciliationPolicyId": {
+          "$ref": "#/$defs/Id"
+        },
+        "identityState": {
+          "type": "string",
+          "enum": [
+            "verified"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountId",
+        "fillId",
+        "observationIds",
+        "reconciliationPolicyId",
+        "identityState"
+      ]
+    },
+    "AccountSourceLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "verificationReceiptId": {
+          "$ref": "#/$defs/Id"
+        },
+        "capability": {
+          "type": "string",
+          "enum": [
+            "history_read",
+            "account_read"
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "active",
+            "paused",
+            "revoked"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountId",
+        "sourceId",
+        "verificationReceiptId",
+        "capability",
+        "state"
+      ]
+    },
+    "SyncJob": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountSourceLinkId": {
+          "$ref": "#/$defs/Id"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "running",
+            "partial",
+            "completed",
+            "failed",
+            "cancelled"
+          ]
+        },
+        "rangeStart": {
+          "$ref": "#/$defs/Instant"
+        },
+        "rangeEnd": {
+          "$ref": "#/$defs/Instant"
+        },
+        "cursorId": {
+          "$ref": "#/$defs/Id"
+        },
+        "coverageId": {
+          "$ref": "#/$defs/Id"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountSourceLinkId",
+        "status",
+        "rangeStart",
+        "rangeEnd",
+        "idempotencyKey"
+      ]
+    },
+    "SyncCursor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountSourceLinkId": {
+          "$ref": "#/$defs/Id"
+        },
+        "nativeCursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "observedThrough": {
+          "$ref": "#/$defs/Instant"
+        },
+        "overlapPolicyId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountSourceLinkId",
+        "observedThrough",
+        "overlapPolicyId"
+      ]
+    },
+    "SourceCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountSourceLinkId": {
+          "$ref": "#/$defs/Id"
+        },
+        "rangeStart": {
+          "$ref": "#/$defs/Instant"
+        },
+        "rangeEnd": {
+          "$ref": "#/$defs/Instant"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "partial",
+            "unknown"
+          ]
+        },
+        "evidenceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "start": {
+                "$ref": "#/$defs/Instant"
+              },
+              "end": {
+                "$ref": "#/$defs/Instant"
+              }
+            },
+            "required": [
+              "start",
+              "end"
+            ]
+          },
+          "maxItems": 10000
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountSourceLinkId",
+        "rangeStart",
+        "rangeEnd",
+        "status",
+        "gaps"
+      ]
+    },
+    "ReconciliationConflict": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "observationIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "identity",
+            "amount",
+            "time",
+            "correction"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "unresolved",
+            "resolved",
+            "excluded"
+          ]
+        },
+        "resolutionReceiptId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountId",
+        "observationIds",
+        "kind",
+        "status"
+      ]
+    },
+    "ScopedQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "accountIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "bookIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "profileIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "maxItems": 10000,
+          "uniqueItems": true
+        },
+        "rangeStart": {
+          "$ref": "#/$defs/Instant"
+        },
+        "rangeEnd": {
+          "$ref": "#/$defs/Instant"
+        },
+        "timezone": {
+          "$ref": "#/$defs/Timezone"
+        },
+        "asOf": {
+          "$ref": "#/$defs/Instant"
+        },
+        "currencyPolicy": {
+          "type": "string",
+          "enum": [
+            "native_only",
+            "converted"
+          ]
+        },
+        "reportingCurrency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "conversionSourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "reviewStatus": {
+          "type": "string",
+          "enum": [
+            "all",
+            "draft",
+            "reviewed"
+          ]
+        },
+        "datasetVersionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500
+        },
+        "cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "accountIds",
+        "bookIds",
+        "profileIds",
+        "rangeStart",
+        "rangeEnd",
+        "timezone",
+        "currencyPolicy",
+        "reviewStatus",
+        "pageSize"
+      ]
+    },
+    "MetricResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "metricId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "value": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "sampleSize": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "unavailableReason": {
+          "type": "string",
+          "enum": [
+            "empty_sample",
+            "insufficient_sample",
+            "zero_denominator",
+            "missing_input",
+            "mixed_currency"
+          ]
+        },
+        "formulaVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "denominatorPolicy": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "account",
+            "decision"
+          ]
+        },
+        "queryId": {
+          "$ref": "#/$defs/Id"
+        },
+        "currency": {
+          "$ref": "#/$defs/Currency"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "metricId",
+        "unit",
+        "sampleSize",
+        "formulaVersion",
+        "denominatorPolicy",
+        "scope",
+        "queryId"
+      ]
+    },
+    "EventEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "eventId": {
+          "$ref": "#/$defs/Id"
+        },
+        "correlationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "causationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "runId": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "paper_replay",
+            "paper_live",
+            "broker_demo",
+            "broker_live"
+          ]
+        },
+        "producerVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "occurredAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "receivedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "nativeCursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "payloadType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "payloadId": {
+          "$ref": "#/$defs/Id"
+        },
+        "contextKind": {
+          "type": "string",
+          "enum": [
+            "account",
+            "paper",
+            "research",
+            "data",
+            "artifact"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "eventId",
+        "correlationId",
+        "producerVersion",
+        "occurredAt",
+        "receivedAt",
+        "payloadType",
+        "payloadId",
+        "contextKind"
+      ]
+    },
+    "CommandEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "commandId": {
+          "$ref": "#/$defs/Id"
+        },
+        "correlationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "causationId": {
+          "$ref": "#/$defs/Id"
+        },
+        "accountId": {
+          "$ref": "#/$defs/Id"
+        },
+        "runId": {
+          "$ref": "#/$defs/Id"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "paper_replay",
+            "paper_live",
+            "broker_demo",
+            "broker_live"
+          ]
+        },
+        "producerVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "occurredAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "payloadType": {
+          "type": "string",
+          "enum": [
+            "OrderIntent",
+            "ChildCommand"
+          ]
+        },
+        "payloadId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "commandId",
+        "correlationId",
+        "accountId",
+        "mode",
+        "producerVersion",
+        "occurredAt",
+        "idempotencyKey",
+        "payloadType",
+        "payloadId"
+      ]
+    },
+    "ManualTrade": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "bookId": {
+          "$ref": "#/$defs/Id"
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "symbolLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "side": {
+          "type": "string",
+          "enum": [
+            "buy",
+            "sell"
+          ]
+        },
+        "quantity": {
+          "$ref": "#/$defs/MeasuredQuantity"
+        },
+        "openedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "closedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "open",
+            "closed"
+          ]
+        },
+        "entryPrice": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "exitPrice": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "grossPnl": {
+          "$ref": "#/$defs/Money"
+        },
+        "netPnl": {
+          "$ref": "#/$defs/Money"
+        },
+        "fees": {
+          "$ref": "#/$defs/Money"
+        },
+        "riskAmount": {
+          "$ref": "#/$defs/Money"
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 200000
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "bookId",
+        "symbolLabel",
+        "side",
+        "quantity",
+        "openedAt",
+        "status",
+        "notes"
+      ]
+    },
+    "JournalEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "bookId": {
+          "$ref": "#/$defs/Id"
+        },
+        "manualTradeId": {
+          "$ref": "#/$defs/Id"
+        },
+        "tradeId": {
+          "$ref": "#/$defs/Id"
+        },
+        "decisionId": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "bookId"
+      ]
+    },
+    "InstrumentContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "underlyingInstrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "expiry": {
+          "$ref": "#/$defs/Instant"
+        },
+        "settlementCurrency": {
+          "$ref": "#/$defs/Currency"
+        },
+        "settlement": {
+          "type": "string",
+          "enum": [
+            "cash",
+            "physical"
+          ]
+        },
+        "contractMultiplier": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "optionSide": {
+          "type": "string",
+          "enum": [
+            "call",
+            "put"
+          ]
+        },
+        "strikePrice": {
+          "$ref": "#/$defs/Decimal"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "instrumentId",
+        "expiry",
+        "settlementCurrency",
+        "settlement",
+        "contractMultiplier"
+      ]
+    },
+    "Dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "instrumentId": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "latestVersionId": {
+          "$ref": "#/$defs/Id"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "active",
+            "archived"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "name",
+        "instrumentId",
+        "sourceId",
+        "state"
+      ]
+    },
+    "Asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "ownerId": {
+          "$ref": "#/$defs/Id"
+        },
+        "workspaceId": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Instant"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Alias"
+          },
+          "uniqueItems": true,
+          "maxItems": 100
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "kind": {
+          "enum": [
+            "currency",
+            "crypto_asset",
+            "company_security",
+            "fund",
+            "commodity",
+            "derivative"
+          ],
+          "type": "string"
+        },
+        "issuerId": {
+          "$ref": "#/$defs/Issuer"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "ownerId",
+        "workspaceId",
+        "revision",
+        "createdAt",
+        "updatedAt",
+        "name",
+        "kind"
+      ]
+    }
+  }
+}

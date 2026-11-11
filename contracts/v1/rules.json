@@ -1,0 +1,555 @@
+{
+  "schemaVersion": 1,
+  "references": {
+    "Profile": {
+      "primaryBookId": "JournalBook",
+      "primaryAccountId": "Account",
+      "chartDocumentIds": "ChartDocumentReference",
+      "bookIds": "JournalBook",
+      "executionDestinationIds": "ExecutionDestination",
+      "dataSourceId": "SourceConnection",
+      "runId": "RunManifest"
+    },
+    "JournalBook": {
+      "accountId": "Account"
+    },
+    "SourceConnection": {
+      "accountId": "Account"
+    },
+    "CapabilityManifest": {
+      "sourceId": "SourceConnection"
+    },
+    "Listing": {
+      "instrumentId": "Instrument",
+      "issuerId": "Issuer"
+    },
+    "ProviderSymbol": {
+      "sourceId": "SourceConnection",
+      "instrumentId": "Instrument"
+    },
+    "Quantity": {
+      "instrumentId": "Instrument"
+    },
+    "ChartDocumentReference": {
+      "profileId": "Profile",
+      "bookId": "JournalBook"
+    },
+    "ExecutionDestination": {
+      "accountId": "Account",
+      "sourceId": "SourceConnection",
+      "manifestId": "CapabilityManifest",
+      "instrumentId": "Instrument"
+    },
+    "OrderIntent": {
+      "accountId": "Account",
+      "instrumentId": "Instrument",
+      "destinationId": "ExecutionDestination",
+      "runId": "RunManifest",
+      "decisionId": "Decision"
+    },
+    "ChildCommand": {
+      "intentId": "OrderIntent",
+      "accountId": "Account",
+      "destinationId": "ExecutionDestination"
+    },
+    "BrokerAcknowledgement": {
+      "commandId": "ChildCommand",
+      "accountId": "Account"
+    },
+    "ExecutionFill": {
+      "accountId": "Account",
+      "sourceId": "SourceConnection",
+      "instrumentId": "Instrument",
+      "correctsFillId": "ExecutionFill",
+      "decisionId": "Decision"
+    },
+    "FeeAdjustment": {
+      "accountId": "Account",
+      "fillId": "ExecutionFill",
+      "sourceId": "SourceConnection"
+    },
+    "CashMovement": {
+      "accountId": "Account",
+      "sourceId": "SourceConnection"
+    },
+    "TradeAggregate": {
+      "accountId": "Account",
+      "instrumentId": "Instrument",
+      "fillIds": "ExecutionFill"
+    },
+    "Decision": {
+      "accountIds": "Account",
+      "artifactRevisionId": "ArtifactRevision"
+    },
+    "Review": {
+      "bookId": "JournalBook",
+      "tradeId": "TradeAggregate",
+      "decisionId": "Decision"
+    },
+    "DatasetVersion": {
+      "instrumentId": "Instrument",
+      "sourceId": "SourceConnection"
+    },
+    "PracticeProject": {
+      "profileId": "Profile"
+    },
+    "RunManifest": {
+      "projectId": "PracticeProject",
+      "accountId": "Account",
+      "bookId": "JournalBook",
+      "datasetVersionId": "DatasetVersion",
+      "instrumentId": "Instrument"
+    },
+    "Checkpoint": {
+      "runId": "RunManifest"
+    },
+    "ArtifactRevision": {
+      "projectId": "ArtifactProject"
+    },
+    "ParameterSet": {
+      "artifactRevisionId": "ArtifactRevision"
+    },
+    "IndicatorAttachment": {
+      "chartDocumentId": "ChartDocumentReference",
+      "artifactRevisionId": "ArtifactRevision",
+      "parameterSetId": "ParameterSet"
+    },
+    "Experiment": {
+      "artifactRevisionId": "ArtifactRevision",
+      "parameterSetId": "ParameterSet",
+      "datasetVersionId": "DatasetVersion",
+      "instrumentId": "Instrument"
+    },
+    "Trial": {
+      "experimentId": "Experiment",
+      "parameterSetId": "ParameterSet"
+    },
+    "EvaluationSplit": {
+      "experimentId": "Experiment"
+    },
+    "StressScenario": {
+      "experimentId": "Experiment"
+    },
+    "ValidationRecord": {
+      "artifactRevisionId": "ArtifactRevision",
+      "parameterSetId": "ParameterSet",
+      "experimentIds": "Experiment"
+    },
+    "DeploymentRevision": {
+      "artifactRevisionId": "ArtifactRevision",
+      "parameterSetId": "ParameterSet",
+      "destinationId": "ExecutionDestination",
+      "validationRecordId": "ValidationRecord"
+    },
+    "DocumentVersion": {
+      "issuerId": "Issuer",
+      "sourceId": "SourceConnection",
+      "amendsDocumentId": "DocumentVersion"
+    },
+    "FactObservation": {
+      "issuerId": "Issuer",
+      "documentVersionId": "DocumentVersion",
+      "revisesFactId": "FactObservation"
+    },
+    "DerivedMetric": {
+      "issuerId": "Issuer",
+      "inputFactIds": "FactObservation"
+    },
+    "NotebookSnapshot": {
+      "documentVersionIds": "DocumentVersion",
+      "factIds": "FactObservation",
+      "derivedMetricIds": "DerivedMetric"
+    },
+    "SourceObservation": {
+      "accountId": "Account",
+      "sourceId": "SourceConnection",
+      "correctsObservationId": "SourceObservation"
+    },
+    "CanonicalExecution": {
+      "accountId": "Account",
+      "fillId": "ExecutionFill",
+      "observationIds": "SourceObservation"
+    },
+    "AccountSourceLink": {
+      "accountId": "Account",
+      "sourceId": "SourceConnection"
+    },
+    "SyncJob": {
+      "accountSourceLinkId": "AccountSourceLink",
+      "cursorId": "SyncCursor",
+      "coverageId": "SourceCoverage"
+    },
+    "SyncCursor": {
+      "accountSourceLinkId": "AccountSourceLink"
+    },
+    "SourceCoverage": {
+      "accountSourceLinkId": "AccountSourceLink"
+    },
+    "ReconciliationConflict": {
+      "accountId": "Account",
+      "observationIds": "SourceObservation"
+    },
+    "ScopedQuery": {
+      "accountIds": "Account",
+      "bookIds": "JournalBook",
+      "profileIds": "Profile",
+      "datasetVersionId": "DatasetVersion",
+      "conversionSourceId": "SourceConnection"
+    },
+    "EventEnvelope": {
+      "accountId": "Account",
+      "runId": "RunManifest",
+      "sourceId": "SourceConnection"
+    },
+    "CommandEnvelope": {
+      "accountId": "Account",
+      "runId": "RunManifest"
+    },
+    "ManualTrade": {
+      "bookId": "JournalBook",
+      "instrumentId": "Instrument"
+    },
+    "JournalEntry": {
+      "bookId": "JournalBook",
+      "manualTradeId": "ManualTrade",
+      "tradeId": "TradeAggregate",
+      "decisionId": "Decision"
+    },
+    "InstrumentContract": {
+      "instrumentId": "Instrument",
+      "underlyingInstrumentId": "Instrument"
+    },
+    "Dataset": {
+      "instrumentId": "Instrument",
+      "sourceId": "SourceConnection",
+      "latestVersionId": "DatasetVersion"
+    },
+    "Asset": {
+      "issuerId": "Issuer"
+    },
+    "Instrument": {
+      "assetId": "Asset"
+    },
+    "MetricResult": {
+      "queryId": "ScopedQuery"
+    }
+  },
+  "unique": [
+    {
+      "type": "JournalBook",
+      "fields": [
+        "accountId"
+      ],
+      "where": {
+        "kind": "connected",
+        "state": "active"
+      },
+      "code": "book.active_account_conflict"
+    },
+    {
+      "type": "JournalBook",
+      "fields": [
+        "accountId"
+      ],
+      "where": {
+        "kind": "paper",
+        "state": "active"
+      },
+      "code": "book.active_account_conflict"
+    },
+    {
+      "type": "Account",
+      "fields": [
+        "providerId",
+        "venue",
+        "externalIdentity",
+        "mode"
+      ],
+      "where": {
+        "kind": "external"
+      },
+      "code": "account.duplicate_identity"
+    },
+    {
+      "type": "ExecutionFill",
+      "fields": [
+        "accountId",
+        "sourceId",
+        "providerId",
+        "externalEventId"
+      ],
+      "where": {},
+      "code": "execution.duplicate_source_event"
+    },
+    {
+      "type": "SourceObservation",
+      "fields": [
+        "accountId",
+        "sourceId",
+        "providerId",
+        "externalEventId",
+        "payloadChecksum"
+      ],
+      "where": {},
+      "code": "observation.duplicate"
+    },
+    {
+      "type": "AccountSourceLink",
+      "fields": [
+        "accountId",
+        "sourceId"
+      ],
+      "where": {},
+      "code": "source.duplicate_account_link"
+    },
+    {
+      "type": "CanonicalExecution",
+      "fields": [
+        "accountId",
+        "fillId"
+      ],
+      "where": {},
+      "code": "execution.duplicate_canonical"
+    },
+    {
+      "type": "JournalEntry",
+      "fields": [
+        "bookId",
+        "tradeId"
+      ],
+      "where": {},
+      "skipMissing": true,
+      "code": "journal.duplicate_membership",
+      "errorField": "tradeId"
+    },
+    {
+      "type": "JournalEntry",
+      "fields": [
+        "bookId",
+        "manualTradeId"
+      ],
+      "where": {},
+      "skipMissing": true,
+      "code": "journal.duplicate_membership",
+      "errorField": "manualTradeId"
+    }
+  ],
+  "immutableTypes": [
+    "OrderIntent",
+    "BrokerAcknowledgement",
+    "ExecutionFill",
+    "FeeAdjustment",
+    "CashMovement",
+    "DatasetVersion",
+    "RunManifest",
+    "Checkpoint",
+    "ArtifactRevision",
+    "ParameterSet",
+    "Experiment",
+    "EvaluationSplit",
+    "StressScenario",
+    "ValidationRecord",
+    "DeploymentRevision",
+    "DocumentVersion",
+    "FactObservation",
+    "DerivedMetric",
+    "NotebookSnapshot",
+    "SourceObservation",
+    "CanonicalExecution",
+    "EventEnvelope",
+    "CommandEnvelope",
+    "InstrumentContract"
+  ],
+  "immutableFields": {
+    "Account": [
+      "kind",
+      "mode",
+      "providerId",
+      "venue",
+      "externalIdentity",
+      "currency"
+    ],
+    "JournalBook": [
+      "kind",
+      "accountId",
+      "currency"
+    ],
+    "ProviderSymbol": [
+      "sourceId",
+      "instrumentId",
+      "symbol",
+      "validFrom"
+    ],
+    "ManualTrade": [
+      "bookId"
+    ],
+    "JournalEntry": [
+      "bookId",
+      "manualTradeId",
+      "tradeId"
+    ]
+  },
+  "ranges": {
+    "DatasetVersion": [
+      "rangeStart",
+      "rangeEnd"
+    ],
+    "RunManifest": [
+      "rangeStart",
+      "rangeEnd"
+    ],
+    "Experiment": [
+      "rangeStart",
+      "rangeEnd"
+    ],
+    "SyncJob": [
+      "rangeStart",
+      "rangeEnd"
+    ],
+    "SourceCoverage": [
+      "rangeStart",
+      "rangeEnd"
+    ],
+    "ScopedQuery": [
+      "rangeStart",
+      "rangeEnd"
+    ]
+  },
+  "stateMachines": {
+    "order": {
+      "pending": [
+        "submitted",
+        "rejected"
+      ],
+      "submitted": [
+        "acknowledged",
+        "part_filled",
+        "filled",
+        "rejected",
+        "unknown"
+      ],
+      "acknowledged": [
+        "part_filled",
+        "filled",
+        "cancel_requested",
+        "rejected",
+        "unknown"
+      ],
+      "part_filled": [
+        "part_filled",
+        "filled",
+        "cancel_requested",
+        "unknown"
+      ],
+      "cancel_requested": [
+        "cancelled",
+        "part_filled",
+        "filled",
+        "unknown"
+      ],
+      "unknown": [
+        "reconciling"
+      ],
+      "reconciling": [
+        "acknowledged",
+        "part_filled",
+        "filled",
+        "cancelled",
+        "rejected",
+        "unknown"
+      ],
+      "filled": [],
+      "cancelled": [],
+      "rejected": []
+    },
+    "run": {
+      "draft": [
+        "data_needed",
+        "ready",
+        "abandoned"
+      ],
+      "data_needed": [
+        "draft",
+        "ready",
+        "abandoned"
+      ],
+      "ready": [
+        "in_progress",
+        "abandoned"
+      ],
+      "in_progress": [
+        "paused",
+        "finished",
+        "abandoned"
+      ],
+      "paused": [
+        "in_progress",
+        "abandoned"
+      ],
+      "finished": [],
+      "abandoned": []
+    },
+    "connectionConfiguration": {
+      "draft": [
+        "configured"
+      ],
+      "configured": [
+        "draft"
+      ]
+    },
+    "connectionHealth": {
+      "unknown": [
+        "offline",
+        "healthy",
+        "degraded",
+        "expired"
+      ],
+      "offline": [
+        "unknown",
+        "healthy",
+        "degraded",
+        "expired"
+      ],
+      "healthy": [
+        "unknown",
+        "offline",
+        "degraded",
+        "expired"
+      ],
+      "degraded": [
+        "unknown",
+        "offline",
+        "healthy",
+        "expired"
+      ],
+      "expired": [
+        "unknown",
+        "offline",
+        "healthy",
+        "degraded"
+      ]
+    },
+    "eligibility": {
+      "unknown": [
+        "eligible",
+        "ineligible"
+      ],
+      "eligible": [
+        "unknown",
+        "ineligible"
+      ],
+      "ineligible": [
+        "unknown",
+        "eligible"
+      ]
+    },
+    "arming": {
+      "disarmed": [
+        "armed"
+      ],
+      "armed": [
+        "disarmed"
+      ]
+    }
+  }
+}

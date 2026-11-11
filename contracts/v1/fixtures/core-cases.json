@@ -1,0 +1,1387 @@
+[
+  {
+    "id": "standalone-manual-and-connected",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [],
+    "append": []
+  },
+  {
+    "id": "same-book-in-another-profile",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "Profile",
+        "value": {
+          "schemaVersion": 1,
+          "id": "profile_local_002",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "name": "Review",
+          "kind": "journal",
+          "state": "active",
+          "currency": "USD",
+          "timezone": "Europe/London",
+          "primaryBookId": "book_manual_001"
+        }
+      }
+    ]
+  },
+  {
+    "id": "duplicate-active-connected-book",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "book.active_account_conflict",
+        "path": "/10/value/accountId"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "JournalBook",
+        "value": {
+          "schemaVersion": 1,
+          "id": "book_connected_002",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "name": "Demo book",
+          "kind": "connected",
+          "state": "active",
+          "accountId": "account_external_001",
+          "currency": "USD",
+          "timezone": "Europe/London"
+        }
+      }
+    ]
+  },
+  {
+    "id": "archived-book-not-an-active-copy",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "JournalBook",
+        "value": {
+          "schemaVersion": 1,
+          "id": "book_connected_002",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "name": "Demo book",
+          "kind": "connected",
+          "state": "archived",
+          "accountId": "account_external_001",
+          "currency": "USD",
+          "timezone": "Europe/London"
+        }
+      }
+    ]
+  },
+  {
+    "id": "manual-book-cannot-claim-account",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "book.manual_account",
+        "path": "/2/value/accountId"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 2,
+        "record": {
+          "type": "JournalBook",
+          "value": {
+            "schemaVersion": 1,
+            "id": "book_manual_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Manual book",
+            "kind": "manual",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "Europe/London",
+            "accountId": "account_external_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "connected-book-needs-account",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "book.account_required",
+        "path": "/4/value/accountId"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 4,
+        "record": {
+          "type": "JournalBook",
+          "value": {
+            "schemaVersion": 1,
+            "id": "book_connected_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Demo book",
+            "kind": "connected",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "Europe/London"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "same-native-login-different-provider",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "Account",
+        "value": {
+          "schemaVersion": 1,
+          "id": "account_external_002",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "kind": "external",
+          "mode": "broker_demo",
+          "providerId": "provider-two",
+          "venue": "demo-server",
+          "externalIdentity": "12345",
+          "currency": "USD",
+          "identityState": "verified",
+          "state": "active"
+        }
+      }
+    ]
+  },
+  {
+    "id": "duplicate-canonical-external-account",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "account.duplicate_identity",
+        "path": "/10/value/providerId"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [],
+    "append": [
+      {
+        "type": "Account",
+        "value": {
+          "schemaVersion": 1,
+          "id": "account_external_002",
+          "ownerId": "owner_local_001",
+          "workspaceId": "workspace_local_001",
+          "revision": 1,
+          "createdAt": "2026-11-02T10:00:00Z",
+          "updatedAt": "2026-11-02T10:00:00Z",
+          "kind": "external",
+          "mode": "broker_demo",
+          "providerId": "provider-one",
+          "venue": "demo-server",
+          "externalIdentity": "12345",
+          "currency": "USD",
+          "identityState": "verified",
+          "state": "active"
+        }
+      }
+    ]
+  },
+  {
+    "id": "external-account-not-paper",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "account.mode_mismatch",
+        "path": "/3/value/mode"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 3,
+        "record": {
+          "type": "Account",
+          "value": {
+            "schemaVersion": 1,
+            "id": "account_external_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "kind": "external",
+            "mode": "paper_replay",
+            "providerId": "provider-one",
+            "venue": "demo-server",
+            "externalIdentity": "12345",
+            "currency": "USD",
+            "identityState": "verified",
+            "state": "active"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "missing-reference",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "reference.missing",
+        "path": "/4/value/accountId"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 4,
+        "record": {
+          "type": "JournalBook",
+          "value": {
+            "schemaVersion": 1,
+            "id": "book_connected_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Demo book",
+            "kind": "connected",
+            "state": "active",
+            "accountId": "account_missing_001",
+            "currency": "USD",
+            "timezone": "Europe/London"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "currency-mismatch",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "book.account_currency",
+        "path": "/4/value/currency"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 4,
+        "record": {
+          "type": "JournalBook",
+          "value": {
+            "schemaVersion": 1,
+            "id": "book_connected_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Demo book",
+            "kind": "connected",
+            "state": "active",
+            "accountId": "account_external_001",
+            "currency": "EUR",
+            "timezone": "Europe/London"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "wrong-quantity-unit",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "quantity.unit_mismatch",
+        "path": "/9/value/unit"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 9,
+        "record": {
+          "type": "Quantity",
+          "value": {
+            "schemaVersion": 1,
+            "id": "quantity_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "instrumentId": "instrument_btc_001",
+            "value": "0.12500000",
+            "unit": "lot"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "quantity-overprecision",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "quantity.invalid_step",
+        "path": "/9/value/value"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 9,
+        "record": {
+          "type": "Quantity",
+          "value": {
+            "schemaVersion": 1,
+            "id": "quantity_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "instrumentId": "instrument_btc_001",
+            "value": "0.125000001",
+            "unit": "base_asset"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "zero-quantity",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "quantity.invalid_step",
+        "path": "/9/value/value"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 9,
+        "record": {
+          "type": "Quantity",
+          "value": {
+            "schemaVersion": 1,
+            "id": "quantity_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "instrumentId": "instrument_btc_001",
+            "value": "0",
+            "unit": "base_asset"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "negative-quantity",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "quantity.invalid_step",
+        "path": "/9/value/value"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 9,
+        "record": {
+          "type": "Quantity",
+          "value": {
+            "schemaVersion": 1,
+            "id": "quantity_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "instrumentId": "instrument_btc_001",
+            "value": "-1",
+            "unit": "base_asset"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "no-float-coercion",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "schema.type",
+        "path": "/9/value/value"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 9,
+        "record": {
+          "type": "Quantity",
+          "value": {
+            "schemaVersion": 1,
+            "id": "quantity_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "instrumentId": "instrument_btc_001",
+            "value": 0.125,
+            "unit": "base_asset"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "no-exponential-decimal",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "schema.pattern",
+        "path": "/9/value/value"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 9,
+        "record": {
+          "type": "Quantity",
+          "value": {
+            "schemaVersion": 1,
+            "id": "quantity_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "instrumentId": "instrument_btc_001",
+            "value": "1e-8",
+            "unit": "base_asset"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "exact-large-decimal",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 9,
+        "record": {
+          "type": "Quantity",
+          "value": {
+            "schemaVersion": 1,
+            "id": "quantity_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "instrumentId": "instrument_btc_001",
+            "value": "9007199254740993.00000001",
+            "unit": "base_asset"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "no-ambiguous-local-time",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "schema.format",
+        "path": "/5/value/createdAt"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 5,
+        "record": {
+          "type": "Profile",
+          "value": {
+            "schemaVersion": 1,
+            "id": "profile_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-10-25T01:30:00",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Review",
+            "kind": "journal",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "Europe/London",
+            "primaryBookId": "book_manual_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "no-invalid-calendar-day",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "schema.format",
+        "path": "/5/value/createdAt"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 5,
+        "record": {
+          "type": "Profile",
+          "value": {
+            "schemaVersion": 1,
+            "id": "profile_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-02-30T01:30:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Review",
+            "kind": "journal",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "Europe/London",
+            "primaryBookId": "book_manual_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "millisecond-utc-time",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 5,
+        "record": {
+          "type": "Profile",
+          "value": {
+            "schemaVersion": 1,
+            "id": "profile_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00.000Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Review",
+            "kind": "journal",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "Europe/London",
+            "primaryBookId": "book_manual_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "reversed-timestamps",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "time.reversed",
+        "path": "/5/value/updatedAt"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 5,
+        "record": {
+          "type": "Profile",
+          "value": {
+            "schemaVersion": 1,
+            "id": "profile_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T09:59:59.999Z",
+            "name": "Review",
+            "kind": "journal",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "Europe/London",
+            "primaryBookId": "book_manual_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "timezone-not-an-offset",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "schema.format",
+        "path": "/5/value/timezone"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 5,
+        "record": {
+          "type": "Profile",
+          "value": {
+            "schemaVersion": 1,
+            "id": "profile_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Review",
+            "kind": "journal",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "UTC+01:00",
+            "primaryBookId": "book_manual_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "unknown-capability-is-representable",
+    "operation": "collection",
+    "expected": [],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [],
+    "append": []
+  },
+  {
+    "id": "supported-capability-needs-evidence",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "capability.evidence_required",
+        "path": "/7/value/capabilities/orderSubmit"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 7,
+        "record": {
+          "type": "CapabilityManifest",
+          "value": {
+            "schemaVersion": 1,
+            "id": "manifest_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "sourceId": "source_local_001",
+            "adapterVersion": "1.0.0",
+            "environment": "broker_demo",
+            "capabilities": {
+              "orderSubmit": {
+                "state": "supported"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "invented-capability-rejected",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "schema.additionalProperties",
+        "path": "/7/value/capabilities/tradeEverywhere"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 7,
+        "record": {
+          "type": "CapabilityManifest",
+          "value": {
+            "schemaVersion": 1,
+            "id": "manifest_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "sourceId": "source_local_001",
+            "adapterVersion": "1.0.0",
+            "environment": "broker_demo",
+            "capabilities": {
+              "tradeEverywhere": {
+                "state": "supported"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "configured-does-not-imply-health",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "source.observation_required",
+        "path": "/6/value/observedAt"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 6,
+        "record": {
+          "type": "SourceConnection",
+          "value": {
+            "schemaVersion": 1,
+            "id": "source_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "providerId": "provider-one",
+            "adapterVersion": "1.0.0",
+            "kind": "remote",
+            "accountId": "account_external_001",
+            "configurationState": "configured",
+            "health": "healthy"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "future-contract-version",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "contract.unsupported_version",
+        "path": "/2/value/schemaVersion"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 2,
+        "record": {
+          "type": "JournalBook",
+          "value": {
+            "schemaVersion": 2,
+            "id": "book_manual_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Manual book",
+            "kind": "manual",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "Europe/London"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "missing-required-field",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "schema.required",
+        "path": "/2/value/name"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 2,
+        "record": {
+          "type": "JournalBook",
+          "value": {
+            "schemaVersion": 1,
+            "id": "book_manual_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "kind": "manual",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "Europe/London"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "no-secret-in-record",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "schema.additionalProperties",
+        "path": "/6/value/password"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 6,
+        "record": {
+          "type": "SourceConnection",
+          "value": {
+            "schemaVersion": 1,
+            "id": "source_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "providerId": "provider-one",
+            "adapterVersion": "1.0.0",
+            "kind": "remote",
+            "accountId": "account_external_001",
+            "configurationState": "configured",
+            "health": "unknown",
+            "password": "test-fixture-not-a-secret"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "invalid-id-not-a-number",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "schema.type",
+        "path": "/2/value/id"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 2,
+        "record": {
+          "type": "JournalBook",
+          "value": {
+            "schemaVersion": 1,
+            "id": 2,
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Manual book",
+            "kind": "manual",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "Europe/London"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "step-too-precise",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "decimal.invalid_step",
+        "path": "/8/value/quantityStep"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 8,
+        "record": {
+          "type": "Instrument",
+          "value": {
+            "schemaVersion": 1,
+            "id": "instrument_btc_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "assetClass": "spot",
+            "name": "BTC/USD",
+            "baseCurrency": "BTC",
+            "quoteCurrency": "USD",
+            "quantityUnit": "base_asset",
+            "quantityStep": "0.000000001",
+            "priceTick": "0.01",
+            "multiplier": "1",
+            "calendarId": "continuous_24_7",
+            "timezone": "UTC",
+            "quantityScale": 8,
+            "priceScale": 2
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "zero-price-tick",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "decimal.invalid_step",
+        "path": "/8/value/priceTick"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 8,
+        "record": {
+          "type": "Instrument",
+          "value": {
+            "schemaVersion": 1,
+            "id": "instrument_btc_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "assetClass": "spot",
+            "name": "BTC/USD",
+            "baseCurrency": "BTC",
+            "quoteCurrency": "USD",
+            "quantityUnit": "base_asset",
+            "quantityStep": "0.00000001",
+            "priceTick": "0",
+            "multiplier": "1",
+            "calendarId": "continuous_24_7",
+            "timezone": "UTC",
+            "quantityScale": 8,
+            "priceScale": 2
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "fractional-contract-step",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "quantity.invalid_step",
+        "path": "/9/value/value"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 8,
+        "record": {
+          "type": "Instrument",
+          "value": {
+            "schemaVersion": 1,
+            "id": "instrument_btc_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "assetClass": "spot",
+            "name": "BTC/USD",
+            "baseCurrency": "BTC",
+            "quoteCurrency": "USD",
+            "quantityUnit": "base_asset",
+            "quantityStep": "0.25",
+            "priceTick": "0.01",
+            "multiplier": "1",
+            "calendarId": "continuous_24_7",
+            "timezone": "UTC",
+            "quantityScale": 8,
+            "priceScale": 2
+          }
+        }
+      },
+      {
+        "index": 9,
+        "record": {
+          "type": "Quantity",
+          "value": {
+            "schemaVersion": 1,
+            "id": "quantity_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "instrumentId": "instrument_btc_001",
+            "value": "0.125",
+            "unit": "base_asset"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "profile-account-book-disagreement",
+    "operation": "collection",
+    "expected": [
+      {
+        "code": "profile.account_book_mismatch",
+        "path": "/5/value/primaryAccountId"
+      }
+    ],
+    "baseFile": "fixtures/local-core.json",
+    "replace": [
+      {
+        "index": 5,
+        "record": {
+          "type": "Profile",
+          "value": {
+            "schemaVersion": 1,
+            "id": "profile_local_001",
+            "ownerId": "owner_local_001",
+            "workspaceId": "workspace_local_001",
+            "revision": 1,
+            "createdAt": "2026-11-02T10:00:00Z",
+            "updatedAt": "2026-11-02T10:00:00Z",
+            "name": "Review",
+            "kind": "journal",
+            "state": "active",
+            "currency": "USD",
+            "timezone": "Europe/London",
+            "primaryBookId": "book_manual_001",
+            "primaryAccountId": "account_external_001"
+          }
+        }
+      }
+    ],
+    "append": []
+  },
+  {
+    "id": "rename-book",
+    "operation": "replacement",
+    "type": "JournalBook",
+    "previous": {
+      "schemaVersion": 1,
+      "id": "book_manual_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Manual book",
+      "kind": "manual",
+      "state": "active",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    },
+    "proposed": {
+      "schemaVersion": 1,
+      "id": "book_manual_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 2,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Renamed",
+      "kind": "manual",
+      "state": "active",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    },
+    "expected": []
+  },
+  {
+    "id": "stale-book-edit",
+    "operation": "replacement",
+    "type": "JournalBook",
+    "previous": {
+      "schemaVersion": 1,
+      "id": "book_manual_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Manual book",
+      "kind": "manual",
+      "state": "active",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    },
+    "proposed": {
+      "schemaVersion": 1,
+      "id": "book_manual_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Renamed",
+      "kind": "manual",
+      "state": "active",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    },
+    "expected": [
+      {
+        "code": "revision.conflict",
+        "path": "/revision"
+      }
+    ]
+  },
+  {
+    "id": "manual-book-cannot-convert",
+    "operation": "replacement",
+    "type": "JournalBook",
+    "previous": {
+      "schemaVersion": 1,
+      "id": "book_manual_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Manual book",
+      "kind": "manual",
+      "state": "active",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    },
+    "proposed": {
+      "schemaVersion": 1,
+      "id": "book_manual_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 2,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Manual book",
+      "kind": "connected",
+      "state": "active",
+      "currency": "USD",
+      "timezone": "Europe/London",
+      "accountId": "account_external_001"
+    },
+    "expected": [
+      {
+        "code": "revision.identity_changed",
+        "path": "/accountId"
+      },
+      {
+        "code": "revision.identity_changed",
+        "path": "/kind"
+      }
+    ]
+  },
+  {
+    "id": "idempotent-replacement",
+    "operation": "replacement",
+    "type": "JournalBook",
+    "previous": {
+      "schemaVersion": 1,
+      "id": "book_manual_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Manual book",
+      "kind": "manual",
+      "state": "active",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    },
+    "proposed": {
+      "schemaVersion": 1,
+      "id": "book_manual_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Manual book",
+      "kind": "manual",
+      "state": "active",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    },
+    "expected": []
+  },
+  {
+    "id": "archive-preserves-book",
+    "operation": "replacement",
+    "type": "JournalBook",
+    "previous": {
+      "schemaVersion": 1,
+      "id": "book_connected_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Demo book",
+      "kind": "connected",
+      "state": "active",
+      "accountId": "account_external_001",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    },
+    "proposed": {
+      "schemaVersion": 1,
+      "id": "book_connected_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 2,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Demo book",
+      "kind": "connected",
+      "state": "archived",
+      "accountId": "account_external_001",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    },
+    "expected": []
+  },
+  {
+    "id": "account-cannot-retarget",
+    "operation": "replacement",
+    "type": "Account",
+    "previous": {
+      "schemaVersion": 1,
+      "id": "account_external_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "kind": "external",
+      "mode": "broker_demo",
+      "providerId": "provider-one",
+      "venue": "demo-server",
+      "externalIdentity": "12345",
+      "currency": "USD",
+      "identityState": "verified",
+      "state": "active"
+    },
+    "proposed": {
+      "schemaVersion": 1,
+      "id": "account_external_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 2,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "kind": "external",
+      "mode": "broker_demo",
+      "providerId": "provider-one",
+      "venue": "demo-server",
+      "externalIdentity": "different",
+      "currency": "USD",
+      "identityState": "verified",
+      "state": "active"
+    },
+    "expected": [
+      {
+        "code": "revision.identity_changed",
+        "path": "/externalIdentity"
+      }
+    ]
+  }
+]

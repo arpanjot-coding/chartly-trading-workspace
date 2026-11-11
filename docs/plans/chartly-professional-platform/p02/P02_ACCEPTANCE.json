@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "package": "P02",
+  "completedAt": "2026-11-02",
+  "owner": "Codex",
+  "packageComplete": true,
+  "browserJourneysVerified": true,
+  "independentReviewComplete": true,
+  "installedJournalMigrationPerformed": false,
+  "scope": "Existing original UI; authenticated local file-backed SQLite workspace; explicit reviewed browser migration; supported registry backup/restore/Undo/restart recovery.",
+  "testedRuntime": {
+    "os": "Windows",
+    "python": "3.14.7",
+    "node": "22.23.4",
+    "workspaceDatabase": "file-backed SQLite"
+  },
+  "verification": {
+    "backendTests": 678,
+    "backendFiles": 15,
+    "finalStorageApiFollowUp": 28,
+    "frontendTests": 291,
+    "frontendFiles": 25,
+    "p00WorkflowTests": 52,
+    "typescript": "passed",
+    "productionBuild": "passed",
+    "ruff": "passed",
+    "biome": "passed",
+    "generatedContracts": "passed"
+  },
+  "resourceAudit": {
+    "iterations": 100,
+    "connectionsOpened": 302,
+    "connectionsClosed": 302,
+    "initialHandles": 241,
+    "finalHandles": 241
+  },
+  "limitations": [
+    "No Linux gunicorn run or PostgreSQL workspace certification claimed.",
+    "Price files, credentials, installed code, runtime activation and unscoped legacy backend stores are explicit workspace ZIP exclusions.",
+    "Raw legacy precision/times and declared provider identities remain unverified; later packages own normalization/connectors.",
+    "Original chart needs its configured feed/API for prices; P02 does not fabricate data or enable live execution."
+  ],
+  "tasks": [
+    {
+      "id": "P02-T01",
+      "state": "done",
+      "evidence": [
+        "STORAGE_INVENTORY.md",
+        "ARCHITECTURE.md",
+        "../../../../frontend/src/lib/trader/browserSnapshot.ts"
+      ]
+    },
+    {
+      "id": "P02-T02",
+      "state": "done",
+      "evidence": [
+        "API_AND_ACCOUNT_ACCESS.md",
+        "../../../../test/test_local_data_api.py",
+        "../../../../test/test_local_account_access.py",
+        "../../../../test/test_user_identity_migration.py",
+        "../../../../test/test_domain_repository.py"
+      ]
+    },
+    {
+      "id": "P02-T03",
+      "state": "done",
+      "evidence": [
+        "../../../../test/test_workspace_storage.py",
+        "../../../../frontend/src/lib/trader/browserSnapshot.test.ts",
+        "evidence/source-checks.log"
+      ]
+    },
+    {
+      "id": "P02-T04",
+      "state": "done",
+      "evidence": [
+        "../../../../frontend/src/pages/settings/StorageRecovery.test.tsx",
+        "../../../../test/test_workspace_storage.py",
+        "storage-recovery.png"
+      ]
+    },
+    {
+      "id": "P02-T05",
+      "state": "done",
+      "evidence": [
+        "../../../../test/test_workspace_recovery.py",
+        "evidence/fixture-workspace.zip",
+        "RECOVERY_GUIDE.md"
+      ]
+    },
+    {
+      "id": "P02-T06",
+      "state": "done",
+      "evidence": [
+        "../../../../test/test_workspace_storage.py",
+        "../../../../frontend/src/lib/trader/useTraderData.test.ts",
+        "IMPLEMENTATION_EVIDENCE.md"
+      ]
+    },
+    {
+      "id": "P02-T07",
+      "state": "done",
+      "evidence": [
+        "../../../../frontend/src/lib/trader/dataPersistence.test.ts",
+        "../../../../frontend/src/lib/trader/nativePersistence.test.ts",
+        "evidence/frontend-tests.log"
+      ]
+    },
+    {
+      "id": "P02-T08",
+      "state": "done",
+      "evidence": [
+        "RECOVERY_GUIDE.md",
+        "evidence/backend-tests.log",
+        "evidence/resource-audit.log",
+        "../../../../test/test_workspace_worker.py",
+        "IMPLEMENTATION_EVIDENCE.md"
+      ]
+    }
+  ],
+  "artifactHashes": {
+    "../../../../blueprints/auth.py": "7200618e53f6bcee747de032b48bfd2c9b9822f319fd034ef9a65447f48761b6",
+    "../../../../blueprints/local_data.py": "993e6b2433a32dacf34b3edaa115b03fd5de197f86541f4b2f0350ac02418872",
+    "../../../../database/user_db.py": "d1f4e622bd32cda71687328813ada28d037c041c4a643f4b26aef732c233ec5b",
+    "../../../../database/workspace_storage_db.py": "85d8fe9a02a2c6a1800e4552ddc411ec7c6194fa004b0d5f4bd0397a34d2d14a",
+    "API_AND_ACCOUNT_ACCESS.md": "58b0fc43019b0c5ae1a6b3dc6f562369271ad0a62823fd4a10271420291030aa",
+    "architecture.html": "6e864071f310e17c3537a3424ca484a6a456727fd98936e3a43d1e0a0e7deea1",
+    "ARCHITECTURE.md": "04d022fce2167f1b095bd6a2b38b70273841b96565255209781aa7ba677f0c46",
+    "architecture.png": "b9dde871e5d237cb3a22fb5dc92c76b81f47b61fbd967484937d8b523f913ca4",
+    "evidence/backend-tests.log": "fb8ab8e041290a5c4a50898bb809ece7ba3845f1929ed92a0b999d1a082bed6e",
+    "evidence/fixture-workspace.zip": "0a30777237d0707ec51599e5d223ee20bc9841ee52ba22eb89ce3d9e427493ae",
+    "evidence/frontend-tests.log": "d14dfd77bfcbb9fa22ae497b86e2647661e86b4f659d8e1bb3f383108c08311a",
+    "evidence/p00-tests.log": "4b9b16a2a52b85d31adc15fb66ac90eeaa3949a4ab31813f9c20ddfa22b2be27",
+    "evidence/production-build.log": "c1773c9d443d7a7df74b03f352b2e2624c32678f4bee0b8ad8b221edeb8fd33e",
+    "evidence/resource-audit.log": "87aee7c35c837928f05ac6fc6d977381f67f6e0ff860ecf6ca2473a28a77cab9",
+    "evidence/source-checks.log": "e686e865ea553a428cf0a337b47b390af576df0978c48a02b363f8e5703e6d93",
+    "IMPLEMENTATION_EVIDENCE.md": "888351fda79a40a0273d98ed53060e64a34df6fb9b335a85173480f5758112a0",
+    "IMPLEMENTATION_PLAN.md": "e1112cd70575d95403c63520a0571c82996b1f548d7d126d6b2c30f973f8e997",
+    "RECOVERY_GUIDE.md": "ae4cf19f2c00809ee2191699a876f1b19f3182178cadb5c8d93afe77d11d87f9",
+    "storage-recovery.png": "a6fd7dc40a87c134b963f36ebc683a8b41cbeee5f489509654f0e3e73b30aaa3",
+    "STORAGE_INVENTORY.md": "522b13107376fa00fe91e43394d38d19abb1e9a1505320ab212d693e0f508bc9",
+    "../../../../frontend/src/components/auth/AuthSync.tsx": "25aaf7360e8949fd53ac6cd4835bd27aed725d99a9172a08569cbc1c098c1d3b",
+    "../../../../frontend/src/hooks/useChartWorkspaceCatalog.ts": "75bae87bd1e3f861c2c973035a62a11aba675d721ded493a165584dcc856559d",
+    "../../../../frontend/src/lib/trader/browserSnapshot.ts": "86c24c1d09304ae4f8998f5e410fd9f6ce7e38868af1a6d1230ba8a10be31482",
+    "../../../../frontend/src/lib/trader/dataPersistence.ts": "3fc4c587aad79a12679dfc2373c6f54eee92eca6e960b96a452eac8eeabaa971",
+    "../../../../frontend/src/lib/trader/db.ts": "666e759f2d67445af0920da2bec02035353263617fb3811b08aad6b664537bf5",
+    "../../../../frontend/src/lib/trader/localStorageClient.ts": "bd01546195af324f1edc83e54aca51a9aaa8bc0d5b078fee02c4149430609dd0",
+    "../../../../frontend/src/lib/trader/nativePersistence.ts": "30fbfece7adcbce8f11d299106620698fa42d3535cd31c54ea99ec20c00a6f25",
+    "../../../../frontend/src/lib/trader/preferenceEvents.ts": "2fe11c935063271f4895a9a81d4afea9000fcbe88cc1d90f0edd781460e79bf7",
+    "../../../../frontend/src/lib/trader/useTraderData.ts": "08dbdcb6b5bcad51a2d95f883c467d1e929653d173164ff1ba65ffddfc58b50d",
+    "../../../../frontend/src/pages/settings/StorageRecovery.tsx": "a021ea1be3b7e18e11a6a2d58979e31f005425cc2bc96964a07987755152b4c1",
+    "../../../../frontend/src/stores/authStore.ts": "3e8b377a2aa1c96850c962f4849962017e78c6488c409d01a0592662929c0fb4",
+    "../../../../services/local_account_access.py": "0a4c78fccb73dffdb3cfddb6fa79b83d8850f951be89e17d2c25611143714dd6",
+    "../../../../services/workspace_recovery.py": "c0e18bb1dde56350d64ab3936b574479e9db708520528f6991bee9f42945b02f",
+    "../../../../services/workspace_storage.py": "368bc5b0e71301dc8ec7fdf67f0271a0a77c332cad9807bef69e7371e7dae931",
+    "../../../../services/workspace_worker.py": "119fc035547d3babab7e4ffe1d295323a551861bebffb3f56b93d00b967b861c",
+    "../../../../test/test_local_account_access.py": "69969fed4398bb982b50a82d628bb0b1d2bc7e4ce11b4517dacfc7b20f6ebd79",
+    "../../../../test/test_local_data_api.py": "9c08966d28f2f6e4f60305d2602a3be534b3817b72eac8edb17bfdab9c097933",
+    "../../../../test/test_user_identity_migration.py": "8697c536c79ce3d5b9fbad4941bcb484ccab8ac4e128f26630f269334338a8a6",
+    "../../../../test/test_workspace_recovery.py": "b8cd35f8049240aa71111c189dd67444f876581098bccd5002b5b3ea65b29fee",
+    "../../../../test/test_workspace_storage.py": "003023fa17a79925c849cea471be7f7905540a6397bc902735e73d1d914555f5",
+    "../../../../test/test_workspace_worker.py": "81dd20ddbbb0b29408aaaff15295c5d984571d41ebf781cef46e39d959b7f47e"
+  }
+}

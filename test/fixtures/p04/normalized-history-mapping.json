@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "name": "Explicit OHLC history",
+  "columns": {"timestamp": "timestamp", "open": "open", "high": "high", "low": "low", "close": "close", "volume": "volume"},
+  "timestampFormat": "iso",
+  "timestampMeaning": "open",
+  "timezone": "America/New_York",
+  "delimiter": ",",
+  "decimalSeparator": "."
+}

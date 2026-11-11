@@ -1,0 +1,19 @@
+meta {
+  name: CancelGTTOrder
+  type: http
+  seq: 67
+}
+
+post {
+  url: http://127.0.0.1:5000/api/v1/cancelgttorder
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "apikey": "{{api_key}}",
+      "strategy": "My GTT Strategy",
+      "trigger_id": "123456"
+  }
+}

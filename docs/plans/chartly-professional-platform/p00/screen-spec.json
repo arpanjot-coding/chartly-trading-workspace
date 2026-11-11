@@ -1,0 +1,961 @@
+{
+  "version": 1,
+  "fixtureOnly": true,
+  "screens": [
+    {
+      "id": "S01",
+      "title": "Workspace",
+      "route": "/workspace",
+      "scope": "Local workspace · no account required",
+      "body": [
+        "Choose a job; enable other modules later.",
+        "Recent work and resume",
+        "Unreviewed decisions"
+      ],
+      "side": [
+        "Storage and backup status",
+        "Optional connection health"
+      ],
+      "actions": [
+        [
+          "Journal trades",
+          "S02"
+        ],
+        [
+          "Import statement",
+          "S04"
+        ],
+        [
+          "Explore charts",
+          "S07"
+        ],
+        [
+          "Start practice",
+          "S09"
+        ],
+        [
+          "Research markets",
+          "S15"
+        ],
+        [
+          "Connect accounts",
+          "S12"
+        ]
+      ],
+      "primary": "Choose a job",
+      "states": {
+        "ready": "Workspace · Next: Choose a job.",
+        "empty": "No usable records or source for Workspace. Next: Choose a job.",
+        "loading": "Loading Workspace in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Workspace; production must wait for authoritative persistence.",
+        "failed": "Could not complete Workspace. Preserve this task and retry or correct input.",
+        "stale": "Workspace contains last-known information. Check source time before acting.",
+        "partial": "Only part of Workspace is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Workspace scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S02",
+      "title": "Trade journal",
+      "route": "/workspace/profiles/:profileId/journal",
+      "scope": "Personal journal · USD · Europe/London",
+      "body": [
+        "Review queue / Trades / Performance / Calendar",
+        "Fixture: EURUSD · manual · open · risk not recorded",
+        "Filters: account, period, strategy and timezone"
+      ],
+      "side": [
+        "Sample size accompanies statistics",
+        "Export report differs from full backup"
+      ],
+      "actions": [
+        [
+          "Add trade",
+          "S03"
+        ],
+        [
+          "Open fixture trade",
+          "S03"
+        ],
+        [
+          "Import trades",
+          "S04"
+        ],
+        [
+          "Back up workspace",
+          "S19"
+        ]
+      ],
+      "primary": "Add or import trades",
+      "states": {
+        "ready": "Trade journal · Next: Add or import trades.",
+        "empty": "No usable records or source for Trade journal. Next: Add or import trades.",
+        "loading": "Loading Trade journal in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Trade journal; production must wait for authoritative persistence.",
+        "failed": "Could not complete Trade journal. Preserve this task and retry or correct input.",
+        "stale": "Trade journal contains last-known information. Check source time before acting.",
+        "partial": "Only part of Trade journal is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Trade journal scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S03",
+      "title": "Trade detail and review",
+      "route": "/workspace/profiles/:profileId/journal/trades/:tradeId",
+      "scope": "Personal journal · fixture trade T1 · manual",
+      "body": [
+        "Facts / Decision / Review / Attachments / History",
+        "Open trade has no closing timestamp. Unknown risk remains blank.",
+        "Review: What did you learn?"
+      ],
+      "side": [
+        "Editable interpretation is separate from execution facts",
+        "Archive offers Undo in production"
+      ],
+      "actions": [
+        [
+          "Save review",
+          "SAVE_REVIEW"
+        ],
+        [
+          "Close fixture trade",
+          "CLOSE_TRADE"
+        ],
+        [
+          "Attach chart",
+          "S07"
+        ],
+        [
+          "Back to journal",
+          "S02"
+        ]
+      ],
+      "primary": "Save this review",
+      "states": {
+        "ready": "Trade detail and review · Next: Save this review.",
+        "empty": "No usable records or source for Trade detail and review. Next: Save this review.",
+        "loading": "Loading Trade detail and review in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Trade detail and review; production must wait for authoritative persistence.",
+        "failed": "Could not complete Trade detail and review. Preserve this task and retry or correct input.",
+        "stale": "Trade detail and review contains last-known information. Check source time before acting.",
+        "partial": "Only part of Trade detail and review is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Trade detail and review scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S04",
+      "title": "Import trade statement",
+      "route": "/journal/import",
+      "scope": "Personal journal · manual/import account · no broker login",
+      "body": [
+        "File/account → Mapping → Validation → Preview → Receipt",
+        "Illustrative fixture: 3 rows; 2 valid; 1 malformed timestamp",
+        "No rows are written until an explicit valid commit."
+      ],
+      "side": [
+        "Review excluded/duplicate/corrected counts",
+        "Cancellation before commit writes nothing"
+      ],
+      "actions": [
+        [
+          "Validate fixture",
+          "VALIDATE_IMPORT"
+        ],
+        [
+          "Correct timestamp mapping",
+          "FIX_IMPORT"
+        ],
+        [
+          "Commit validated rows",
+          "COMMIT_IMPORT"
+        ],
+        [
+          "Cancel import",
+          "S02"
+        ]
+      ],
+      "primary": "Resolve row errors then commit",
+      "states": {
+        "ready": "Import trade statement · Next: Resolve row errors then commit.",
+        "empty": "No usable records or source for Import trade statement. Next: Resolve row errors then commit.",
+        "loading": "Loading Import trade statement in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Import trade statement; production must wait for authoritative persistence.",
+        "failed": "Could not complete Import trade statement. Preserve this task and retry or correct input.",
+        "stale": "Import trade statement contains last-known information. Check source time before acting.",
+        "partial": "Only part of Import trade statement is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Import trade statement scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S05",
+      "title": "Data Library",
+      "route": "/data",
+      "scope": "Local historical datasets · execution account optional",
+      "body": [
+        "Instrument / Source / Resolution / Coverage / Quality",
+        "Fixture: EURUSD · local CSV · 1m · available window",
+        "Immutable dataset versions preserve run reproducibility."
+      ],
+      "side": [
+        "Trade statements are not candle history",
+        "Return to the same draft run after source selection"
+      ],
+      "actions": [
+        [
+          "Import historical prices",
+          "S06"
+        ],
+        [
+          "Select fixture dataset",
+          "SELECT_DATASET"
+        ],
+        [
+          "Open historical chart",
+          "S07"
+        ],
+        [
+          "Return to run",
+          "S09"
+        ]
+      ],
+      "primary": "Select or import historical data",
+      "states": {
+        "ready": "Data Library · Next: Select or import historical data.",
+        "empty": "No usable records or source for Data Library. Next: Select or import historical data.",
+        "loading": "Loading Data Library in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Data Library; production must wait for authoritative persistence.",
+        "failed": "Could not complete Data Library. Preserve this task and retry or correct input.",
+        "stale": "Data Library contains last-known information. Check source time before acting.",
+        "partial": "Only part of Data Library is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Data Library scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S06",
+      "title": "Import historical prices",
+      "route": "/data/import",
+      "scope": "Local import · source timezone and instrument required",
+      "body": [
+        "File → Columns/timezone/units → Quality preview → Commit",
+        "Preview gaps, duplicates, invalid OHLC and unknown volume",
+        "New dataset version rather than silent overwrite"
+      ],
+      "side": [
+        "CSV/Parquet are historical price inputs",
+        "Show exact accepted and rejected counts"
+      ],
+      "actions": [
+        [
+          "Validate price fixture",
+          "VALIDATE_PRICES"
+        ],
+        [
+          "Commit dataset fixture",
+          "COMMIT_DATASET"
+        ],
+        [
+          "Cancel price import",
+          "S05"
+        ]
+      ],
+      "primary": "Validate the historical file",
+      "states": {
+        "ready": "Import historical prices · Next: Validate the historical file.",
+        "empty": "No usable records or source for Import historical prices. Next: Validate the historical file.",
+        "loading": "Loading Import historical prices in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Import historical prices; production must wait for authoritative persistence.",
+        "failed": "Could not complete Import historical prices. Preserve this task and retry or correct input.",
+        "stale": "Import historical prices contains last-known information. Check source time before acting.",
+        "partial": "Only part of Import historical prices is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Import historical prices scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S07",
+      "title": "Chart workspace",
+      "route": "/trading?profileId=...&runId=...",
+      "scope": "Profile / run · explicit mode · source separate from target",
+      "body": [
+        "Instrument / Timeframe / Indicators / Layout",
+        "Chart canvas from selected dataset or source",
+        "Drawing rail · replay transport or account activity"
+      ],
+      "side": [
+        "Journal / Watchlist / Objects",
+        "Attach chart evidence to the scoped trade"
+      ],
+      "actions": [
+        [
+          "Choose chart source",
+          "S05"
+        ],
+        [
+          "Open journal panel",
+          "S03"
+        ],
+        [
+          "Prepare paper run",
+          "S09"
+        ],
+        [
+          "View account connections",
+          "S12"
+        ]
+      ],
+      "primary": "Choose a usable source",
+      "states": {
+        "ready": "Chart workspace · Next: Choose a usable source.",
+        "empty": "No usable records or source for Chart workspace. Next: Choose a usable source.",
+        "loading": "Loading Chart workspace in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Chart workspace; production must wait for authoritative persistence.",
+        "failed": "Could not complete Chart workspace. Preserve this task and retry or correct input.",
+        "stale": "Chart workspace contains last-known information. Check source time before acting.",
+        "partial": "Only part of Chart workspace is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Chart workspace scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S08",
+      "title": "Practice projects",
+      "route": "/practice",
+      "scope": "Research question · independent experiments",
+      "body": [
+        "Draft / Data needed / Ready / In progress / Finished / Abandoned",
+        "Resume the same run and dataset version",
+        "Compare runs; do not pool independent equity"
+      ],
+      "side": [
+        "Instrument, window and assumptions per run",
+        "Archive preserves journal provenance"
+      ],
+      "actions": [
+        [
+          "Prepare run",
+          "S09"
+        ],
+        [
+          "Resume fixture run",
+          "RESUME_RUN"
+        ],
+        [
+          "Review fixture run",
+          "S11"
+        ]
+      ],
+      "primary": "Prepare or resume a run",
+      "states": {
+        "ready": "Practice projects · Next: Prepare or resume a run.",
+        "empty": "No usable records or source for Practice projects. Next: Prepare or resume a run.",
+        "loading": "Loading Practice projects in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Practice projects; production must wait for authoritative persistence.",
+        "failed": "Could not complete Practice projects. Preserve this task and retry or correct input.",
+        "stale": "Practice projects contains last-known information. Check source time before acting.",
+        "partial": "Only part of Practice projects is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Practice projects scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S09",
+      "title": "Prepare historical run",
+      "route": "/practice/runs/:runId/prepare",
+      "scope": "Project P1 · draft run R1 · Paper replay",
+      "body": [
+        "Dataset/version → Instrument/window → Capital → Costs → Validate",
+        "Fixture instrument EURUSD with explicit quantity units",
+        "Starting capital, spread, fees, slippage and fill policy"
+      ],
+      "side": [
+        "No data means Start is unavailable",
+        "Source setup preserves this run identity"
+      ],
+      "actions": [
+        [
+          "Choose run data",
+          "CHOOSE_RUN_DATA"
+        ],
+        [
+          "Start paper run",
+          "START_RUN"
+        ],
+        [
+          "Back to projects",
+          "S08"
+        ]
+      ],
+      "primary": "Validate the selected dataset",
+      "states": {
+        "ready": "Prepare historical run · Next: Validate the selected dataset.",
+        "empty": "No usable records or source for Prepare historical run. Next: Validate the selected dataset.",
+        "loading": "Loading Prepare historical run in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Prepare historical run; production must wait for authoritative persistence.",
+        "failed": "Could not complete Prepare historical run. Preserve this task and retry or correct input.",
+        "stale": "Prepare historical run contains last-known information. Check source time before acting.",
+        "partial": "Only part of Prepare historical run is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Prepare historical run scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S10",
+      "title": "Historical paper run",
+      "route": "/practice/runs/:runId",
+      "scope": "Run R1 · simulated clock · no broker target",
+      "body": [
+        "Historical chart with visible-prefix data",
+        "Paper order ticket and isolated ledger",
+        "Save / Pause / Advance / Finish"
+      ],
+      "side": [
+        "Source version and fill fidelity always visible",
+        "Prototype advance changes fixture state, not market fills"
+      ],
+      "actions": [
+        [
+          "Advance fixture bar",
+          "ADVANCE_RUN"
+        ],
+        [
+          "Save run checkpoint",
+          "SAVE_RUN"
+        ],
+        [
+          "Finish and review",
+          "FINISH_RUN"
+        ]
+      ],
+      "primary": "Trade only in the historical simulator",
+      "states": {
+        "ready": "Historical paper run · Next: Trade only in the historical simulator.",
+        "empty": "No usable records or source for Historical paper run. Next: Trade only in the historical simulator.",
+        "loading": "Loading Historical paper run in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Historical paper run; production must wait for authoritative persistence.",
+        "failed": "Could not complete Historical paper run. Preserve this task and retry or correct input.",
+        "stale": "Historical paper run contains last-known information. Check source time before acting.",
+        "partial": "Only part of Historical paper run is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Historical paper run scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S11",
+      "title": "Run review",
+      "route": "/practice/runs/:runId/review",
+      "scope": "Run R1 · simulated outcomes · source and assumptions",
+      "body": [
+        "Execution timeline / Costs / Linked journal / Experiment notes",
+        "Recorded source version and engine assumptions",
+        "Review each simulated decision"
+      ],
+      "side": [
+        "Compare independent runs explicitly",
+        "No real account equity implied"
+      ],
+      "actions": [
+        [
+          "Review simulated trade",
+          "S03"
+        ],
+        [
+          "Back to projects",
+          "S08"
+        ],
+        [
+          "Open run chart",
+          "S10"
+        ]
+      ],
+      "primary": "Review the run decisions",
+      "states": {
+        "ready": "Run review · Next: Review the run decisions.",
+        "empty": "No usable records or source for Run review. Next: Review the run decisions.",
+        "loading": "Loading Run review in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Run review; production must wait for authoritative persistence.",
+        "failed": "Could not complete Run review. Preserve this task and retry or correct input.",
+        "stale": "Run review contains last-known information. Check source time before acting.",
+        "partial": "Only part of Run review is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Run review scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S12",
+      "title": "Connections",
+      "route": "/connections",
+      "scope": "Sources, history accounts and execution destinations",
+      "body": [
+        "Market/research sources are separate from order destinations",
+        "Configured ≠ Connected ≠ Ready ≠ Armed",
+        "Measured heartbeat, verified identity and supported capabilities"
+      ],
+      "side": [
+        "Start read-only",
+        "No adapter is certified by a platform name"
+      ],
+      "actions": [
+        [
+          "Add crypto exchange",
+          "SETUP_CRYPTO"
+        ],
+        [
+          "Add retail platform",
+          "SETUP_RETAIL"
+        ],
+        [
+          "Add brokerage",
+          "SETUP_BROKER"
+        ],
+        [
+          "View order activity fixture",
+          "S14"
+        ]
+      ],
+      "primary": "Choose a connection family",
+      "states": {
+        "ready": "Connections · Next: Choose a connection family.",
+        "empty": "No usable records or source for Connections. Next: Choose a connection family.",
+        "loading": "Loading Connections in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Connections; production must wait for authoritative persistence.",
+        "failed": "Could not complete Connections. Preserve this task and retry or correct input.",
+        "stale": "Connections contains last-known information. Check source time before acting.",
+        "partial": "Only part of Connections is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Connections scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S13",
+      "title": "Connection setup",
+      "route": "/connections/new",
+      "scope": "Provider path · read-only first · fixture only",
+      "body": [
+        "Prerequisites → Pair/authenticate → Identity → Capabilities → Sync",
+        "No credentials are collected by this prototype",
+        "Real adapter certification belongs to P07–P10"
+      ],
+      "side": [
+        "Changing account identity disarms writes",
+        "Saved terminal path is not measured health"
+      ],
+      "actions": [
+        [
+          "Verify read-only fixture",
+          "VERIFY_CONNECTION"
+        ],
+        [
+          "Open imported history",
+          "S02"
+        ],
+        [
+          "Inspect demo order activity",
+          "S14"
+        ],
+        [
+          "Cancel setup",
+          "S12"
+        ]
+      ],
+      "primary": "Verify identity and capabilities",
+      "states": {
+        "ready": "Connection setup · Next: Verify identity and capabilities.",
+        "empty": "No usable records or source for Connection setup. Next: Verify identity and capabilities.",
+        "loading": "Loading Connection setup in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Connection setup; production must wait for authoritative persistence.",
+        "failed": "Could not complete Connection setup. Preserve this task and retry or correct input.",
+        "stale": "Connection setup contains last-known information. Check source time before acting.",
+        "partial": "Only part of Connection setup is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Connection setup scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S14",
+      "title": "Order preview and activity",
+      "route": "/activity/:intentId",
+      "scope": "Demo fixture account D1 · no real submission",
+      "body": [
+        "Command validation / Approval / Submission / Acknowledgement / Fill",
+        "Fixture submission timed out: outcome unknown",
+        "Reconcile broker/account state before any resubmission"
+      ],
+      "side": [
+        "Unknown outcome has no Retry order action",
+        "Confirmed protection is distinct from a chart drawing"
+      ],
+      "actions": [
+        [
+          "Reconcile fixture outcome",
+          "RECONCILE"
+        ],
+        [
+          "Back to connections",
+          "S12"
+        ]
+      ],
+      "primary": "Investigate an unknown outcome",
+      "states": {
+        "ready": "Order preview and activity · Next: Investigate an unknown outcome.",
+        "empty": "No usable records or source for Order preview and activity. Next: Investigate an unknown outcome.",
+        "loading": "Loading Order preview and activity in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Order preview and activity; production must wait for authoritative persistence.",
+        "failed": "Could not complete Order preview and activity. Preserve this task and retry or correct input.",
+        "stale": "Order preview and activity contains last-known information. Check source time before acting.",
+        "partial": "Only part of Order preview and activity is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Order preview and activity scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S15",
+      "title": "Research search",
+      "route": "/research",
+      "scope": "Research-only · no broker or AI required",
+      "body": [
+        "Search issuer, listing, asset, series or report",
+        "Fixture: Example Industries · fictional issuer · illustrative source",
+        "Resolve entity/venue identity before comparisons"
+      ],
+      "side": [
+        "Source coverage and freshness",
+        "Saved local notebooks stay usable during source outage"
+      ],
+      "actions": [
+        [
+          "Open example issuer",
+          "S16"
+        ],
+        [
+          "Open saved notebook",
+          "S18"
+        ],
+        [
+          "Configure research source",
+          "S12"
+        ]
+      ],
+      "primary": "Find an entity, series or report",
+      "states": {
+        "ready": "Research search · Next: Find an entity, series or report.",
+        "empty": "No usable records or source for Research search. Next: Find an entity, series or report.",
+        "loading": "Loading Research search in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Research search; production must wait for authoritative persistence.",
+        "failed": "Could not complete Research search. Preserve this task and retry or correct input.",
+        "stale": "Research search contains last-known information. Check source time before acting.",
+        "partial": "Only part of Research search is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Research search scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S16",
+      "title": "Security and asset research",
+      "route": "/research/entities/:entityId",
+      "scope": "Example Industries · fictional fixture · as-of context",
+      "body": [
+        "Overview / Financials or asset fundamentals / Events / Reports",
+        "Illustrative fact: inspect source, period, units and revision",
+        "Company, crypto, fund, FX and futures use different fundamentals"
+      ],
+      "side": [
+        "Missing is not zero",
+        "Snapshot evidence preserves publication availability"
+      ],
+      "actions": [
+        [
+          "Open original report",
+          "S17"
+        ],
+        [
+          "Save research hypothesis",
+          "S18"
+        ],
+        [
+          "Open study chart",
+          "S07"
+        ],
+        [
+          "Back to search",
+          "S15"
+        ]
+      ],
+      "primary": "Inspect source-backed facts",
+      "states": {
+        "ready": "Security and asset research · Next: Inspect source-backed facts.",
+        "empty": "No usable records or source for Security and asset research. Next: Inspect source-backed facts.",
+        "loading": "Loading Security and asset research in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Security and asset research; production must wait for authoritative persistence.",
+        "failed": "Could not complete Security and asset research. Preserve this task and retry or correct input.",
+        "stale": "Security and asset research contains last-known information. Check source time before acting.",
+        "partial": "Only part of Security and asset research is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Security and asset research scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S17",
+      "title": "Source report",
+      "route": "/research/reports/:documentVersionId",
+      "scope": "Fictional report V1 · publication and availability timestamps",
+      "body": [
+        "Readable original report / Search / Stable citation anchors",
+        "Illustrative excerpt used for navigation testing only",
+        "Source revision and highlights are version-bound"
+      ],
+      "side": [
+        "Source unavailable? Retry or use a saved snapshot",
+        "Do not require a trading account"
+      ],
+      "actions": [
+        [
+          "Retry report source",
+          "RETRY_REPORT"
+        ],
+        [
+          "Open saved report snapshot",
+          "REPORT_SNAPSHOT"
+        ],
+        [
+          "Save cited note",
+          "S18"
+        ],
+        [
+          "Back to issuer",
+          "S16"
+        ]
+      ],
+      "primary": "Read the report and save a citation",
+      "states": {
+        "ready": "Source report · Next: Read the report and save a citation.",
+        "empty": "No usable records or source for Source report. Next: Read the report and save a citation.",
+        "loading": "Loading Source report in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Source report; production must wait for authoritative persistence.",
+        "failed": "Could not complete Source report. Preserve this task and retry or correct input.",
+        "stale": "Source report contains last-known information. Check source time before acting.",
+        "partial": "Only part of Source report is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Source report scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S18",
+      "title": "Research notebook",
+      "route": "/research/notebooks/:notebookId",
+      "scope": "Notebook N1 · hypothesis, not an execution fact",
+      "body": [
+        "Hypothesis / Evidence snapshots / User notes / Linked decisions",
+        "Fictional citation: Report V1, section 1",
+        "Record original evidence rather than silently updating it"
+      ],
+      "side": [
+        "Broker and AI optional",
+        "Save preserves context and source version"
+      ],
+      "actions": [
+        [
+          "Save notebook",
+          "SAVE_NOTEBOOK"
+        ],
+        [
+          "Return to source report",
+          "S17"
+        ],
+        [
+          "Back to research",
+          "S15"
+        ]
+      ],
+      "primary": "Save the cited hypothesis",
+      "states": {
+        "ready": "Research notebook · Next: Save the cited hypothesis.",
+        "empty": "No usable records or source for Research notebook. Next: Save the cited hypothesis.",
+        "loading": "Loading Research notebook in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Research notebook; production must wait for authoritative persistence.",
+        "failed": "Could not complete Research notebook. Preserve this task and retry or correct input.",
+        "stale": "Research notebook contains last-known information. Check source time before acting.",
+        "partial": "Only part of Research notebook is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Research notebook scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    },
+    {
+      "id": "S19",
+      "title": "Settings and recovery",
+      "route": "/settings",
+      "scope": "Local workspace · module preferences and storage",
+      "body": [
+        "Pinned modules / Local storage / Backup / Restore / Diagnostics",
+        "Full backup contains relationships, notes and checkpoints",
+        "Restore preview validates before replacing anything"
+      ],
+      "side": [
+        "Preferences do not grant execution permissions",
+        "Production recovery is P02/P19 work"
+      ],
+      "actions": [
+        [
+          "Pin research module",
+          "PIN_RESEARCH"
+        ],
+        [
+          "Preview fixture backup",
+          "BACKUP_PREVIEW"
+        ],
+        [
+          "Back to workspace",
+          "S01"
+        ]
+      ],
+      "primary": "Inspect storage and recovery scope",
+      "states": {
+        "ready": "Settings and recovery · Next: Inspect storage and recovery scope.",
+        "empty": "No usable records or source for Settings and recovery. Next: Inspect storage and recovery scope.",
+        "loading": "Loading Settings and recovery in the current scope; keep drafts and prevent duplicate submissions.",
+        "saved": "Fixture confirmation for Settings and recovery; production must wait for authoritative persistence.",
+        "failed": "Could not complete Settings and recovery. Preserve this task and retry or correct input.",
+        "stale": "Settings and recovery contains last-known information. Check source time before acting.",
+        "partial": "Only part of Settings and recovery is ready. Inspect affected records or missing prerequisites.",
+        "unauthorized": "Access to this Settings and recovery scope is unavailable. Change source/scope or return to Workspace; local journal needs no broker."
+      },
+      "focus": {
+        "navigation": "main heading",
+        "failed": "status summary",
+        "partial": "status summary",
+        "unauthorized": "status summary",
+        "saved": "polite status"
+      }
+    }
+  ],
+  "states": [
+    "ready",
+    "empty",
+    "loading",
+    "saved",
+    "failed",
+    "stale",
+    "partial",
+    "unauthorized"
+  ],
+  "jobs": [
+    "J01",
+    "J02",
+    "J03",
+    "J04",
+    "J05",
+    "J06"
+  ]
+}

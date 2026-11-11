@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Chartly">
+  <rect width="64" height="64" rx="15" fill="#00635b"/>
+  <path d="M46 19a18 18 0 1 0 0 26" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+  <path d="M29 30v13m9-18v13m9-14v11" fill="none" stroke="#9ce6d9" stroke-width="2" stroke-linecap="round"/>
+  <path d="M29 34v5m9-10v5m9-8v5" fill="none" stroke="#9ce6d9" stroke-width="5" stroke-linecap="round"/>
+</svg>

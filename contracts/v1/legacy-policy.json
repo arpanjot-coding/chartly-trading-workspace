@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "tables": ["portfolios", "practiceSessions", "journalTrades", "dailyMoods", "brokerAccounts", "terminals", "profileDestinations"],
+  "paperOrigins": ["replay", "simulator"],
+  "externalOrigins": ["connector", "imported", "chart"],
+  "maxLegacyId": 9007199254740991
+}

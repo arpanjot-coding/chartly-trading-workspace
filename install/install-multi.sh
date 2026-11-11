@@ -1,0 +1,769 @@
+#!/bin/bash
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Chartly Multi-Instance Installation Banner
+echo -e "${BLUE}"
+echo "  ██████╗ ██████╗ ███████╗███╗   ██╗ █████╗ ██╗      ██████╗  ██████╗ "
+echo " ██╔═══██╗██╔══██╗██╔════╝████╗  ██║██╔══██╗██║     ██╔════╝ ██╔═══██╗"
+echo " ██║   ██║██████╔╝███████╗██╔██╗ ██║███████║██║     ██║  ███╗██║   ██║"
+echo " ██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║██╔══██║██║     ██║   ██║██║   ██║"
+echo " ╚██████╔╝██╗     ███████╗██║ ╚████║██║  ██║███████╗╚██████╔╝╚██████╔╝"
+echo "  ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝ "
+echo "                      MULTI-INSTANCE INSTALLER                          "
+echo -e "${NC}"
+
+# Create logs directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+LOGS_DIR="$SCRIPT_DIR/logs"
+mkdir -p "$LOGS_DIR"
+
+# Generate unique log file
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+LOG_FILE="$LOGS_DIR/install_multi_${TIMESTAMP}.log"
+
+# Function to log messages
+log_message() {
+    local message="$1"
+    local color="$2"
+    echo -e "${color}${message}${NC}" | tee -a "$LOG_FILE"
+}
+
+# Function to check command status
+check_status() {
+    if [ $? -ne 0 ]; then
+        log_message "Error: $1" "$RED"
+        exit 1
+    fi
+}
+
+# >>> Telegram /chart browser (kept identical in install.sh, install-multi.sh and update.sh)
+# Telegram /chart draws its images with Kaleido, which starts a headless Chrome or
+# Chromium as the Chartly service account. A snap browser cannot start as that
+# account: snap needs a writable home, and a service account's home (/var/www) is not
+# one ("cannot create snap home dir"), so every render fails with "The browser seemed
+# to close immediately after starting". Ubuntu's chromium and chromium-browser packages
+# only install that snap, so they are never used here.
+
+# Prints the browser Kaleido will start and succeeds when it is one the service account
+# can run. Kaleido looks for Google Chrome first, then takes the first Chromium on PATH,
+# so the first name found below is the one it uses.
+chart_browser_path() {
+    local name path real
+    for name in chrome google-chrome google-chrome-stable chromium chromium-browser; do
+        path="$(command -v "$name" 2>/dev/null)" || continue
+        real="$(readlink -f "$path")"
+        # A snap command is /snap/bin/<name>, a link to /usr/bin/snap; Ubuntu's
+        # chromium-browser is a small script that starts the snap.
+        case "$path" in /snap/*) return 1 ;; esac
+        [ "$(basename "$real")" = "snap" ] && return 1
+        if [ "$(head -c 2 "$real" 2>/dev/null)" = "#!" ] && grep -qs "/snap/" "$real"; then
+            return 1
+        fi
+        echo "$real"
+        return 0
+    done
+    return 1
+}
+
+# Installs a browser for Telegram /chart when there is none the service account can run.
+# With apt: Google Chrome's .deb on amd64 (it adds Google's apt source, so Chrome
+# updates with the system), else Debian's own chromium package, never Ubuntu's snap.
+# With dnf or yum: the distribution's chromium, else Google Chrome's rpm on x86_64.
+# With pacman: chromium. Never fatal: Chartly runs without it, only /chart cannot draw.
+ensure_chart_browser() {
+    local found tmp candidate
+    if found="$(chart_browser_path)"; then
+        log_message "Telegram /chart browser: $found" "$GREEN"
+        return 0
+    fi
+    log_message "\nInstalling a browser for Telegram /chart rendering..." "$BLUE"
+    if command -v apt-get >/dev/null 2>&1; then
+        if [ "$(dpkg --print-architecture 2>/dev/null)" = "amd64" ]; then
+            tmp="$(mktemp -d)"
+            if curl -fsSL -o "$tmp/google-chrome.deb" https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb; then
+                sudo apt-get install -y "$tmp/google-chrome.deb" fonts-liberation || true
+            fi
+            rm -rf "$tmp"
+        fi
+        if ! chart_browser_path >/dev/null; then
+            # On Ubuntu the only candidate is the snap stub, whose version names the snap.
+            candidate="$(apt-cache policy chromium 2>/dev/null | awk '/Candidate:/ {print $2}')"
+            if [ -n "$candidate" ] && [ "$candidate" != "(none)" ] && [[ "$candidate" != *snap* ]]; then
+                sudo apt-get install -y chromium fonts-liberation || true
+            fi
+        fi
+    elif command -v dnf >/dev/null 2>&1 || command -v yum >/dev/null 2>&1; then
+        local pm=dnf
+        command -v dnf >/dev/null 2>&1 || pm=yum
+        sudo "$pm" install -y chromium liberation-fonts || true
+        if ! chart_browser_path >/dev/null && [ "$(uname -m)" = "x86_64" ]; then
+            sudo "$pm" install -y https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm liberation-fonts || true
+        fi
+    elif command -v pacman >/dev/null 2>&1; then
+        sudo pacman -S --noconfirm --needed chromium ttf-liberation || true
+    fi
+    if found="$(chart_browser_path)"; then
+        log_message "Telegram /chart will use $found" "$GREEN"
+        if command -v snap >/dev/null 2>&1 && snap list chromium >/dev/null 2>&1; then
+            log_message "The chromium snap is not used by Chartly. If nothing else needs it: sudo snap remove chromium" "$YELLOW"
+        fi
+    else
+        log_message "No browser the Chartly service can start was installed, so Telegram /chart will not draw charts" "$YELLOW"
+        log_message "Install Google Chrome (amd64) or your distribution's chromium package; on arm64 Ubuntu, Chromium exists only as a snap, which cannot run as a service" "$YELLOW"
+    fi
+    return 0
+}
+# <<< Telegram /chart browser
+
+# Function to generate random hex string
+generate_hex() {
+    python3 -c "import secrets; print(secrets.token_hex(32))"
+}
+
+# Function to validate broker name
+validate_broker() {
+    local broker=$1
+    local valid_brokers="fivepaisa,fivepaisaxts,aliceblue,angel,arrow,compositedge,definedge,deltaexchange,dhan,dhan_sandbox,firstock,flattrade,fyers,groww,hdfcsecurities,hdfcsky,ibulls,iifl,iiflcapital,indmoney,jainamxts,kotak,motilal,mstock,nubra,paytm,pocketful,rmoney,rupeezy,samco,shoonya,tradejini,tradesmart,upstox,wisdom,zebu,zerodha"
+
+    if [[ ",$valid_brokers," == *",$broker,"* ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to check if broker is XTS based
+is_xts_broker() {
+    local broker=$1
+    local xts_brokers="fivepaisaxts,compositedge,ibulls,iifl,jainamxts,rmoney,wisdom"
+    if [[ ",$xts_brokers," == *",$broker,"* ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to check timezone
+check_timezone() {
+    current_tz=$(timedatectl | grep "Time zone" | awk '{print $3}')
+    log_message "Current timezone: $current_tz" "$BLUE"
+
+    if [[ "$current_tz" == "Asia/Kolkata" ]]; then
+        log_message "Server is already set to IST timezone." "$GREEN"
+        return 0
+    fi
+
+    log_message "Server is not set to IST timezone." "$YELLOW"
+    read -p "Would you like to change the timezone to IST? (y/n): " change_tz
+    if [[ $change_tz =~ ^[Yy]$ ]]; then
+        log_message "Changing timezone to IST..." "$BLUE"
+        sudo timedatectl set-timezone Asia/Kolkata
+        check_status "Failed to change timezone"
+        log_message "Timezone successfully changed to IST" "$GREEN"
+    else
+        log_message "Keeping current timezone: $current_tz" "$YELLOW"
+    fi
+}
+
+# Start logging
+log_message "Starting Chartly Multi-Instance installation" "$BLUE"
+log_message "Log file: $LOG_FILE" "$BLUE"
+log_message "----------------------------------------" "$BLUE"
+
+# Check timezone
+check_timezone
+
+# Ask number of instances
+while true; do
+    read -p "How many Chartly instances do you want to set up? " INSTANCES
+    if [[ "$INSTANCES" =~ ^[0-9]+$ ]] && [ "$INSTANCES" -gt 0 ]; then
+        break
+    else
+        log_message "Invalid number. Please enter a positive integer." "$RED"
+    fi
+done
+
+log_message "Setting up $INSTANCES Chartly instances" "$GREEN"
+
+# Base configuration
+BASE_DIR="/var/python/chartly-flask"
+REPO_URL=""
+FLASK_PORT_BASE=5000
+WS_PORT_BASE=8765
+ZMQ_PORT_BASE=5555
+
+# Arrays to store instance configurations
+declare -a DOMAINS
+declare -a BROKERS
+declare -a API_KEYS
+declare -a API_SECRETS
+declare -a API_KEYS_MARKET
+declare -a API_SECRETS_MARKET
+declare -a IS_XTS
+declare -a MCP_ENABLED_LIST
+
+# Collect information for all instances
+log_message "\n=== COLLECTING INSTANCE CONFIGURATIONS ===" "$YELLOW"
+
+for ((i=1; i<=INSTANCES; i++)); do
+    log_message "\n--- Instance $i Configuration ---" "$BLUE"
+
+    # Get domain
+    while true; do
+        read -p "Enter subdomain for instance $i (e.g., trade$i.example.com): " domain
+        if [ -z "$domain" ]; then
+            log_message "Error: Domain name is required" "$RED"
+            continue
+        fi
+        # Simplified domain validation: must contain at least one dot and end with valid TLD
+        if [[ ! $domain =~ ^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?))+$ ]]; then
+            log_message "Error: Invalid domain format (e.g., subdomain.example.com)" "$RED"
+            continue
+        fi
+        DOMAINS+=("$domain")
+        break
+    done
+
+    # Get broker
+    while true; do
+        log_message "\nValid brokers: fivepaisa,fivepaisaxts,aliceblue,angel,arrow,compositedge,definedge,deltaexchange,dhan,dhan_sandbox,firstock,flattrade,fyers,groww,hdfcsecurities,hdfcsky,ibulls,iifl,iiflcapital,indmoney,jainamxts,kotak,motilal,mstock,nubra,paytm,pocketful,rmoney,rupeezy,samco,shoonya,tradejini,tradesmart,upstox,wisdom,zebu,zerodha" "$BLUE"
+        read -p "Enter broker name for instance $i: " broker
+        if validate_broker "$broker"; then
+            BROKERS+=("$broker")
+            break
+        else
+            log_message "Invalid broker name" "$RED"
+        fi
+    done
+
+    # Show redirect URL
+    log_message "\nRedirect URL for broker portal: https://${domain}/${broker}/callback" "$GREEN"
+    echo ""
+
+    # Get API credentials
+    read -p "Enter broker API key for instance $i: " api_key
+    read -p "Enter broker API secret for instance $i: " api_secret
+
+    if [ -z "$api_key" ] || [ -z "$api_secret" ]; then
+        log_message "Error: API credentials are required" "$RED"
+        exit 1
+    fi
+
+    API_KEYS+=("$api_key")
+    API_SECRETS+=("$api_secret")
+
+    # Check for XTS broker
+    if is_xts_broker "$broker"; then
+        IS_XTS+=("true")
+        log_message "\nThis broker ($broker) requires market data credentials" "$YELLOW"
+        read -p "Enter market data API key: " market_key
+        read -p "Enter market data API secret: " market_secret
+
+        if [ -z "$market_key" ] || [ -z "$market_secret" ]; then
+            log_message "Error: Market data credentials required for XTS brokers" "$RED"
+            exit 1
+        fi
+
+        API_KEYS_MARKET+=("$market_key")
+        API_SECRETS_MARKET+=("$market_secret")
+    else
+        IS_XTS+=("false")
+        API_KEYS_MARKET+=("")
+        API_SECRETS_MARKET+=("")
+    fi
+
+    # Optional: Remote MCP for hosted AI clients (Claude.ai, ChatGPT).
+    # Same-domain mode — /mcp and /oauth/* are served from the same nginx
+    # vhost as this instance's dashboard, so no extra config is required.
+    # Local stdio MCP (Claude Desktop / Cursor / Windsurf) works regardless.
+    log_message "\nRemote MCP lets hosted AI clients (Claude.ai, ChatGPT) connect to Chartly over HTTPS." "$BLUE"
+    log_message "Skip this if you only use the local MCP server with Claude Desktop / Cursor." "$YELLOW"
+    read -p "Enable Remote MCP for instance $i? (y/N): " enable_mcp_input
+    if [[ $enable_mcp_input =~ ^[Yy]$ ]]; then
+        MCP_ENABLED_LIST+=("true")
+        log_message "Remote MCP will be enabled at https://$domain/mcp" "$GREEN"
+    else
+        MCP_ENABLED_LIST+=("false")
+    fi
+
+    log_message "Instance $i configuration collected" "$GREEN"
+done
+
+# System packages installation (one-time)
+log_message "\n=== INSTALLING SYSTEM PACKAGES ===" "$YELLOW"
+sudo apt-get update && sudo apt-get upgrade -y
+check_status "Failed to update system"
+
+sudo apt-get install -y python3 python3-venv python3-pip python3-full nginx git software-properties-common snapd ufw certbot python3-certbot-nginx \
+    libopenblas0 libgomp1 libgfortran5
+check_status "Failed to install packages"
+
+ensure_chart_browser
+
+# Install uv
+log_message "\nInstalling uv package manager..." "$BLUE"
+sudo snap install astral-uv --classic
+check_status "Failed to install uv"
+
+# Configure firewall (one-time)
+log_message "\nConfiguring firewall..." "$BLUE"
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw allow 'Nginx Full'
+sudo ufw --force enable
+check_status "Failed to configure firewall"
+
+# Create base directory
+sudo mkdir -p "$BASE_DIR"
+
+# Install each instance
+log_message "\n=== INSTALLING INSTANCES ===" "$YELLOW"
+
+for ((i=1; i<=INSTANCES; i++)); do
+    idx=$((i-1))
+    DOMAIN="${DOMAINS[$idx]}"
+    BROKER="${BROKERS[$idx]}"
+    API_KEY="${API_KEYS[$idx]}"
+    API_SECRET="${API_SECRETS[$idx]}"
+    API_KEY_MARKET="${API_KEYS_MARKET[$idx]}"
+    API_SECRET_MARKET="${API_SECRETS_MARKET[$idx]}"
+    IS_XTS_INSTANCE="${IS_XTS[$idx]}"
+    ENABLE_REMOTE_MCP="${MCP_ENABLED_LIST[$idx]}"
+
+    log_message "\n--- Installing Instance $i: $DOMAIN ($BROKER) ---" "$BLUE"
+
+    # Paths
+    DEPLOY_NAME="${DOMAIN/./-}-${BROKER}"
+    INSTANCE_DIR="$BASE_DIR/chartly$i"
+    VENV_PATH="$INSTANCE_DIR/venv"
+    SOCKET_FILE="$INSTANCE_DIR/chartly.sock"
+    SERVICE_NAME="chartly$i"
+
+    # Ports
+    FLASK_PORT=$((FLASK_PORT_BASE + i - 1))
+    WS_PORT=$((WS_PORT_BASE + i - 1))
+    ZMQ_PORT=$((ZMQ_PORT_BASE + i - 1))
+
+    # Clone or update repository
+    if [ ! -d "$INSTANCE_DIR" ]; then
+        log_message "Cloning repository to $INSTANCE_DIR" "$BLUE"
+        # --filter=blob:none makes this a partial clone: the server sends every
+        # commit and tree but no file contents, so it pulls ~20 MB instead of
+        # ~280 MB. Blobs outside the current checkout are fetched on demand, so
+        # the full history stays usable -- all 4,824 commits, 62 tags, every
+        # branch -- which keeps `git reset --hard HEAD~n`, tag checkouts and
+        # branch switching working. Nearly all of that 280 MB is superseded
+        # frontend/dist bundles that a server never reads. A host without filter
+        # support just full-clones, so this is never worse than no flag at all.
+        sudo git clone --filter=blob:none "$REPO_URL" "$INSTANCE_DIR"
+        check_status "Failed to clone repository"
+    else
+        log_message "Directory exists, skipping clone" "$YELLOW"
+    fi
+
+    # Create virtual environment
+    log_message "Setting up virtual environment..." "$BLUE"
+    if [ -d "$VENV_PATH" ]; then
+        sudo rm -rf "$VENV_PATH"
+    fi
+    sudo uv venv "$VENV_PATH"
+    check_status "Failed to create venv"
+
+    # Install dependencies
+    log_message "Installing Python dependencies..." "$BLUE"
+    ACTIVATE_CMD="source $VENV_PATH/bin/activate"
+    sudo bash -c "$ACTIVATE_CMD && uv pip install -r $INSTANCE_DIR/requirements-nginx.txt"
+    check_status "Failed to install dependencies"
+
+    # Ensure gunicorn and eventlet
+    sudo bash -c "$ACTIVATE_CMD && uv pip install 'gunicorn>=25.0,<26' eventlet"
+
+    # Configure .env file
+    log_message "Configuring environment file..." "$BLUE"
+    ENV_FILE="$INSTANCE_DIR/.env"
+
+    if [ -f "$ENV_FILE" ]; then
+        sudo mv "$ENV_FILE" "${ENV_FILE}.backup_$(date +%Y%m%d_%H%M%S)"
+    fi
+
+    sudo cp "$INSTANCE_DIR/.sample.env" "$ENV_FILE"
+
+    # Generate keys
+    APP_KEY=$(generate_hex)
+    API_KEY_PEPPER=$(generate_hex)
+
+    # Database paths (unique per instance for complete isolation)
+    DB_PATH="sqlite:///db/chartly${i}.db"
+    LATENCY_DB="sqlite:///db/latency${i}.db"
+    LOGS_DB="sqlite:///db/logs${i}.db"
+    HEALTH_DB="sqlite:///db/health${i}.db"
+    SANDBOX_DB="sqlite:///db/sandbox${i}.db"
+    HISTORIFY_DB="db/historify${i}.duckdb"
+
+    # Session/CSRF cookie names
+    SESSION_COOKIE="session${i}"
+    CSRF_COOKIE="csrf_token${i}"
+
+    # Update .env file
+    # IMPORTANT: Order matters! Update broker and domain BEFORE ports
+
+    # 1. Replace broker placeholder first
+    sudo sed -i "s|<broker>|$BROKER|g" "$ENV_FILE"
+
+    # 2. Replace domain URLs (before port changes)
+    sudo sed -i "s|http://127.0.0.1:5000|https://$DOMAIN|g" "$ENV_FILE"
+    # Explicitly set HOST_SERVER in case the default value didn't match
+    sudo sed -i "s|HOST_SERVER = '.*'|HOST_SERVER = 'https://$DOMAIN'|g" "$ENV_FILE"
+    sudo sed -i "s|CORS_ALLOWED_ORIGINS = '.*'|CORS_ALLOWED_ORIGINS = 'https://$DOMAIN'|g" "$ENV_FILE"
+
+    # 3. Update ports (these stay as localhost for internal communication)
+    sudo sed -i "s|FLASK_PORT='[0-9]*'|FLASK_PORT='$FLASK_PORT'|g" "$ENV_FILE"
+    sudo sed -i "s|WEBSOCKET_PORT='[0-9]*'|WEBSOCKET_PORT='$WS_PORT'|g" "$ENV_FILE"
+    sudo sed -i "s|ZMQ_PORT='[0-9]*'|ZMQ_PORT='$ZMQ_PORT'|g" "$ENV_FILE"
+
+    # 4. Update WebSocket URL for production (secure WebSocket through nginx)
+    sudo sed -i "s|WEBSOCKET_URL='.*'|WEBSOCKET_URL='wss://$DOMAIN/ws'|g" "$ENV_FILE"
+
+    # 5. Host bindings intentionally left at 127.0.0.1 (the .sample.env default):
+    #    nginx on this host reverse-proxies /ws -> 127.0.0.1:WEBSOCKET_PORT, and
+    #    ZMQ is an internal message bus that must never be exposed publicly.
+
+    # 6. Update API credentials
+    sudo sed -i "s|YOUR_BROKER_API_KEY|$API_KEY|g" "$ENV_FILE"
+    sudo sed -i "s|YOUR_BROKER_API_SECRET|$API_SECRET|g" "$ENV_FILE"
+
+    # 7. Update security keys
+    sudo sed -i "s|CHARTLY_PLACEHOLDER_APP_KEY_REGENERATE_BEFORE_USE|$APP_KEY|g" "$ENV_FILE"
+    sudo sed -i "s|CHARTLY_PLACEHOLDER_API_KEY_PEPPER_REGENERATE_BEFORE_USE|$API_KEY_PEPPER|g" "$ENV_FILE"
+
+    # Each instance runs gunicorn behind nginx (Unix socket bind). Trust the
+    # proxy's X-Forwarded-For / X-Real-IP for IP-based features.
+    sudo sed -i "s|TRUST_PROXY_HEADERS = 'FALSE'|TRUST_PROXY_HEADERS = 'TRUE'|g" "$ENV_FILE"
+
+    # 8. Update database paths (unique per instance - ALL 6 databases)
+    sudo sed -i "s|DATABASE_URL = '.*'|DATABASE_URL = '$DB_PATH'|g" "$ENV_FILE"
+    sudo sed -i "s|LATENCY_DATABASE_URL = '.*'|LATENCY_DATABASE_URL = '$LATENCY_DB'|g" "$ENV_FILE"
+    sudo sed -i "s|LOGS_DATABASE_URL = '.*'|LOGS_DATABASE_URL = '$LOGS_DB'|g" "$ENV_FILE"
+    sudo sed -i "s|HEALTH_DATABASE_URL = '.*'|HEALTH_DATABASE_URL = '$HEALTH_DB'|g" "$ENV_FILE"
+    sudo sed -i "s|SANDBOX_DATABASE_URL = '.*'|SANDBOX_DATABASE_URL = '$SANDBOX_DB'|g" "$ENV_FILE"
+    sudo sed -i "s|HISTORIFY_DATABASE_URL = '.*'|HISTORIFY_DATABASE_URL = '$HISTORIFY_DB'|g" "$ENV_FILE"
+
+    # 9. Update session/CSRF cookies (CRITICAL for instance isolation)
+    sudo sed -i "s|SESSION_COOKIE_NAME = '.*'|SESSION_COOKIE_NAME = '$SESSION_COOKIE'|g" "$ENV_FILE"
+    sudo sed -i "s|CSRF_COOKIE_NAME = '.*'|CSRF_COOKIE_NAME = '$CSRF_COOKIE'|g" "$ENV_FILE"
+
+    # 10. Update Flask host IP binding (internal only)
+    sudo sed -i "s|FLASK_HOST_IP='.*'|FLASK_HOST_IP='127.0.0.1'|g" "$ENV_FILE"
+
+    # 11. Enable Remote MCP if the operator opted in for this instance.
+    # Same-domain mode: /mcp and /oauth/* are served from the same nginx
+    # vhost as the dashboard. Other MCP_* keys (auto-approve, write scope,
+    # CORS allowlist) inherit their defaults from .sample.env — flip them
+    # later in the per-instance .env if you want stricter behavior.
+    if [ "$ENABLE_REMOTE_MCP" = "true" ]; then
+        sudo sed -i "s|MCP_HTTP_ENABLED = 'False'|MCP_HTTP_ENABLED = 'True'|g" "$ENV_FILE"
+        sudo sed -i "s|MCP_PUBLIC_URL = ''|MCP_PUBLIC_URL = 'https://$DOMAIN'|g" "$ENV_FILE"
+    fi
+
+    # XTS broker credentials
+    if [ "$IS_XTS_INSTANCE" = "true" ]; then
+        sudo sed -i "s|YOUR_BROKER_MARKET_API_KEY|$API_KEY_MARKET|g" "$ENV_FILE"
+        sudo sed -i "s|YOUR_BROKER_MARKET_API_SECRET|$API_SECRET_MARKET|g" "$ENV_FILE"
+    fi
+
+    # Set permissions
+    log_message "Setting permissions..." "$BLUE"
+    sudo mkdir -p "$INSTANCE_DIR/db"
+    sudo mkdir -p "$INSTANCE_DIR/tmp/numba_cache"
+    sudo mkdir -p "$INSTANCE_DIR/tmp/matplotlib"
+    # Create directories for Python strategy feature
+    sudo mkdir -p "$INSTANCE_DIR/strategies/scripts"
+    sudo mkdir -p "$INSTANCE_DIR/strategies/examples"
+    sudo mkdir -p "$INSTANCE_DIR/log/strategies"
+    sudo mkdir -p "$INSTANCE_DIR/keys"
+    sudo chown -R www-data:www-data "$INSTANCE_DIR"
+    sudo chmod -R 755 "$INSTANCE_DIR"
+    # Set more restrictive permissions for sensitive directories
+    sudo chmod 700 "$INSTANCE_DIR/keys"
+    # Restrict .env to the service account only — contains APP_KEY, API_KEY_PEPPER,
+    # broker API credentials. The recursive chmod 755 above would otherwise leave
+    # it world-readable on shared multi-tenant boxes.
+    sudo chmod 600 "$ENV_FILE"
+    [ -S "$SOCKET_FILE" ] && sudo rm -f "$SOCKET_FILE"
+
+    # Configure Nginx (initial for SSL)
+    log_message "Configuring Nginx for SSL..." "$BLUE"
+    sudo tee /etc/nginx/sites-available/$DOMAIN > /dev/null << EOL
+server {
+    listen 80;
+    listen [::]:80;
+    server_name $DOMAIN;
+    root /var/www/html;
+
+    # CHARTLY_WEBHOOK_LOG_GUARD: URL credentials never enter nginx access logs.
+    set \$chartly_loggable 1;
+    if (\$uri ~ ^/(strategy|flow|chartink)/webhook/) {
+        set \$chartly_loggable 0;
+    }
+    access_log /var/log/nginx/${DOMAIN}_access.log combined if=\$chartly_loggable;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+}
+EOL
+
+    sudo ln -sf /etc/nginx/sites-available/$DOMAIN /etc/nginx/sites-enabled/
+
+    # Remove default on first instance
+    if [ $i -eq 1 ]; then
+        sudo rm -f /etc/nginx/sites-enabled/default
+    fi
+
+    # Reload Nginx
+    sudo nginx -t && sudo systemctl reload nginx
+    check_status "Failed to reload Nginx"
+
+    # Obtain SSL certificate
+    log_message "Obtaining SSL certificate for $DOMAIN..." "$BLUE"
+    sudo certbot --nginx -d $DOMAIN --non-interactive --agree-tos --email admin@${DOMAIN#*.}
+    check_status "Failed to obtain SSL certificate"
+
+    # Configure final Nginx with SSL and WebSocket
+    log_message "Configuring final Nginx setup..." "$BLUE"
+    sudo tee /etc/nginx/sites-available/$DOMAIN > /dev/null << EOL
+server {
+    listen 80;
+    listen [::]:80;
+    server_name $DOMAIN;
+
+    # CHARTLY_WEBHOOK_LOG_GUARD: suppress URL-secret routes before redirect logs.
+    set \$chartly_loggable 1;
+    if (\$uri ~ ^/(strategy|flow|chartink)/webhook/) {
+        set \$chartly_loggable 0;
+    }
+    access_log /var/log/nginx/${DOMAIN}_access.log combined if=\$chartly_loggable;
+
+    # WebSocket redirect exceptions
+    location = /ws {
+        return 301 https://\$host\$request_uri;
+    }
+
+    location /ws/ {
+        return 301 https://\$host\$request_uri;
+    }
+
+    location / {
+        return 301 https://\$host\$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    server_name $DOMAIN;
+
+    # CHARTLY_WEBHOOK_LOG_GUARD: URL credentials never enter nginx access logs.
+    set \$chartly_loggable 1;
+    if (\$uri ~ ^/(strategy|flow|chartink)/webhook/) {
+        set \$chartly_loggable 0;
+    }
+    access_log /var/log/nginx/${DOMAIN}_access.log combined if=\$chartly_loggable;
+
+    ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
+
+    # SSL configuration
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers EECDH+AESGCM:EDH+AESGCM;
+    ssl_ecdh_curve secp384r1;
+    ssl_session_timeout 10m;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_tickets off;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    # Security headers
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+    add_header X-XSS-Protection "1; mode=block";
+    add_header Strict-Transport-Security "max-age=63072000" always;
+
+    # WebSocket endpoints
+    location = /ws {
+        proxy_pass http://127.0.0.1:$WS_PORT;
+        proxy_http_version 1.1;
+        proxy_read_timeout 86400s;
+        proxy_send_timeout 86400s;
+        proxy_buffering off;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+
+    location /ws/ {
+        proxy_pass http://127.0.0.1:$WS_PORT/;
+        proxy_http_version 1.1;
+        proxy_read_timeout 86400s;
+        proxy_send_timeout 86400s;
+        proxy_buffering off;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+
+    # Socket.IO (Flask-SocketIO real-time events)
+    location /socket.io/ {
+        proxy_pass http://unix:$SOCKET_FILE;
+        proxy_http_version 1.1;
+        proxy_read_timeout 86400s;
+        proxy_send_timeout 86400s;
+        proxy_buffering off;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+
+    # Main app via Unix socket
+    location / {
+        proxy_pass http://unix:$SOCKET_FILE;
+        proxy_http_version 1.1;
+
+        # Extended timeouts for broker authentication (cold start can take 60-90s)
+        proxy_read_timeout 300s;
+        proxy_connect_timeout 300s;
+        proxy_send_timeout 300s;
+
+        # Increased buffer sizes for large headers (auth tokens, session cookies)
+        proxy_buffer_size 128k;
+        proxy_buffers 4 256k;
+        proxy_busy_buffers_size 256k;
+
+        # Plain HTTP only: /ws, /ws/ and /socket.io/ have their own blocks.
+        # Forcing "Connection: upgrade" here sent every ordinary request
+        # upstream with a bogus upgrade header and an empty Upgrade:, which
+        # breaks HTTP/1.1 keep-alive to gunicorn and shows up as intermittent
+        # truncated asset responses and 5xx (GitHub issue #1807).
+        proxy_set_header Connection "";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_redirect off;
+    }
+}
+EOL
+
+    sudo nginx -t
+    check_status "Failed to validate Nginx config"
+
+    # Create systemd service
+    log_message "Creating systemd service..." "$BLUE"
+    sudo tee /etc/systemd/system/$SERVICE_NAME.service > /dev/null << EOL
+[Unit]
+Description=Chartly Instance $i ($DOMAIN - $BROKER)
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=$INSTANCE_DIR
+# Set HOME so Kaleido/choreographer can write temp files for Telegram /chart.
+# Kaleido 1.x creates temp dirs in Path.home() (not TMPDIR); the default
+# www-data home /var/www/ is typically root-owned and not writable.
+Environment="HOME=$INSTANCE_DIR/tmp"
+# Environment variables for numba/scipy support
+Environment="TMPDIR=$INSTANCE_DIR/tmp"
+Environment="NUMBA_CACHE_DIR=$INSTANCE_DIR/tmp/numba_cache"
+Environment="LLVMLITE_TMPDIR=$INSTANCE_DIR/tmp"
+Environment="MPLCONFIGDIR=$INSTANCE_DIR/tmp/matplotlib"
+# Limit OpenBLAS/NumPy threads to prevent RLIMIT_NPROC exhaustion
+# See: 
+Environment="OPENBLAS_NUM_THREADS=2"
+Environment="OMP_NUM_THREADS=2"
+Environment="MKL_NUM_THREADS=2"
+Environment="NUMEXPR_NUM_THREADS=2"
+Environment="NUMBA_NUM_THREADS=2"
+ExecStart=/bin/bash -c 'source $VENV_PATH/bin/activate && $VENV_PATH/bin/gunicorn \\
+    --worker-class eventlet \\
+    -w 1 \\
+    --bind unix:$SOCKET_FILE \\
+    --timeout 300 \\
+    --log-level info \\
+    app:app'
+Restart=always
+RestartSec=5
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+    # Enable and start service
+    log_message "Starting service..." "$BLUE"
+    sudo systemctl daemon-reload
+    sudo systemctl enable $SERVICE_NAME
+    sudo systemctl start $SERVICE_NAME
+    check_status "Failed to start service"
+
+    log_message "Instance $i installed successfully!" "$GREEN"
+    log_message "   URL: https://$DOMAIN" "$BLUE"
+    log_message "   Flask:$FLASK_PORT | WS:$WS_PORT | ZMQ:$ZMQ_PORT" "$BLUE"
+    log_message "   Service: $SERVICE_NAME" "$BLUE"
+    if [ "$ENABLE_REMOTE_MCP" = "true" ]; then
+        log_message "   Remote MCP: Enabled at https://$DOMAIN/mcp" "$BLUE"
+    else
+        log_message "   Remote MCP: Disabled" "$BLUE"
+    fi
+done
+
+# Final Nginx reload
+log_message "\nReloading Nginx..." "$BLUE"
+sudo systemctl reload nginx
+
+# Summary
+log_message "\n╔════════════════════════════════════════════════════════╗" "$GREEN"
+log_message "║          MULTI-INSTANCE INSTALLATION COMPLETE          ║" "$GREEN"
+log_message "╚════════════════════════════════════════════════════════╝" "$GREEN"
+
+log_message "\n INSTANCE SUMMARY:" "$YELLOW"
+for ((i=1; i<=INSTANCES; i++)); do
+    idx=$((i-1))
+    log_message "\nInstance $i:" "$BLUE"
+    log_message "  Domain: https://${DOMAINS[$idx]}" "$GREEN"
+    log_message "  Broker: ${BROKERS[$idx]}" "$BLUE"
+    log_message "  Service: chartly$i" "$BLUE"
+    log_message "  Directory: $BASE_DIR/chartly$i" "$BLUE"
+    if [ "${MCP_ENABLED_LIST[$idx]}" = "true" ]; then
+        log_message "  Remote MCP: Enabled at https://${DOMAINS[$idx]}/mcp" "$BLUE"
+    else
+        log_message "  Remote MCP: Disabled" "$BLUE"
+    fi
+done
+
+log_message "\n USEFUL COMMANDS:" "$YELLOW"
+log_message "View all services: systemctl list-units 'chartly*'" "$BLUE"
+log_message "Restart instance: sudo systemctl restart chartly<N>" "$BLUE"
+log_message "View logs: sudo journalctl -u chartly<N> -f" "$BLUE"
+log_message "Check status: sudo systemctl status chartly<N>" "$BLUE"
+
+log_message "\n Installation log saved to: $LOG_FILE" "$BLUE"
+log_message "\n All instances are ready to use!" "$GREEN"

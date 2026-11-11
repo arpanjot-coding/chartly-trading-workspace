@@ -1,0 +1,28 @@
+meta {
+  name: PlaceSmartOrder
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://127.0.0.1:5000/api/v1/placesmartorder
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "apikey": "{{api_key}}",
+      "strategy": "Test Strategy",
+      "exchange": "NSE",
+      "symbol": "YESBANK",
+      "action": "BUY",
+      "product": "MIS",
+      "pricetype": "MARKET",
+      "quantity": "10",
+      "price": "0",
+      "trigger_price": "0",
+      "disclosed_quantity": "0",
+      "position_size": "10"
+  }
+}

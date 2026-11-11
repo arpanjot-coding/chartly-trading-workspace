@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "package": "P03",
+  "completedAt": "2026-11-02",
+  "owner": "Codex",
+  "packageComplete": true,
+  "browserJourneysVerified": true,
+  "independentReviewComplete": true,
+  "installedJournalMigrationPerformed": false,
+  "scope": "Original web journal UI: manual lifecycle/corrections, one normalized CSV format, account/provider reconciliation, reviews, exact scoped metrics, drafts and additive local recovery.",
+  "testedRuntime": {
+    "os": "Windows",
+    "python": "3.14.7",
+    "node": "22.23.4",
+    "database": "file-backed SQLite"
+  },
+  "verification": {
+    "backendTests": 807,
+    "backendFiles": 23,
+    "frontendTests": 448,
+    "frontendFiles": 39,
+    "importScreenFollowUpTests": 6,
+    "p00WorkflowTests": 52,
+    "typescript": "passed",
+    "productionBuild": "passed",
+    "ruff": "passed",
+    "biome": "passed",
+    "generatedContracts": "passed",
+    "labelFollowUpTests": 18
+  },
+  "resourceAudit": {
+    "iterations": 100,
+    "repeatImports": 10,
+    "connectionsOpened": 533,
+    "connectionsClosed": 533,
+    "initialHandles": 262,
+    "finalHandles": 261,
+    "workersSpawned": 24,
+    "workersReaped": 24,
+    "temporaryDirectoriesCleaned": 24,
+    "workerInitialHandles": 261,
+    "workerFinalHandles": 262,
+    "frontendDraftStore": "One module-scoped Dexie instance; 100-draft bound, explicit exports, no silent purge."
+  },
+  "p02Compatibility": {
+    "verified": true,
+    "evidence": [
+      {
+        "path": "evidence/p02-regression.log",
+        "sha256": "7a81321fc27c055f7320e5fb57241e47484b219a9f274be1d54233376fac8683"
+      }
+    ]
+  },
+  "limitations": [
+    "One documented normalized statement format; individual broker adapters and live history sync remain later packages.",
+    "No implicit currency conversion or guessed contract economics; unknown values remain unknown.",
+    "Unsubmitted browser drafts require separate export and are not in server workspace ZIPs.",
+    "Existing chart needs a configured eligible feed/API for prices.",
+    "Windows local web/SQLite verified; no Linux gunicorn, PostgreSQL or real provider certification claimed."
+  ],
+  "tasks": [
+    {
+      "id": "P03-T01",
+      "state": "done",
+      "evidence": [
+        "IMPLEMENTATION_EVIDENCE.md",
+        "evidence/partial-and-close.png",
+        "../../../../test/test_journal_service.py"
+      ]
+    },
+    {
+      "id": "P03-T02",
+      "state": "done",
+      "evidence": [
+        "SUPPORTED_STATEMENT_FORMAT.md",
+        "evidence/import-preview.png",
+        "../../../../test/test_journal_api.py"
+      ]
+    },
+    {
+      "id": "P03-T03",
+      "state": "done",
+      "evidence": [
+        "IMPORT_PLAN.md",
+        "../../../../test/test_journal_import.py",
+        "../../../../test/test_journal_review_findings.py"
+      ]
+    },
+    {
+      "id": "P03-T04",
+      "state": "done",
+      "evidence": [
+        "UI_PLAN.md",
+        "../../../../test/test_journal_api.py",
+        "../../../../test/test_journal_final_review.py"
+      ]
+    },
+    {
+      "id": "P03-T05",
+      "state": "done",
+      "evidence": [
+        "CALCULATION_POLICY.md",
+        "../../../../frontend/src/lib/trader/journalAnalytics.test.ts",
+        "../../../../frontend/src/lib/trader/metrics.test.ts"
+      ]
+    },
+    {
+      "id": "P03-T06",
+      "state": "done",
+      "evidence": [
+        "CALCULATION_POLICY.md",
+        "../../../../frontend/src/pages/workspace/CombinedLiveAnalytics.test.tsx",
+        "../../../../test/test_journal_final_review.py"
+      ]
+    },
+    {
+      "id": "P03-T07",
+      "state": "done",
+      "evidence": [
+        "CALCULATION_POLICY.md",
+        "METRICS_PLAN.md",
+        "evidence/frontend-tests.log"
+      ]
+    },
+    {
+      "id": "P03-T08",
+      "state": "done",
+      "evidence": [
+        "evidence/saved-period-reviews.png",
+        "evidence/archive-undo.png",
+        "evidence/browser-book-export.json",
+        "../../../../test/test_journal_recovery.py",
+        "evidence/resource-audit.log"
+      ]
+    }
+  ],
+  "artifactHashes": {
+    "../../../../.github/workflows/ci.yml": "fcc6d2a167e43b9cab5675f5fec032ad38b50eda12cc0d8503522963230ebd1b",
+    "../../../../app.py": "bb574f98eb0518adc2684eba2f06f62cc0f17737857e784ff22c4b93f8e1152b",
+    "../../../../blueprints/auth.py": "7200618e53f6bcee747de032b48bfd2c9b9822f319fd034ef9a65447f48761b6",
+    "../../../../blueprints/journal.py": "95f6f152aa74e54fc8e9e35bc5c3771b3f0d8e2720d40e7a2296f9c0c6aa4a71",
+    "../../../../blueprints/local_data.py": "993e6b2433a32dacf34b3edaa115b03fd5de197f86541f4b2f0350ac02418872",
+    "../../../../database/user_db.py": "d1f4e622bd32cda71687328813ada28d037c041c4a643f4b26aef732c233ec5b",
+    "../../../../database/workspace_storage_db.py": "c72bb79bcf9fdcaa42da47be1719e3c0ba6977241926278bb9563b677bbabc87",
+    "../../../api/local-journal.md": "f45e79d916aa4ae64006ef4de431427a4285daa982548e6eb852067b004348e3",
+    "../../../api/README.md": "9bd12cafcf0f1e80e33d71dea22f8ecacb24c43d7988c39957e7cb67c4886cbb",
+    "../03-journal-and-imports.md": "a62c700fee53f1e35d2e5b0760198c6da87a7e7b929e279b61a76525ad3d818d",
+    "../MASTER_PLAN.md": "173615eed975870c1a22f3886f04a29609e801ceca99fbf9960e5ce50310208d",
+    "../p01/STATE_REVIEW_AND_CONTINUATION.md": "a6b6bfea7408789868be1d7a9fac8cdbcfe70e83234ee5adea1bf34093ed1d7f",
+    "ACCEPTANCE_GATE.md": "f68bf06ae136681ce285c84e67df90db3a4efac379ea3d6cf1a283b7010634e8",
+    "architecture.html": "2b154dfd653948580a9693c44dcfc31f5a7775e6723afa24e4741580d7e33e33",
+    "ARCHITECTURE.md": "56a8b6fb457c9084138daeccf4129c9fd0918203d3b051ae127141c5f80bfe7b",
+    "architecture.png": "3d706d1a9e0ba5756ec3dfce5707b78f69ca4714f80bb100f2beccdfa2eade29",
+    "CALCULATION_POLICY.md": "924f832e666ff1892a591069c434f9a7b16b376c8f15ac42a99030ad255f6a16",
+    "evidence/app-smoke.log": "a889cde7d2e788970a51f347946837889dc7904333dc9caa7968562e9f680e0c",
+    "evidence/archive-undo.png": "5a2eeac8988967eedf6c527065371bfc90ed4ad3bd60ff6d4fafd4959a352b1c",
+    "evidence/backend-tests.log": "7a81321fc27c055f7320e5fb57241e47484b219a9f274be1d54233376fac8683",
+    "evidence/browser-book-export.json": "ab0739cf953d899ea3a669e77f49fae570687e2204bc36118e7698653fd56f1c",
+    "evidence/chart-return.png": "bb9f4c1d54ac1a60687f9509081631600674b69ef74813aba730d907537e58ac",
+    "evidence/frontend-biome.log": "e3d7b2500f52ac5aab9bec6fc25489a590264c535765e1522a36877cd5370ecd",
+    "evidence/frontend-tests.log": "73a8123503f0cfc6c8bb00c558fbf28cef40952232c425bdbfc5ea1868978756",
+    "evidence/import-biome.log": "42a0b3e15b2d2d87a976bb910545992e1c3f24feb1ef62a9d63c7b2b9547cb32",
+    "evidence/import-preview.png": "3a923839c639b1c0d307b6adad00ede39b0e78f450581daedab710d6ccae6081",
+    "evidence/independent-review.log": "5a947ebdcce7e2f4c6a2f7f012d52396fbb4e0b885a17b9b9f1ba823049c0424",
+    "evidence/journal-operations.log": "88690c97507b35c4c7152cf0b97c0f4784bd87537e4e098446bd6331a60a3637",
+    "evidence/label-polish.log": "fe05722803686b944b55c145879ac627decd788dfd08b0f4cae9aef4ab23fc83",
+    "evidence/p00-regression.log": "de943cccf515a953376b395018800010305afbaaf72218c673e565c87f22cf19",
+    "evidence/p02-regression.log": "7a81321fc27c055f7320e5fb57241e47484b219a9f274be1d54233376fac8683",
+    "evidence/partial-and-close.png": "12551701fdf0c1c3d41351a9d49a5872f4accc4158f3ceebae7e06af6c531ab1",
+    "evidence/production-build.log": "922c7f07847eddb7c96efe11f9ed4ed7216fcc45a2817b0b28b676180ce43e4f",
+    "evidence/resource-audit.log": "4092cbe7f0ac0ff4a5838a259ca939717fe7876f89ebf429b57b1954ba6ae051",
+    "evidence/saved-period-reviews.png": "354e1bc085b325c5b150e6d2166645fa06771c58519b8b4e185187a6d3c0d1b8",
+    "evidence/source-checks.log": "3ab2349aa45011783a2c4101c3d74464983a28f32ecf08f12632216d8248764d",
+    "evidence/typescript.log": "e11b23ab7ca54517bac53703e18a082204cf10a127210f59222ebbd02b43c9b6",
+    "IMPLEMENTATION_EVIDENCE.md": "af00be1a58e7e200f8e4bd54b7fd26b46713d6c52566e89d3ae75c66aff2344d",
+    "IMPLEMENTATION_PLAN.md": "108a9db7c70ca25b7f1c10668553a25878a605e4205f3c0bb06b305d9d659e1f",
+    "IMPORT_PLAN.md": "90f79d75f821b9b099559d9433768b05e73eb8c5e5b4b5ed220312a84a8735b3",
+    "METRICS_PLAN.md": "9763885a4c2b5aa086654d686fe5d7a246ea5a247828cd9c45a63dd8eaa3153d",
+    "SUPPORTED_STATEMENT_FORMAT.md": "3b3c925020ad12f1de5496b437de67c38e7386ac6239471d4bf047f5b7f2a3e5",
+    "UI_PLAN.md": "a83cc60403e9dc7dbd3f952326258bcd73481e373d834d55eba15359a747c5ca",
+    "../../../userguide/33-trading-journal/README.md": "f740349c13984e33b331b85cb2085cd58031a30b9e82ee2dbaedf98a8b342717",
+    "../../../../frontend/package-lock.json": "f60c7e124723ddca0e3689d91f945eb9ca63fcf53a1245198fd2491b43ba1b12",
+    "../../../../frontend/package.json": "d4c7d55267525aab8ec2814862ebcd1cad91ba7186e0e5525be8f32e522d4b2c",
+    "../../../../frontend/src/components/auth/AuthSync.tsx": "25aaf7360e8949fd53ac6cd4835bd27aed725d99a9172a08569cbc1c098c1d3b",
+    "../../../../frontend/src/hooks/useChartWorkspaceCatalog.ts": "75bae87bd1e3f861c2c973035a62a11aba675d721ded493a165584dcc856559d",
+    "../../../../frontend/src/lib/trader/browserSnapshot.ts": "86c24c1d09304ae4f8998f5e410fd9f6ce7e38868af1a6d1230ba8a10be31482",
+    "../../../../frontend/src/lib/trader/dataPersistence.ts": "a74a9f022ece008df176254da7683b02ebc2161bb6f58d6a3f7f38c24f39f8db",
+    "../../../../frontend/src/lib/trader/db.ts": "4010c3042941a74e1099c1d9767ee882ab0872a5312de451388f2ed5aea6f6f9",
+    "../../../../frontend/src/lib/trader/journalAnalytics.test.ts": "7d07279c414126c4a4e9930bca2b94e70e8ec91a69c80724ef725c4dd2f01864",
+    "../../../../frontend/src/lib/trader/journalAnalytics.ts": "ee42678b108513ececcbc92f6ff49c02e3b3a9a127c9cd92d6b47ad780e8e462",
+    "../../../../frontend/src/lib/trader/journalClient.test.ts": "19996e26a739375e356c84b9b7e5844d484f69af2f713b8df393005cf458173c",
+    "../../../../frontend/src/lib/trader/journalClient.ts": "dc886e609aa0cae854986230b1a845bc1465841ce000c32d411972d2eab7d2b2",
+    "../../../../frontend/src/lib/trader/journalDrafts.test.ts": "ef807d3af73f98d525fc7b7f68566bb6d5eb516c1d1ac5b5b6d2e2cc6624fa3a",
+    "../../../../frontend/src/lib/trader/journalDrafts.ts": "d58b27926d18aa31542e8f5025b0767b13c1ab609d397aaa81644077154d58ba",
+    "../../../../frontend/src/lib/trader/journalNavigation.test.ts": "a93d09e9198226a183e50b7011d9576337078945e51b0e19f06f913ae9741034",
+    "../../../../frontend/src/lib/trader/journalNavigation.ts": "34f9e9c4d6d6ccb3d443a7c7ac42886b3ef4cba587f4b36af2d384d86953040f",
+    "../../../../frontend/src/lib/trader/journalValidation.test.ts": "237df5362a9f91182f37be8257d6f808846511667be706c3cc15096fffbafba5",
+    "../../../../frontend/src/lib/trader/journalValidation.ts": "6907b1d93545ed1f91ba1ee756ff8aee122ed83f4e6c1ccb919150ee656b2ccb",
+    "../../../../frontend/src/lib/trader/localStorageClient.ts": "bd01546195af324f1edc83e54aca51a9aaa8bc0d5b078fee02c4149430609dd0",
+    "../../../../frontend/src/lib/trader/metrics.test.ts": "7f19ae7d824c1fcc1a25d76fe29131dfecb0331b2ad422760ad8827c7b8e1e02",
+    "../../../../frontend/src/lib/trader/metrics.ts": "7ee16bb17f56cd176194bcd9d562d887e67154be4aa60c8fa87c20cbaa8e210f",
+    "../../../../frontend/src/lib/trader/nativePersistence.ts": "30fbfece7adcbce8f11d299106620698fa42d3535cd31c54ea99ec20c00a6f25",
+    "../../../../frontend/src/lib/trader/preferenceEvents.ts": "2fe11c935063271f4895a9a81d4afea9000fcbe88cc1d90f0edd781460e79bf7",
+    "../../../../frontend/src/lib/trader/useTraderData.test.ts": "75feaeb1035fd4061ad50882c6a375cc025a7d0cf15570c5c3a351d1ae4d24d5",
+    "../../../../frontend/src/lib/trader/useTraderData.ts": "cc03d5d6eb405209e67fb52145ed31d9ca5ef4b2f8103bad3f1e2e37b2a24218",
+    "../../../../frontend/src/pages/settings/StorageRecovery.tsx": "a021ea1be3b7e18e11a6a2d58979e31f005425cc2bc96964a07987755152b4c1",
+    "../../../../frontend/src/pages/workspace/CombinedLiveAnalytics.test.tsx": "f4bceb722b9f944cd67fff37de3f577f183a4d33705e16aa98c1a5108dfa8bdd",
+    "../../../../frontend/src/pages/workspace/CombinedLiveAnalytics.tsx": "5eb7f39c8ec92203b9c79f7eac52288b3c3e943c284d09c3a7e0305f9d3d6d14",
+    "../../../../frontend/src/pages/workspace/journalCsv.test.ts": "77f8bb9256e41c157a2b2fc1781d72822d902382e7edbf6eac04a6f7b3d69687",
+    "../../../../frontend/src/pages/workspace/journalCsv.ts": "8cd629511dfc034b32aaed24be53db0a0bdafd4024132f59a90deeb45c346af2",
+    "../../../../frontend/src/pages/workspace/journalForm.test.ts": "af30ef8825c060836ec714ead6a596a5d63cd081d8ea8b470fc5c3da783a10e7",
+    "../../../../frontend/src/pages/workspace/journalForm.ts": "6cc94cde0269c5ec48c321915a783b636a724e2abcc5abe7c85644b04880cebf",
+    "../../../../frontend/src/pages/workspace/JournalLifecycle.test.tsx": "b9e04bc904f7f9e1899c9399bc159f0491acc1f199d20bb294267d880d6c17bb",
+    "../../../../frontend/src/pages/workspace/JournalOperations.test.tsx": "58c0a7e8bead22a3c9cb88adae643757a7666e87333716e48786409d9206ce86",
+    "../../../../frontend/src/pages/workspace/JournalOperations.tsx": "cc89b5c26e6f56b73350c7c6fe67bf2227bd15e0386bed5418c9d41f94f1f463",
+    "../../../../frontend/src/pages/workspace/JournalSeparation.test.tsx": "05e4ae6a441235d78c697afa16dcbed518e51a1869dfa963cba50c6a2050b759",
+    "../../../../frontend/src/pages/workspace/JournalTradeEditor.tsx": "a40bc2c6fc95c7c79c1b559c3acd972d923907fd6f6cd85fcd651acae072ac26",
+    "../../../../frontend/src/pages/workspace/TraderJournal.tsx": "e61797991d9b3040f824b4aec4b98e40d196b7d7107fe4fef23e7f78c1e946b6",
+    "../../../../frontend/src/pages/workspace/useJournalDraft.ts": "3c69839f13e817b500d4f54c9f45cefa621407f43c143c99a007fc623bdfba9b",
+    "../../../../frontend/src/stores/authStore.ts": "3e8b377a2aa1c96850c962f4849962017e78c6488c409d01a0592662929c0fb4",
+    "../../../../services/journal_import.py": "6998c2b8240303398e04d1b519b1cd978190f08d45aa0c871d324e033f380d24",
+    "../../../../services/journal_ledger.py": "d08ceebedc4de71897a549803e0a79f4e4248200dce7e7e28199be38d6e57efb",
+    "../../../../services/journal_service.py": "92b9b9d1ff85b031b8fe1804585ff4a04e2c21a872f2825ee054ad8db8a3dad6",
+    "../../../../services/local_account_access.py": "0a4c78fccb73dffdb3cfddb6fa79b83d8850f951be89e17d2c25611143714dd6",
+    "../../../../services/workspace_recovery.py": "035ba965e43e97a9ed23b64a918490c2a9676d3ac57efb0542d5f135e85fee9e",
+    "../../../../services/workspace_storage.py": "84e2b983925f67d66049b970f42f08500d32e7e37f392e373796b2a6993e0919",
+    "../../../../services/workspace_worker.py": "d764421a194293b7505fb3b2cb7c9580ad64a08e9e1b91de5d8b323eb77094f9",
+    "../../../../test/fixtures/p03/preview-example.json": "3a5613a01768a95342f97cad419a81a7fba4860bed5c50fc128552a78bd18921",
+    "../../../../test/fixtures/p03/universal-partial.csv": "ac2f8d940ccd0e121b2076f122fbda67306ae4ba796390277b355554c56089e8",
+    "../../../../test/fixtures/p03/universal-summary.csv": "a3381d1e97e54132c42ff5d7ec924879ff0acbb351da7b90308619e700f15fb9",
+    "../../../../test/test_journal_api.py": "f511be7bc34364db561bc9fc509d9cb849d780e6ce7f4b03afb305a100275b9c",
+    "../../../../test/test_journal_final_review.py": "ef148a35adf6b5cda9fcc0df50ecc88b2aab65d3f536b2378aa1f5398d51132b",
+    "../../../../test/test_journal_import.py": "ef00b456d66aa717aef0c5a02b39c1f7e3dd4071c876593ed61392d6aaa43f19",
+    "../../../../test/test_journal_metrics_review.py": "34d7035c1c9b014c7f42b53dbaee24db932f9c4616a7dfb4d216568f4e3f4b2d",
+    "../../../../test/test_journal_recovery.py": "693d79234e330545d5df1ae1806f873e0db94bc460361b140e25b25b6c05d684",
+    "../../../../test/test_journal_resource_audit.py": "a220d48d616196cfcd5bf5f1a8c3eaeeb89ce70a6dd9c5f4524b2f616b38b6ba",
+    "../../../../test/test_journal_review_findings.py": "6643896af42d181540ad8158b44c904922596358ae7508580d00129e29fb2028",
+    "../../../../test/test_journal_service.py": "a1bf1c2bf8f1caa4b21e34480cae24b0215d9e6f55841979e86c840cb870bf11",
+    "../../../../test/test_local_account_access.py": "69969fed4398bb982b50a82d628bb0b1d2bc7e4ce11b4517dacfc7b20f6ebd79",
+    "../../../../test/test_local_data_api.py": "9c08966d28f2f6e4f60305d2602a3be534b3817b72eac8edb17bfdab9c097933",
+    "../../../../test/test_user_identity_migration.py": "8697c536c79ce3d5b9fbad4941bcb484ccab8ac4e128f26630f269334338a8a6",
+    "../../../../test/test_workspace_recovery.py": "328e5ceba226a73abbc5fa70153f270f1e79d2e5c8b6def15d1e701299d82fad",
+    "../../../../test/test_workspace_storage.py": "003023fa17a79925c849cea471be7f7905540a6397bc902735e73d1d914555f5",
+    "../../../../test/test_workspace_worker.py": "81dd20ddbbb0b29408aaaff15295c5d984571d41ebf781cef46e39d959b7f47e",
+    "../../../../tmp/validate_professional_plan.py": "59bb7b21a4f171a12c722ccd96716ff55ccbb06074ed10d84cf8a71cced9810a"
+  }
+}

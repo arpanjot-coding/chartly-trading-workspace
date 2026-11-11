@@ -1,0 +1,4 @@
+# Optional Windows bridge. Core Chartly and the fake conformance suite do not need it.
+# Install explicitly with: uv pip install -r requirements-mt5.txt
+# Re-run the adapter's read-only conformance checks after an SDK or terminal update.
+MetaTrader5==5.0.6231; sys_platform == "win32"

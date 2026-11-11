@@ -1,0 +1,12 @@
+[
+  {"id":"explicit-manual", "value":{"id":1,"portfolioId":1,"origin":"manual"},"expected":{"state":"manual","reason":"legacy.explicit_manual"}},
+  {"id":"missing-origin-not-guessed", "value":{"id":1,"portfolioId":1},"expected":{"state":"needs_classification","reason":"legacy.ambiguous_provenance"}},
+  {"id":"mixed-manual-account", "value":{"id":1,"portfolioId":1,"origin":"manual","accountId":2},"expected":{"state":"needs_classification","reason":"legacy.ambiguous_provenance"}},
+  {"id":"replay-not-ready-from-label", "value":{"id":1,"portfolioId":1,"origin":"replay","sessionId":2},"expected":{"state":"needs_practice_mapping","reason":"legacy.dataset_run_unverified"}},
+  {"id":"connector-needs-verification", "value":{"id":1,"portfolioId":1,"origin":"connector","accountId":2},"expected":{"state":"needs_account_verification","reason":"legacy.account_unverified"}},
+  {"id":"import-without-account", "value":{"id":1,"portfolioId":1,"origin":"imported"},"expected":{"state":"needs_classification","reason":"legacy.ambiguous_provenance"}},
+  {"id":"chart-is-not-always-paper", "value":{"id":1,"portfolioId":1,"origin":"chart","accountId":2},"expected":{"state":"needs_account_verification","reason":"legacy.account_unverified"}},
+  {"id":"invalid-parent-id", "value":{"id":1,"portfolioId":0},"expected":{"state":"invalid","reason":"legacy.invalid_identity"}},
+  {"id":"unsafe-numeric-id", "value":{"id":9007199254740992,"portfolioId":1},"expected":{"state":"invalid","reason":"legacy.invalid_identity"}},
+  {"id":"null-account-not-absent", "value":{"id":1,"portfolioId":1,"origin":"manual","accountId":null},"expected":{"state":"invalid","reason":"legacy.invalid_reference"}}
+]

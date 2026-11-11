@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chartly P00 workflow prototype</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font:15px/1.55 system-ui,sans-serif;color:#181818;background:white}header{padding:16px 24px;border-bottom:1px solid #aaa}h1{font-size:23px;font-weight:600;margin:0}h2{font-size:19px;font-weight:600;margin:0 0 12px}h3{font-size:16px;font-weight:600}p{margin:8px 0}button,select,textarea{font:inherit;color:inherit;background:white;border:1px solid #999;border-radius:3px}button,select{min-height:42px;padding:8px 12px;cursor:pointer}button:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #333;outline-offset:2px}button:disabled{color:#666;cursor:not-allowed;background:#eee}button.primary{background:#222;color:white}.notice{font-size:13px;color:#444}.toolbar,nav,.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.toolbar{margin-top:12px}.layout{display:grid;grid-template-columns:230px minmax(0,1fr);max-width:1400px;margin:auto}nav{align-content:start;align-items:stretch;padding:18px;border-right:1px solid #bbb}nav button{width:100%;text-align:left}main{min-width:0;padding:24px}.scope{border-bottom:1px solid #bbb;padding-bottom:12px;color:#444}.panels{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:24px;margin:18px 0}.row{padding:12px 0;border-bottom:1px solid #ddd}.side{border:1px solid #aaa;padding:14px}.actions{padding:14px 0}#status{border:1px solid #888;padding:12px;margin-top:16px}#status:empty{display:none}label{display:block}textarea{display:block;width:100%;min-height:100px;padding:10px}code{overflow-wrap:anywhere;font-size:12px}.fixture{font-size:13px;color:#444}#screen-title:focus{outline:none}@media(max-width:700px){.layout{grid-template-columns:minmax(0,1fr)}nav{border-right:0;border-bottom:1px solid #bbb}nav button{width:auto}main{padding:16px}.panels{grid-template-columns:minmax(0,1fr)}header{padding:16px}}
+</style></head><body>
+<header><h1>Chartly workflow prototype</h1><p class="notice">Superseded v1 screen harness · P00 reopened for workflow redesign · Fictional fixtures only · No app records, credentials, market feeds or real orders</p><div class="toolbar"><label for="screen-choice">Inspect screen</label><select id="screen-choice"></select><label for="state-choice">Inspect state</label><select id="state-choice"></select></div></header>
+<div class="layout"><nav aria-label="Modules"><button data-go="S01">Workspace</button><button data-go="S02">Journal</button><button data-go="S07">Charts</button><button data-go="S08">Practice</button><button data-go="S15">Research</button><button data-go="S05">Data Library</button><button data-go="S12">Connections</button><button data-go="S19">Settings and recovery</button><button id="reset">Reset fixture session</button></nav><main><h2 id="screen-title" tabindex="-1"></h2><p class="scope" id="scope"></p><p><code id="route"></code></p><div class="panels"><section aria-label="Primary content" id="body"></section><aside class="side" id="side"></aside></div><div id="editor" hidden><label for="review">Review note</label><textarea id="review" placeholder="What did you learn from this decision?"></textarea></div><div class="actions" id="actions"></div><div role="status" aria-live="polite" id="status" tabindex="-1"></div><p class="fixture" id="fixture"></p></main></div>
+<script type="module">
+import {spec} from './screen-spec.mjs';
+import {initialState,transition} from './workflow.mjs';
+let state=initialState();
+const byId=id=>document.getElementById(id);
+for(const screen of spec.screens){const option=document.createElement('option');option.value=screen.id;option.textContent=screen.id+' · '+screen.title;byId('screen-choice').append(option)}
+for(const name of spec.states){const option=document.createElement('option');option.value=name;option.textContent=name;byId('state-choice').append(option)}
+function rows(target,items){target.replaceChildren();for(const text of items){const p=document.createElement('p');p.className='row';p.textContent=text;target.append(p)}}
+function render(focus=true){
+ const screen=spec.screens.find(s=>s.id===state.screen);
+ byId('screen-title').textContent=screen.title;byId('scope').textContent=screen.scope+(state.screen==='S13'&&state.connectionFamily?' · '+state.connectionFamily:'');byId('route').textContent='Proposed route: '+screen.route;
+ const body=screen.body.map(text=>{
+  if(state.screen==='S04'&&text.startsWith('Illustrative fixture:')&&state.importValid)return 'Illustrative fixture: 3 valid rows; 0 malformed; '+(state.importCommitted?'committed once':'not yet committed');
+  if(state.screen==='S03'&&text.startsWith('Open trade has')&&state.tradeClosed)return 'Fixture trade closed; closing timestamp belongs to execution facts. Review retained.';
+  if(state.screen==='S02'&&text.startsWith('Fixture: EURUSD')&&state.tradeClosed)return 'Fixture: EURUSD · manual · closed · risk not recorded';
+  return text;
+ });
+ rows(byId('body'),body);rows(byId('side'),screen.side);byId('actions').replaceChildren();
+ for(const [label,action]of screen.actions){const button=document.createElement('button');button.dataset.action=action;button.textContent=state.screen==='S04'&&state.importCommitted&&label==='Cancel import'?'Review imported trades':label;button.addEventListener('click',()=>dispatch(action));
+  if((action==='COMMIT_IMPORT'&&!state.importValid)||(action==='START_RUN'&&!state.datasetReady)||(action==='COMMIT_DATASET'&&!state.pricesValid)||(action==='CLOSE_TRADE'&&state.tradeClosed))button.disabled=true;
+  byId('actions').append(button)}
+ byId('screen-choice').value=state.screen;byId('state-choice').value=state.viewState;
+ byId('status').textContent=state.message||screen.states[state.viewState];
+ byId('fixture').textContent=`Fixture state: dataset ${state.datasetReady?'V1 ready':'not selected'} · run R1 ${state.runFinished?'finished':state.runStarted?'started':'draft'} · return target ${state.returnTo||'none'} · order ${state.orderOutcome}`;
+ byId('editor').hidden=state.screen!=='S03'&&state.screen!=='S18';
+ byId('review').value=state.screen==='S18'?state.notebookText:state.reviewText;
+ if(focus){if(['failed','partial','unauthorized'].includes(state.viewState))byId('status').focus();else byId('screen-title').focus()}
+}
+function dispatch(action){const oldScreen=state.screen;state=transition(state,action);const error=['failed','partial','unauthorized'].includes(state.viewState);render(oldScreen!==state.screen||error);if(oldScreen===state.screen&&!error){const opener=Array.from(byId('actions').children).find(b=>b.dataset.action===action&&!b.disabled);if(opener)opener.focus()}}
+byId('screen-choice').addEventListener('change',e=>dispatch(e.target.value));
+byId('state-choice').addEventListener('change',e=>{state={...state,viewState:e.target.value,message:''};render()});
+byId('review').addEventListener('input',e=>{state={...state,[state.screen==='S18'?'notebookText':'reviewText']:e.target.value}});
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>dispatch(b.dataset.go)));
+byId('reset').addEventListener('click',()=>{state=initialState();byId('review').value='';render()});
+render(false);
+</script></body></html>

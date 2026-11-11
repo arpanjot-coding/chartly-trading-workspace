@@ -1,0 +1,36 @@
+meta {
+  name: BasketOrder
+  type: http
+  seq: 17
+}
+
+post {
+  url: http://127.0.0.1:5000/api/v1/basketorder
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "apikey": "{{api_key}}",
+      "strategy": "your-strategy",
+      "orders": [
+          {
+              "symbol": "RELIANCE",
+              "exchange": "NSE",
+              "action": "BUY",
+              "quantity": "1",
+              "pricetype": "MARKET",
+              "product": "MIS"
+          },
+          {
+              "symbol": "INFY",
+              "exchange": "NSE",
+              "action": "SELL",
+              "quantity": "1",
+              "pricetype": "MARKET",
+              "product": "MIS"
+          }
+      ]
+  }
+}

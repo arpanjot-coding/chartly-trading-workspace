@@ -1,0 +1,852 @@
+"""
+React Frontend Serving Blueprint
+Serves the pre-built React app for migrated routes.
+"""
+
+import mimetypes
+import os
+import re
+from pathlib import Path
+
+from flask import Blueprint, abort, request, send_file, send_from_directory
+
+react_bp = Blueprint("react", __name__)
+
+# Pre-compressed encodings to negotiate, in preference order (best ratio first).
+# utils/precompress_assets.py writes <asset>.gz next to each hashed asset at
+# startup. They are deliberately NOT committed with frontend/dist/: compressed
+# output can be neither deflated nor delta-compressed by git, so re-committing
+# it on every CI rebuild grew to two thirds of the repository history.
+#
+# Serving these lets installs with no compressing proxy ship compressed bytes
+# at zero per-request CPU, and nginx or Cloudflare in front passes the
+# Content-Encoding through untouched rather than re-compressing.
+#
+# ".br" stays in the list although nothing in the repo produces it now: the
+# lookup is one stat that misses, and it means an operator whose own pipeline
+# emits brotli gets it served without a code change. Missing variants always
+# fall back to the raw asset.
+_PRECOMPRESSED_ENCODINGS = ((".br", "br"), (".gz", "gzip"))
+
+
+def _accepts_encoding(header: str, encoding: str) -> bool:
+    """Whether ``header`` actually accepts ``encoding``.
+
+    A substring test is not enough: ``Accept-Encoding: gzip, br;q=0`` contains
+    "br" while explicitly refusing it, and a client that refuses an encoding
+    cannot decode it if we send it anyway.
+    """
+    for part in header.split(","):
+        token, _, params = part.strip().partition(";")
+        if token.strip().lower() != encoding:
+            continue
+        for param in params.split(";"):
+            key, _, value = param.partition("=")
+            if key.strip().lower() == "q":
+                try:
+                    return float(value.strip()) > 0
+                except ValueError:
+                    return True
+        return True
+    return False
+
+
+# Path to the pre-built React frontend
+FRONTEND_DIST = Path(__file__).parent.parent / "frontend" / "dist"
+
+
+def _configured_brokers():
+    """Broker names this deployment loads, per VALID_BROKERS in .env."""
+    return {
+        broker.strip().lower()
+        for broker in (os.getenv("VALID_BROKERS") or "").split(",")
+        if broker.strip()
+    }
+
+
+def is_react_frontend_available():
+    """Check if the React frontend build exists."""
+    index_html = FRONTEND_DIST / "index.html"
+    return FRONTEND_DIST.exists() and index_html.exists()
+
+
+def serve_react_app():
+    """Serve the React app's index.html."""
+    if not is_react_frontend_available():
+        return (
+            """
+        <html>
+        <head><title>Chartly - Frontend Not Available</title></head>
+        <body style="font-family: system-ui; padding: 40px; max-width: 600px; margin: 0 auto;">
+            <h1>Frontend Not Built</h1>
+            <p>The React frontend is not available. To build it:</p>
+            <pre style="background: #f4f4f4; padding: 16px; border-radius: 8px;">
+cd frontend
+npm install
+npm run build</pre>
+            <p>Or use the pre-built version from the repository.</p>
+        </body>
+        </html>
+        """,
+            503,
+        )
+
+    shell = FRONTEND_DIST / "app.html"
+    response = _serve_frontend_html(shell if shell.is_file() else FRONTEND_DIST / "index.html")
+    response.headers["X-Robots-Tag"] = "noindex"
+    return response
+
+
+def _serve_frontend_html(path):
+    response = send_file(path, mimetype="text/html")
+    # index.html references content-hashed asset URLs, so it must always be
+    # revalidated — otherwise a browser could serve a stale shell pointing at
+    # chunks that no longer exist after an update. "no-cache" means
+    # revalidate-before-use (not "don't store"); this is what lets 180k users
+    # pick up frontend updates without ever clearing their cache.
+    response.headers["Cache-Control"] = "no-cache"
+    return response
+
+
+# ============================================================
+# Phase 2 Migrated Routes - These are served by React
+# ============================================================
+
+
+# Index/Home route
+@react_bp.route("/")
+def react_index():
+    if not is_react_frontend_available():
+        return serve_react_app()
+    return _serve_frontend_html(FRONTEND_DIST / "index.html")
+
+
+@react_bp.route("/guides/<slug>", strict_slashes=False)
+def react_public_guide(slug):
+    if not re.fullmatch(r"[a-z][a-z0-9-]*", slug):
+        abort(404)
+    page = FRONTEND_DIST / "guides" / slug / "index.html"
+    if not page.is_file():
+        abort(404)
+    return _serve_frontend_html(page)
+
+
+@react_bp.route("/robots.txt")
+@react_bp.route("/sitemap.xml")
+def react_crawler_metadata():
+    return send_from_directory(FRONTEND_DIST, request.path[1:])
+
+
+# Login route
+@react_bp.route("/login")
+def react_login():
+    return serve_react_app()
+
+
+# Setup route (initial admin setup)
+@react_bp.route("/setup")
+def react_setup():
+    return serve_react_app()
+
+
+# Password reset
+@react_bp.route("/reset-password")
+def react_reset_password():
+    return serve_react_app()
+
+
+# Download page
+@react_bp.route("/download")
+def react_download():
+    return serve_react_app()
+
+
+# FAQ page
+@react_bp.route("/faq")
+def react_faq():
+    return serve_react_app()
+
+
+# Error page
+@react_bp.route("/error")
+def react_error():
+    return serve_react_app()
+
+
+# Rate limited page
+@react_bp.route("/rate-limited")
+def react_rate_limited():
+    return serve_react_app()
+
+
+# Broker selection - serve React at /broker (alias for /auth/broker)
+@react_bp.route("/broker")
+def react_broker():
+    return serve_react_app()
+
+
+# Broker TOTP routes - serve React for broker authentication forms
+@react_bp.route("/broker/<broker>/totp")
+def react_broker_totp(broker):
+    return serve_react_app()
+
+
+# Samco keeps its own auth form path rather than the generic TOTP one.
+@react_bp.route("/broker/samco/auth", strict_slashes=False)
+def react_broker_samco_auth():
+    return serve_react_app()
+
+
+# Generic per-broker auth form, matching the React "/:broker/auth" route.
+@react_bp.route("/<broker>/auth", strict_slashes=False)
+def react_broker_auth(broker):
+    # A root-level dynamic rule matches anything, so serving the SPA
+    # unconditionally would let "/<probe>/auth" bypass the unauthenticated 404
+    # tracking that feeds the IP ban. Only brokers this deployment actually
+    # loads are served; everything else falls through to the not-found path.
+    if broker.strip().lower() not in _configured_brokers():
+        abort(404)
+    return serve_react_app()
+
+
+# Trader workspace and profile-owned journal/connections/replay surfaces.
+@react_bp.route("/settings", strict_slashes=False)
+@react_bp.route("/settings/connections", strict_slashes=False)
+@react_bp.route("/settings/storage", strict_slashes=False)
+@react_bp.route("/settings/custom-indicators", strict_slashes=False)
+def react_settings():
+    return serve_react_app()
+
+
+@react_bp.route("/workspace")
+def react_workspace():
+    return serve_react_app()
+
+
+@react_bp.route("/workspace/combined")
+def react_workspace_combined():
+    return serve_react_app()
+
+
+@react_bp.route("/workspace/profiles/<int:profile_id>")
+def react_workspace_profile(profile_id):
+    return serve_react_app()
+
+
+@react_bp.route("/workspace/profiles/<int:profile_id>/journal")
+def react_workspace_profile_journal(profile_id):
+    return serve_react_app()
+
+
+@react_bp.route("/workspace/profiles/<int:profile_id>/connections")
+def react_workspace_profile_connections(profile_id):
+    return serve_react_app()
+
+
+@react_bp.route("/workspace/profiles/<int:profile_id>/replay")
+def react_workspace_profile_replay(profile_id):
+    return serve_react_app()
+
+
+@react_bp.route("/workspace/profiles/<int:profile_id>/settings")
+def react_workspace_profile_settings(profile_id):
+    return serve_react_app()
+
+
+# Legacy global journal URL. React redirects it into a trading profile.
+@react_bp.route("/journal")
+def react_journal():
+    return serve_react_app()
+
+
+# Dashboard
+@react_bp.route("/dashboard")
+def react_dashboard():
+    return serve_react_app()
+
+
+# Trading pages
+@react_bp.route("/positions")
+def react_positions():
+    return serve_react_app()
+
+
+@react_bp.route("/orderbook")
+def react_orderbook():
+    return serve_react_app()
+
+
+@react_bp.route("/tradebook")
+def react_tradebook():
+    return serve_react_app()
+
+
+@react_bp.route("/holdings")
+def react_holdings():
+    return serve_react_app()
+
+
+# Scalping Terminal
+@react_bp.route("/scalping", strict_slashes=False)
+def react_scalping():
+    return serve_react_app()
+
+
+# Search pages
+@react_bp.route("/search/token")
+def react_search_token():
+    return serve_react_app()
+
+
+@react_bp.route("/search")
+def react_search():
+    return serve_react_app()
+
+
+# API Key management - handled by api_key_bp (supports both JSON and React)
+
+
+# Playground
+@react_bp.route("/playground")
+def react_playground():
+    return serve_react_app()
+
+
+# Charting terminal (line-based chart trading, powered by chartly-charts)
+@react_bp.route("/trading", strict_slashes=False)
+def react_trading():
+    return serve_react_app()
+
+
+# ============================================================
+# Phase 4 Routes - Charts, WebSocket & Sandbox
+# ============================================================
+
+
+# Trading Platforms overview
+@react_bp.route("/platforms")
+def react_platforms():
+    return serve_react_app()
+
+
+# TradingView webhook configuration
+@react_bp.route("/tradingview")
+def react_tradingview():
+    return serve_react_app()
+
+
+# Portfolio Analyzer (live broker holdings)
+@react_bp.route("/portfolio-analyzer")
+def react_portfolio_analyzer():
+    return serve_react_app()
+
+
+# GoCharting webhook configuration
+@react_bp.route("/gocharting")
+def react_gocharting():
+    return serve_react_app()
+
+
+# P&L Tracker with real-time chart
+@react_bp.route("/pnl-tracker")
+def react_pnltracker():
+    return serve_react_app()
+
+
+# Tools overview (Option Chain, IV Chart, etc.)
+
+
+# IV Chart for options implied volatility
+
+
+# OI Tracker for open interest analysis
+
+
+# Chart test page (dev/testing only) - 1m history + live forming candle.
+# Intentionally not linked from any menu; reachable only by direct URL.
+@react_bp.route("/chart/test")
+def react_chart_test():
+    return serve_react_app()
+
+
+# Max Pain analysis
+
+
+# Straddle Chart - Dynamic ATM Straddle analysis
+
+
+# Vol Surface - 3D Implied Volatility surface
+
+
+# GEX Dashboard - Gamma Exposure analysis
+
+
+# Strike Profile - GEX and DEX per strike across expiries
+
+
+# IV Smile - Implied Volatility smile curve
+
+
+# OI Profile - Open Interest Profile with futures candles
+
+
+# Arbitrage - Futures calendar-spread scanner
+
+
+# Option Chain - live chain with Greeks and click-to-trade
+
+
+# OI Range - open interest across a custom strike range
+
+
+# Gamma Density
+
+
+# Straddle PnL
+
+
+# Agent - the LLM agent surface. Registered even though React Router would serve
+# it anyway through the 404 fallback: an unregistered path counts against
+# Error404Tracker for unauthenticated visitors, so a bookmark opened while
+# logged out would push that address toward an IP ban.
+@react_bp.route("/agent", strict_slashes=False)
+def react_agent():
+    return serve_react_app()
+
+
+# Agent configuration - models, provider keys and web search. A separate React
+# route under the same surface, so it needs its own registration for the same
+# Error404Tracker reason as /agent above.
+@react_bp.route("/agent/config", strict_slashes=False)
+def react_agent_config():
+    return serve_react_app()
+
+
+# WebSocket market data test page
+@react_bp.route("/websocket/test")
+def react_websocket_test():
+    return serve_react_app()
+
+
+# WebSocket depth test pages (broker dependent depth levels)
+@react_bp.route("/websocket/test/20")
+def react_websocket_test_20():
+    return serve_react_app()
+
+
+@react_bp.route("/websocket/test/30")
+def react_websocket_test_30():
+    return serve_react_app()
+
+
+@react_bp.route("/websocket/test/50")
+def react_websocket_test_50():
+    return serve_react_app()
+
+
+# WebSocket order and trade update stream test page
+@react_bp.route("/websocket/order", strict_slashes=False)
+def react_websocket_order():
+    return serve_react_app()
+
+
+# Sandbox configuration
+@react_bp.route("/sandbox")
+def react_sandbox():
+    return serve_react_app()
+
+
+# Sandbox P&L history
+@react_bp.route("/sandbox/mypnl")
+def react_sandbox_mypnl():
+    return serve_react_app()
+
+
+# API Request Analyzer
+@react_bp.route("/analyzer")
+def react_analyzer():
+    return serve_react_app()
+
+
+# ============================================================
+# Phase 6 Routes - Strategy & Automation
+# ============================================================
+
+
+# Strategy module (multi-leg options strategies with risk management)
+#
+# Registered even though React Router would serve these anyway via the 404
+# fallback: an unregistered path counts against Error404Tracker for
+# unauthenticated visitors, and a shared strategy link opened while logged out
+# would push the visitor's address toward an IP ban.
+@react_bp.route("/strategy", strict_slashes=False)
+def react_strategy_index():
+    return serve_react_app()
+
+
+@react_bp.route("/strategy/new", strict_slashes=False)
+def react_strategy_new():
+    return serve_react_app()
+
+
+@react_bp.route("/strategy/<int:strategy_id>", strict_slashes=False)
+def react_strategy_detail(strategy_id):
+    return serve_react_app()
+
+
+@react_bp.route("/strategy/<int:strategy_id>/edit", strict_slashes=False)
+def react_strategy_edit(strategy_id):
+    return serve_react_app()
+
+
+# Python Strategies
+# Note: Using strict_slashes=False to handle both /python and /python/
+@react_bp.route("/python", strict_slashes=False)
+def react_python_index():
+    return serve_react_app()
+
+
+@react_bp.route("/python/new", strict_slashes=False)
+def react_python_new():
+    return serve_react_app()
+
+
+@react_bp.route("/python/<strategy_id>/edit", strict_slashes=False)
+def react_python_edit(strategy_id):
+    return serve_react_app()
+
+
+@react_bp.route("/python/<strategy_id>/logs", strict_slashes=False)
+def react_python_logs(strategy_id):
+    return serve_react_app()
+
+
+# Distinct from python_strategy_bp's "/python/schedule/<strategy_id>" POST -
+# the segments are reversed, so the two rules do not overlap.
+@react_bp.route("/python/<strategy_id>/schedule", strict_slashes=False)
+def react_python_schedule(strategy_id):
+    return serve_react_app()
+
+
+@react_bp.route("/python/guide", strict_slashes=False)
+def react_python_guide():
+    return serve_react_app()
+
+
+# Chartink Strategies
+# Note: Using strict_slashes=False to handle both /chartink and /chartink/
+@react_bp.route("/chartink", strict_slashes=False)
+def react_chartink_index():
+    return serve_react_app()
+
+
+@react_bp.route("/chartink/new", strict_slashes=False)
+def react_chartink_new():
+    return serve_react_app()
+
+
+@react_bp.route("/chartink/<int:strategy_id>", strict_slashes=False)
+def react_chartink_view(strategy_id):
+    return serve_react_app()
+
+
+@react_bp.route("/chartink/<int:strategy_id>/configure", strict_slashes=False)
+def react_chartink_configure(strategy_id):
+    return serve_react_app()
+
+
+# ============================================================
+# Phase 7 Routes - Admin & Settings
+# ============================================================
+
+
+# Admin Dashboard
+@react_bp.route("/admin", strict_slashes=False)
+def react_admin_index():
+    return serve_react_app()
+
+
+# Admin - Freeze Quantities
+@react_bp.route("/admin/freeze", strict_slashes=False)
+def react_admin_freeze():
+    return serve_react_app()
+
+
+# Admin - Market Holidays
+@react_bp.route("/admin/holidays", strict_slashes=False)
+def react_admin_holidays():
+    return serve_react_app()
+
+
+# Admin - Market Timings
+@react_bp.route("/admin/timings", strict_slashes=False)
+def react_admin_timings():
+    return serve_react_app()
+
+
+# Admin - System Diagnostics
+@react_bp.route("/admin/diagnostics", strict_slashes=False)
+def react_admin_diagnostics():
+    return serve_react_app()
+
+
+# Admin - Remote MCP
+@react_bp.route("/admin/remote-mcp", strict_slashes=False)
+def react_admin_remote_mcp():
+    return serve_react_app()
+
+
+# Leverage Configuration (Crypto)
+@react_bp.route("/leverage", strict_slashes=False)
+def react_leverage():
+    return serve_react_app()
+
+
+# ============================================================
+# Phase 7 Routes - Monitoring Dashboards
+# ============================================================
+
+
+# Security Dashboard
+@react_bp.route("/security", strict_slashes=False)
+def react_security():
+    return serve_react_app()
+
+
+# Traffic Dashboard
+@react_bp.route("/traffic", strict_slashes=False)
+def react_traffic():
+    return serve_react_app()
+
+
+# Latency Dashboard
+@react_bp.route("/latency", strict_slashes=False)
+def react_latency():
+    return serve_react_app()
+
+
+# Health Monitor. health_bp is prefixed "/health" but registers no root route,
+# so the bare path would otherwise 404.
+@react_bp.route("/health", strict_slashes=False)
+def react_health():
+    return serve_react_app()
+
+
+# ============================================================
+# Phase 7 Routes - Settings & Action Center
+# ============================================================
+
+
+# Logs Index
+@react_bp.route("/logs", strict_slashes=False)
+def react_logs():
+    return serve_react_app()
+
+
+# Live Logs
+@react_bp.route("/logs/live", strict_slashes=False)
+def react_logs_live():
+    return serve_react_app()
+
+
+# Sandbox Logs (Analyzer)
+@react_bp.route("/logs/sandbox", strict_slashes=False)
+def react_logs_sandbox():
+    return serve_react_app()
+
+
+# Security Logs
+@react_bp.route("/logs/security", strict_slashes=False)
+def react_logs_security():
+    return serve_react_app()
+
+
+# Traffic Monitor
+@react_bp.route("/logs/traffic", strict_slashes=False)
+def react_logs_traffic():
+    return serve_react_app()
+
+
+# Latency Monitor
+@react_bp.route("/logs/latency", strict_slashes=False)
+def react_logs_latency():
+    return serve_react_app()
+
+
+# Profile Settings
+@react_bp.route("/profile", strict_slashes=False)
+def react_profile():
+    return serve_react_app()
+
+
+# Action Center (Semi-automated trading)
+@react_bp.route("/action-center", strict_slashes=False)
+def react_action_center():
+    return serve_react_app()
+
+
+# Historify (Historical Data Management)
+@react_bp.route("/historify", strict_slashes=False)
+def react_historify():
+    return serve_react_app()
+
+
+@react_bp.route("/historify/provider-tools", strict_slashes=False)
+def react_historify_provider_tools():
+    return serve_react_app()
+
+
+# Historify Charts
+@react_bp.route("/historify/charts", strict_slashes=False)
+def react_historify_charts():
+    return serve_react_app()
+
+
+# String, not path: the React ":symbol" segment does not match slashes.
+@react_bp.route("/historify/charts/<symbol>", strict_slashes=False)
+def react_historify_charts_symbol(symbol):
+    return serve_react_app()
+
+
+# Master Contract status and download
+@react_bp.route("/master-contract", strict_slashes=False)
+def react_master_contract():
+    return serve_react_app()
+
+
+# ============================================================
+# Flow Routes - Visual Workflow Automation
+# ============================================================
+
+
+# Flow Dashboard (Workflow List)
+@react_bp.route("/flow", strict_slashes=False)
+def react_flow_index():
+    return serve_react_app()
+
+
+# Flow Editor (Visual Workflow Builder)
+@react_bp.route("/flow/editor/<int:workflow_id>", strict_slashes=False)
+def react_flow_editor(workflow_id):
+    return serve_react_app()
+
+
+# Flow Keyboard Shortcuts reference
+@react_bp.route("/flow/shortcuts", strict_slashes=False)
+def react_flow_shortcuts():
+    return serve_react_app()
+
+
+# ============================================================
+# Static Assets - Always served for React app
+# ============================================================
+
+
+@react_bp.route("/assets/<path:filename>")
+def serve_assets(filename):
+    """Serve static assets with long cache headers.
+
+    Negotiates pre-compressed variants: if the client advertises ``br``/``gzip``
+    and a ``<filename>.br``/``.gz`` exists, serve that with the matching
+    ``Content-Encoding`` and the original file's ``Content-Type``. Otherwise
+    fall back to the raw asset (i.e. worst case == previous behavior). All paths
+    go through ``send_from_directory`` so traversal protection is preserved.
+
+    One URL therefore has up to three representations of very different lengths
+    (brotli, gzip, identity), so two things are non-negotiable:
+
+    * ``Vary: Accept-Encoding`` on **every** response, the identity fallback
+      included. A stored response with no ``Vary`` matches any later request for
+      the same URI (RFC 9111), and these are cached ``immutable`` for a year, so
+      omitting it on one branch lets a cache hand the raw 150 KB copy to a
+      client that negotiated brotli.
+    * No byte ranges on the compressed branches. A range is served from whichever
+      representation the *current* request negotiates, so a client resuming or
+      revalidating against a range it captured from a different representation
+      splices mismatched bytes together and the module fails to parse. That
+      surfaces as a chunk-load error and, before the guard in
+      ``utils/chunkReload.ts`` was fixed, an endless reload loop (issue #1807).
+    """
+    assets_dir = FRONTEND_DIST / "assets"
+    if not assets_dir.exists():
+        return "Assets not found", 404
+
+    accept_encoding = request.headers.get("Accept-Encoding", "")
+    response = None
+    for ext, encoding in _PRECOMPRESSED_ENCODINGS:
+        if (
+            _accepts_encoding(accept_encoding, encoding)
+            and (assets_dir / (filename + ext)).is_file()
+        ):
+            # conditional=False disables Werkzeug's 206/Range handling, so the
+            # compressed representation is only ever served whole.
+            response = send_from_directory(assets_dir, filename + ext, conditional=False)
+            response.headers["Content-Encoding"] = encoding
+            # Type must reflect the ORIGINAL asset, not the .br/.gz wrapper.
+            content_type = mimetypes.guess_type(filename)[0]
+            if content_type:
+                response.headers["Content-Type"] = content_type
+            response.headers["Accept-Ranges"] = "none"
+            break
+    if response is None:
+        response = send_from_directory(assets_dir, filename)
+
+    # Cache assets for 1 year — safe because filenames are content-hashed, so a
+    # new build produces new URLs and users never need to clear their cache.
+    response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    # Set on every branch, not just the compressed ones — see the docstring.
+    response.headers["Vary"] = "Accept-Encoding"
+    return response
+
+
+@react_bp.route("/favicon.ico")
+def serve_favicon():
+    """Serve favicon."""
+    if not is_react_frontend_available():
+        return "Not found", 404
+    return send_from_directory(FRONTEND_DIST, "favicon.ico")
+
+
+@react_bp.route("/logo.png")
+def serve_logo():
+    """Serve logo."""
+    if not is_react_frontend_available():
+        return "Not found", 404
+    return send_from_directory(FRONTEND_DIST, "logo.png")
+
+
+@react_bp.route("/apple-touch-icon.png")
+def serve_apple_touch_icon():
+    """Serve Apple touch icon."""
+    if not is_react_frontend_available():
+        return "Not found", 404
+    return send_from_directory(FRONTEND_DIST, "apple-touch-icon.png")
+
+
+@react_bp.route("/images/<path:filename>")
+def serve_images(filename):
+    """Serve images from React dist."""
+    images_dir = FRONTEND_DIST / "images"
+    if not images_dir.exists():
+        return "Images not found", 404
+    return send_from_directory(images_dir, filename)
+
+
+@react_bp.route("/sounds/<path:filename>")
+def serve_sounds(filename):
+    """Serve sounds from React dist."""
+    sounds_dir = FRONTEND_DIST / "sounds"
+    if not sounds_dir.exists():
+        return "Sounds not found", 404
+    return send_from_directory(sounds_dir, filename)
+
+
+@react_bp.route("/docs/<path:filename>")
+def serve_docs(filename):
+    """Serve docs from React dist."""
+    docs_dir = FRONTEND_DIST / "docs"
+    if not docs_dir.exists():
+        return "Docs not found", 404
+    return send_from_directory(docs_dir, filename)
+
+

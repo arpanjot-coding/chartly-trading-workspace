@@ -1,0 +1,175 @@
+{
+  "status": "Historical 24-entry inventory updated after user-confirmed retirement; see TOOLS_RETIREMENT_IMPLEMENTATION.md and RETIREMENT_MANIFEST.json",
+  "scope": "24 current Tools registry entries, not the complete app inventory",
+  "items": [
+    {
+      "title": "Flow Automations",
+      "route": "/flow",
+      "proposedDestination": "automation",
+      "decision": "retained reusable capability; Tools directory removed",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Platforms & Alerts",
+      "route": "/platforms",
+      "proposedDestination": "automation",
+      "decision": "retained reusable capability; Tools directory removed",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Python Strategies",
+      "route": "/python",
+      "proposedDestination": "strategy-lab",
+      "decision": "removed from Strategy Builder launcher; retained backend/runtime dependencies pending explicit host/API migration",
+      "implementationStatus": "legacy launcher removed; dedicated project workflow planned"
+    },
+    {
+      "title": "Strategies",
+      "route": "/strategy",
+      "proposedDestination": "strategy-lab",
+      "decision": "removed from Strategy Builder launcher; retained backend/runtime dependencies pending explicit host/API migration",
+      "implementationStatus": "legacy launcher removed; dedicated project workflow planned"
+    },
+    {
+      "title": "Chartink Strategies",
+      "route": "/chartink",
+      "proposedDestination": "automation",
+      "decision": "retained reusable capability; Tools directory removed",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Strategy Builder",
+      "route": "/strategybuilder",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Strategy Portfolio",
+      "route": "/strategybuilder/portfolio",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Portfolio Backtester",
+      "route": "/portfolio-backtester",
+      "proposedDestination": "strategy-lab",
+      "decision": "removed from Strategy Builder launcher; retained backend/runtime dependencies pending explicit host/API migration",
+      "implementationStatus": "legacy launcher removed; dedicated project workflow planned"
+    },
+    {
+      "title": "SIP Backtester",
+      "route": "/sip-backtester",
+      "proposedDestination": "regional-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Portfolio Analyzer",
+      "route": "/portfolio-analyzer",
+      "proposedDestination": "portfolio-analysis",
+      "decision": "retained reusable capability; Tools directory removed",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Option Chain",
+      "route": "/optionchain",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Option Greeks",
+      "route": "/ivchart",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "OI Tracker",
+      "route": "/oitracker",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "OI Range",
+      "route": "/oirange",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Max Pain",
+      "route": "/maxpain",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Straddle Chart",
+      "route": "/straddle",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Straddle PnL",
+      "route": "/straddlepnl",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Vol Surface",
+      "route": "/volsurface",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "GEX Dashboard",
+      "route": "/gex",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Strike Profile",
+      "route": "/strikeprofile",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Gamma Density",
+      "route": "/gammadensity",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "IV Smile",
+      "route": "/ivsmile",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "OI Profile",
+      "route": "/oiprofile",
+      "proposedDestination": "derivatives-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    },
+    {
+      "title": "Arbitrage",
+      "route": "/arbitrage",
+      "proposedDestination": "regional-optional",
+      "decision": "retired specialist/legacy UI and dedicated endpoints; preserve shared engine dependencies",
+      "implementationStatus": "implemented; exact source retirement in RETIREMENT_MANIFEST.json"
+    }
+  ],
+  "builderScope": "Temporary legacy launcher removed; see STRATEGY_BUILDER_GAP_REVIEW.md. Underlying reusable engine/host migration is separate."
+}

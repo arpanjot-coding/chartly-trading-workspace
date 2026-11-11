@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "chartly",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

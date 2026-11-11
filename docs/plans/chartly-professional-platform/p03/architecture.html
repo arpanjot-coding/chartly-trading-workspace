@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>P03 journal architecture</title>
+<style>body{margin:0;background:#f7f7f5;color:#181818;font:16px/1.5 system-ui,sans-serif}main{max-width:960px;margin:32px auto;padding:28px;background:white;border:1px solid #ccc}h1{font-size:28px;margin:0}p{color:#555}ol{padding:0;list-style:none;display:grid;gap:12px}.step{border:1px solid #aaa;border-left:4px solid #222;padding:14px 18px}.step b{display:block}small{display:block;color:#555}.arrow{text-align:center;color:#666}.branches{display:grid;grid-template-columns:1fr 1fr;gap:14px}.branches>div{border:1px solid #999;padding:16px}footer{margin-top:20px;border-top:1px solid #ccc;padding-top:12px;font-size:14px;color:#555}@media(max-width:640px){main{margin:12px;padding:18px}.branches{grid-template-columns:1fr}}</style>
+<main><h1>The original journal, with durable records</h1><p>P03 · 2 November 2026 · Profiles remain environments. Each account has its own book.</p>
+<ol><li class="step"><b>Original Journal and Combined Analysis</b><small>Capture, partial/final close, reviews, import preview, daily/weekly review and chart return.</small></li>
+<li class="arrow">↓ shared book / currency / time / filter scope</li>
+<li class="step"><b>Authenticated local journal API</b><small>Local account proof + CSRF. Stable request receipts and revisions protect retries.</small></li>
+<li class="arrow">↓ bounded first-party workspace worker</li>
+<li class="step"><b>Journal service + normalized CSV engine</b><small>Exact amounts, source-event identity, correction consent, immutable observations and history.</small></li>
+<li class="arrow">↓ one scoped SQLite transaction</li>
+</ol><div class="branches"><div><b>Saved journal</b><small>Original trade projections + relational journal records. Source facts and user reviews have separate revisions.</small></div><div><b>P02 recovery registry</b><small>Journal records, raw statements and permitted evidence enter workspace ZIP / restore / Undo. Old archives upgrade explicitly.</small></div></div>
+<footer>Unsent forms remain in a separate principal / source / book IndexedDB draft store and have their own export. No broker order is executed by this journal workflow. Missing data and costs remain unknown. The existing chart keeps its actual feed readiness state.</footer></main></html>

@@ -1,0 +1,35 @@
+meta {
+  name: multiquotes
+  type: http
+  seq: 9
+}
+
+post {
+  url: http://127.0.0.1:5000/api/v1/multiquotes
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "apikey": "{{api_key}}",
+      "symbols": [
+        {
+          "symbol": "SBIN",
+          "exchange": "NSE"
+        },
+        {
+          "symbol": "TCS",
+          "exchange": "NSE"
+        },
+        {
+          "symbol": "INFY",
+          "exchange": "BSE"
+        },
+        {
+          "symbol": "NIFTY25AUG26FUT",
+          "exchange": "NFO"
+        }
+      ]
+  }
+}

@@ -1,0 +1,1372 @@
+{
+  "title": "Chartly whole-product workflow and UI blueprint",
+  "date": "2026-11-02",
+  "status": "P00 design baseline explicitly accepted by the user on 2 November 2026. No production feature or adapter certification is implied.",
+  "modules": [
+    {
+      "id": "workspace",
+      "name": "Workspace",
+      "purpose": "Manage environments; use the original chart and independent journal books for actual trading, practice and review.",
+      "boundary": "Chart and Journal are focused destinations. Open manages the environment through Overview, Connections and Settings.",
+      "screens": [
+        {
+          "id": "WS01",
+          "name": "Workspace home and environments",
+          "state": "Improve existing",
+          "surface": "Page",
+          "base": "/workspace · TraderWorkspace.tsx",
+          "layout": [
+            "Keep the current profile cards and Chart / Journal / Open actions.",
+            "Show Live, Paper or journal-only intent, source readiness and the relevant book/account identity.",
+            "Keep Combined Analysis as an explicit cross-portfolio action."
+          ],
+          "actions": [
+            "Create environment",
+            "Open Chart, Journal or portfolio management",
+            "Resume the last relevant workspace"
+          ],
+          "handoff": [
+            "WS02",
+            "WS03",
+            "WS04",
+            "WS08",
+            "WS13"
+          ],
+          "gap": "Manual journal entry into the product and truthful live/paper readiness are not complete.",
+          "phase": "Core"
+        },
+        {
+          "id": "WS02",
+          "name": "Create an environment or standalone book",
+          "state": "Improve existing",
+          "surface": "Dialog / short flow",
+          "base": "Existing New profile dialog; current persisted types are live/replay",
+          "layout": [
+            "Keep the existing creation dialog styling.",
+            "Offer the user jobs: Journal only, Paper/replay, or Connected trading.",
+            "Ask only for the book, account or dataset fields required by that job; show what will actually be created."
+          ],
+          "actions": [
+            "Create a manual book without a broker",
+            "Prepare a paper environment",
+            "Configure a connected environment"
+          ],
+          "handoff": [
+            "WS03",
+            "WS06",
+            "WS08",
+            "SET02"
+          ],
+          "gap": "Journal-only is a required first-use path, not currently a distinct persisted profile type. Define migration before changing ownership.",
+          "phase": "Core"
+        },
+        {
+          "id": "WS03",
+          "name": "Open: portfolio/environment management",
+          "state": "Improve existing",
+          "surface": "Page with three existing tabs",
+          "base": "/workspace/profiles/:id · TraderProfileDetail.tsx / ProfileShell.tsx",
+          "layout": [
+            "Overview: identity, account/book, observed balances, readiness and running-task shortcuts.",
+            "Connections: this environment’s data/account/terminal bindings.",
+            "Settings: defaults, timezone, limits and archive; Chart and Journal remain shortcuts out of management."
+          ],
+          "actions": [
+            "Resolve missing setup",
+            "Open the existing chart or book",
+            "Prepare/resume paper runs"
+          ],
+          "handoff": [
+            "WS04",
+            "WS06",
+            "WS08",
+            "SET02",
+            "AUTO05"
+          ],
+          "gap": "The navigation separation is implemented; readiness and balance labels still need to be backed by observed scoped data.",
+          "phase": "Core"
+        },
+        {
+          "id": "WS04",
+          "name": "Original chart terminal",
+          "state": "Keep and connect",
+          "surface": "Existing full terminal",
+          "base": "/trading?profileId=:id · Trading.tsx / ChartPane",
+          "layout": [
+            "Keep the existing toolbar, chart grid, drawings, watchlist, indicator controls, right rail and bottom dock.",
+            "Add source/account/mode/readiness and instrument context within the existing controls.",
+            "Use contextual links to Fundamentals, journal evidence and a Strategy Builder project."
+          ],
+          "actions": [
+            "Search/change instrument and timeframe",
+            "Apply a built-in or validated custom indicator",
+            "Open research, log/review a trade, or inspect a report’s trade"
+          ],
+          "handoff": [
+            "WS05",
+            "WS07",
+            "WS09",
+            "SB02",
+            "SB06",
+            "FND02",
+            "SH01"
+          ],
+          "gap": "The terminal exists. Research, dataset, project revision and book handoffs are not all connected; opening the chart must not start a bot.",
+          "phase": "Core"
+        },
+        {
+          "id": "WS05",
+          "name": "Orders, positions and execution context",
+          "state": "Keep and connect",
+          "surface": "Existing chart dock / order dialogs",
+          "base": "TradingDock.tsx; Orders / Positions / Trades / GTT",
+          "layout": [
+            "Keep the existing order/position/trade views and chart-side order tools.",
+            "Show the actual selected account, demo/live state, connection health and command outcome.",
+            "Present risk, sizing, protective-order support and copying destinations only when supported."
+          ],
+          "actions": [
+            "Preview an eligible order",
+            "Inspect working orders and confirmed fills",
+            "Modify/cancel/close with explicit account context"
+          ],
+          "handoff": [
+            "WS04",
+            "WS09",
+            "AUTO04",
+            "SET02"
+          ],
+          "gap": "The dock currently uses legacy global broker/app mode. Profile labels do not establish per-account execution authority. Multi-account execution/copying requires later verified contracts.",
+          "phase": "Connected"
+        },
+        {
+          "id": "WS06",
+          "name": "Paper/replay setup and run library",
+          "state": "Configuration only",
+          "surface": "Run list + setup flow",
+          "base": "TraderReplay.tsx and profile Overview run shortcuts",
+          "layout": [
+            "Keep existing run cards/creation controls; distinguish manual replay from automated testing.",
+            "Select a real saved dataset, instrument, range, timezone, starting balance and simulation costs.",
+            "Show coverage errors, warmup and resume/checkpoint status before enabling Start."
+          ],
+          "actions": [
+            "Select saved history",
+            "Create a paper run",
+            "Resume or inspect an existing run"
+          ],
+          "handoff": [
+            "SH01",
+            "WS07",
+            "SB05"
+          ],
+          "gap": "Current run creation stores a source description and Draft state. It does not prove a dataset-bound persistent paper ledger.",
+          "phase": "Core"
+        },
+        {
+          "id": "WS07",
+          "name": "Paper session in the original chart",
+          "state": "Keep and connect",
+          "surface": "Original chart replay controls + session summary",
+          "base": "Trading.tsx / WorkspaceReplayBar; existing replay mechanics",
+          "layout": [
+            "Keep chart presentation and replay controls.",
+            "Make the simulation clock, available data, paper orders/positions and session book visible.",
+            "Show completed-run results and restart/resume behavior."
+          ],
+          "actions": [
+            "Step/play/pause history",
+            "Place supported paper orders",
+            "Review session trades and journal"
+          ],
+          "handoff": [
+            "WS04",
+            "WS06",
+            "WS09"
+          ],
+          "gap": "Visual replay exists; deterministic paper fills, durable session/account state and once-only journal ingestion need an integrated verification journey.",
+          "phase": "Core"
+        },
+        {
+          "id": "WS08",
+          "name": "Independent journal books and book setup",
+          "state": "Missing",
+          "surface": "Book selector / focused book entry",
+          "base": "Existing profile Journal actions are the starting surface",
+          "layout": [
+            "Each connected book names exactly one account; manual books have no external account binding.",
+            "Show book identity and source/sync coverage without requiring a chart or execution setup.",
+            "Open the existing journal presentation, not a new replacement ledger."
+          ],
+          "actions": [
+            "Create/open a manual book",
+            "Bind a connected book to one verified account",
+            "Import a statement or configure read-only sync"
+          ],
+          "handoff": [
+            "WS09",
+            "WS11",
+            "WS12"
+          ],
+          "gap": "Current journal persistence is profile-scoped. A distinct durable book/account model and existing multi-destination migration are still required.",
+          "phase": "Core"
+        },
+        {
+          "id": "WS09",
+          "name": "Journal review workspace",
+          "state": "Keep and connect",
+          "surface": "Existing focused journal and tabs",
+          "base": "/workspace/profiles/:id/journal · TraderJournal.tsx",
+          "layout": [
+            "Preserve Overview, Trades, Calendar, Breakdown and optional Mind.",
+            "Keep book identity, filters, trade details, notes and performance charts.",
+            "Add source/coverage and review actions in the existing hierarchy; keep portfolio management behind Open."
+          ],
+          "actions": [
+            "Filter and review this book",
+            "Open a trade’s chart/research/strategy evidence",
+            "Log, edit or close a trade"
+          ],
+          "handoff": [
+            "WS10",
+            "WS11",
+            "WS12",
+            "WS04",
+            "FND08",
+            "SB06"
+          ],
+          "gap": "Separation and chart/management return filters are tested. Complete book ownership, source reconciliation and the full trade lifecycle remain unfinished.",
+          "phase": "Core"
+        },
+        {
+          "id": "WS10",
+          "name": "Capture, edit, close and review a trade",
+          "state": "Improve existing",
+          "surface": "Existing dialog + expanded trade detail",
+          "base": "TraderJournal.tsx / useTraderData.ts",
+          "layout": [
+            "Lock the destination book/account and show timezone and asset-appropriate quantity units.",
+            "Keep open-trade facts separate from close facts and realized P&L.",
+            "Keep source facts separate from user notes, screenshots, setup tags and review choices."
+          ],
+          "actions": [
+            "Save an open or completed manual trade",
+            "Edit/correct or close the same record",
+            "Attach chart/research evidence and review"
+          ],
+          "handoff": [
+            "WS09",
+            "WS04",
+            "FND08"
+          ],
+          "gap": "Manual creation/deletion and review fields exist; the data hook has no complete update/close lifecycle. Preserve drafts on save failure.",
+          "phase": "Core"
+        },
+        {
+          "id": "WS11",
+          "name": "Statement import and validation",
+          "state": "Missing",
+          "surface": "Connected import flow",
+          "base": "New flow beside existing Log trade; reuse journal components",
+          "layout": [
+            "Choose a book/account, source file and timezone/units mapping.",
+            "Preview valid rows, row errors, duplicates, corrections and source coverage before commit.",
+            "Show a durable import result and reversible/recoverable correction path."
+          ],
+          "actions": [
+            "Upload/select a statement",
+            "Map and validate fields",
+            "Commit valid records or resolve issues"
+          ],
+          "handoff": [
+            "WS08",
+            "WS09",
+            "WS12"
+          ],
+          "gap": "A market-candle CSV upload and journal CSV export are not a trade-statement import workflow.",
+          "phase": "Core"
+        },
+        {
+          "id": "WS12",
+          "name": "Read-only journal sync and reconciliation",
+          "state": "Missing",
+          "surface": "Book source panel + activity/conflict views",
+          "base": "Profile Connections currently stores configuration only",
+          "layout": [
+            "Show the account/source binding, history coverage, last successful sync and current job.",
+            "Show new/corrected records and ambiguous cross-source matches without discarding notes.",
+            "Provide retry, backfill/import and conflict resolution; cached journal remains readable offline."
+          ],
+          "actions": [
+            "Connect a supported read-only history source",
+            "Sync while the local engine is running",
+            "Resolve gaps, duplicate candidates and corrections"
+          ],
+          "handoff": [
+            "SET02",
+            "SH02",
+            "WS11",
+            "WS09"
+          ],
+          "gap": "Needs real adapters, cursors, account identity and canonical executions. A chart tab need not stay open; closing the local engine stops updates.",
+          "phase": "Core"
+        },
+        {
+          "id": "WS13",
+          "name": "Combined Analysis",
+          "state": "Working slice",
+          "surface": "Existing analytics page",
+          "base": "/workspace/combined · CombinedLiveAnalytics.tsx",
+          "layout": [
+            "Keep selection, clear-all and explicit Save selection.",
+            "Keep currency groups and the same portfolio selection behind every displayed result.",
+            "Add coverage, duplicate-account/source protection and live/paper comparison rules as their contracts mature."
+          ],
+          "actions": [
+            "Choose portfolios",
+            "Save/reopen a selection",
+            "Review selected metrics and return to an individual portfolio"
+          ],
+          "handoff": [
+            "WS01",
+            "WS09"
+          ],
+          "gap": "Selection/empty/save behavior and selected-only results are tested. Canonical account deduplication, named comparison sets and broader analytics semantics remain separate work.",
+          "phase": "Core"
+        }
+      ]
+    },
+    {
+      "id": "fundamentals",
+      "name": "Fundamentals",
+      "purpose": "Research companies and assets, inspect original evidence and carry decisions into charts and journal reviews.",
+      "boundary": "Research is usable without an execution account. Company facts, quotes, macro data and relationship intelligence each need verified source coverage.",
+      "screens": [
+        {
+          "id": "FND01",
+          "name": "Research home, search and saved lists",
+          "state": "Missing",
+          "surface": "New research page using existing app components",
+          "base": "/fundamentals now has an availability notice; company search/source service is not implemented",
+          "layout": [
+            "Search company/asset names with issuer/listing disambiguation.",
+            "Show saved lists and recently researched entities.",
+            "Expose supported coverage and source availability rather than a fake populated dashboard."
+          ],
+          "actions": [
+            "Find an issuer/listing",
+            "Reopen saved research",
+            "Compare supported entities"
+          ],
+          "handoff": [
+            "FND02",
+            "FND07",
+            "FND08"
+          ],
+          "gap": "A direct navigation destination now exists; the functional research workflow is absent. Yahoo is a source candidate, not a connected certified provider.",
+          "phase": "Core"
+        },
+        {
+          "id": "FND02",
+          "name": "Company/asset overview",
+          "state": "Missing",
+          "surface": "Company page / tabs",
+          "base": "New Fundamentals surface",
+          "layout": [
+            "Header: issuer and selected listing, source, as-of time and freshness.",
+            "Center: sourced business description and supported headline facts; asset-specific layouts later.",
+            "Tabs: Statements, Metrics, Reports, Events and later Relationships; explicit Chart and Save research actions."
+          ],
+          "actions": [
+            "Inspect a company",
+            "Change listing without changing issuer facts",
+            "Open a mapped original chart"
+          ],
+          "handoff": [
+            "FND03",
+            "FND04",
+            "FND05",
+            "FND06",
+            "WS04",
+            "FND08"
+          ],
+          "gap": "No fundamentals data model or page exists. Missing fields stay unavailable; fetching current facts does not make them historical backtest inputs.",
+          "phase": "Core"
+        },
+        {
+          "id": "FND03",
+          "name": "Financial statements",
+          "state": "Missing",
+          "surface": "Company tab / period selector",
+          "base": "New Income / Balance Sheet / Cash Flow views",
+          "layout": [
+            "Annual/quarterly periods, fiscal labels, units, scaling and currency.",
+            "Reported values with source drilldown and missing-cell explanations.",
+            "Restated versus as-reported selection only when supported by stored revisions."
+          ],
+          "actions": [
+            "Switch statements and periods",
+            "Inspect the original fact/report",
+            "Save a sourced view"
+          ],
+          "handoff": [
+            "FND02",
+            "FND05",
+            "FND08"
+          ],
+          "gap": "Normalization and report provenance are absent; duration and instant facts must not be treated interchangeably.",
+          "phase": "Core"
+        },
+        {
+          "id": "FND04",
+          "name": "Metrics, valuation and comparison definitions",
+          "state": "Missing",
+          "surface": "Company tab / explanatory detail",
+          "base": "New Fundamentals metrics view",
+          "layout": [
+            "Supported reported/calculated ratios and growth with formula definitions.",
+            "Period, price timestamp, currency and input citations for each calculation.",
+            "Unavailable denominators, negative earnings and unsupported TTM shown honestly."
+          ],
+          "actions": [
+            "Inspect metric inputs",
+            "Compare consistent periods/entities",
+            "Record a research observation"
+          ],
+          "handoff": [
+            "FND03",
+            "FND07",
+            "FND08"
+          ],
+          "gap": "Do not populate attractive metric tiles until their source/period/formula tests pass.",
+          "phase": "Research expansion"
+        },
+        {
+          "id": "FND05",
+          "name": "Filings, original reports and source detail",
+          "state": "Missing",
+          "surface": "Company tab + source inspector",
+          "base": "New report index and fact-source panel",
+          "layout": [
+            "Document type, publication time, provider and original link.",
+            "Fact-to-document references and revision/amendment context.",
+            "Freshness, unavailable documents and refresh failure recovery."
+          ],
+          "actions": [
+            "Open an original report",
+            "Inspect a fact’s origin",
+            "Cite evidence in saved research"
+          ],
+          "handoff": [
+            "FND03",
+            "FND08",
+            "SH02"
+          ],
+          "gap": "An overview feed alone may not supply original filings. Verify report access separately rather than inventing citations.",
+          "phase": "Core"
+        },
+        {
+          "id": "FND06",
+          "name": "Earnings and corporate events",
+          "state": "Missing",
+          "surface": "Company calendar / event detail",
+          "base": "New sourced event view",
+          "layout": [
+            "Dated earnings, dividends, splits and relevant announcements where covered.",
+            "Separate announced/estimated/confirmed events and display source/timezone.",
+            "Link to reports, chart timestamps and saved notes."
+          ],
+          "actions": [
+            "Inspect an event",
+            "Set a supported reminder",
+            "Open related chart/report"
+          ],
+          "handoff": [
+            "FND05",
+            "WS04",
+            "AUTO02"
+          ],
+          "gap": "Events and estimates need their own coverage and revision contract; no universal calendar exists.",
+          "phase": "Research expansion"
+        },
+        {
+          "id": "FND07",
+          "name": "Screener and company comparison",
+          "state": "Missing",
+          "surface": "Research list / comparison workspace",
+          "base": "New Fundamentals surface",
+          "layout": [
+            "A declared supported universe and consistent metric/period filters.",
+            "Side-by-side facts with source, currency and missing-value treatment.",
+            "Saved criteria and explicit inclusion; avoid an opaque universal quality score."
+          ],
+          "actions": [
+            "Filter supported entities",
+            "Compare selected companies",
+            "Save a research list"
+          ],
+          "handoff": [
+            "FND01",
+            "FND02",
+            "FND08"
+          ],
+          "gap": "Needs normalized facts and real universe coverage before the screening UI can make truthful comparisons.",
+          "phase": "Research expansion"
+        },
+        {
+          "id": "FND08",
+          "name": "Saved research and decision notebook",
+          "state": "Missing",
+          "surface": "Research note + immutable evidence snapshot",
+          "base": "New local research records; references into existing journal",
+          "layout": [
+            "Notes, thesis, linked entities, reports and captured facts with source dates.",
+            "Distinguish saved evidence from refreshed current data.",
+            "Choose the destination book/trade/note when attaching research."
+          ],
+          "actions": [
+            "Save/reopen a snapshot",
+            "Attach a citation to a journal review",
+            "Return to the exact researched company or chart"
+          ],
+          "handoff": [
+            "FND02",
+            "FND05",
+            "WS09",
+            "WS04"
+          ],
+          "gap": "There is no durable research notebook/snapshot workflow. A research note never creates a trade fill.",
+          "phase": "Core"
+        },
+        {
+          "id": "FND09",
+          "name": "Company relationships",
+          "state": "Missing",
+          "surface": "Later relationship explorer",
+          "base": "New evidence-backed research expansion",
+          "layout": [
+            "Supplier/customer/ownership edges with type, source, date and evidence.",
+            "Inspect relationships without treating inference as reported fact.",
+            "Show changes over time and distinguish verified relationships from unavailable coverage."
+          ],
+          "actions": [
+            "Explore a sourced relationship",
+            "Inspect evidence",
+            "Open the related company"
+          ],
+          "handoff": [
+            "FND02",
+            "FND05",
+            "FND08"
+          ],
+          "gap": "This is part of the Bloomberg-like vision. A company overview source does not establish a complete customer/supplier graph.",
+          "phase": "Research expansion"
+        },
+        {
+          "id": "FND10",
+          "name": "Market intelligence, economic calendar and reports",
+          "state": "Missing",
+          "surface": "Market overview + macro/report detail",
+          "base": "New Fundamentals research expansion",
+          "layout": [
+            "Supported macro series, economic releases and original economic reports.",
+            "Release time, observation period, revisions, source and freshness; original links for any licensed news/report coverage.",
+            "Watchlists, dated events and chart overlays only where their data is supported."
+          ],
+          "actions": [
+            "Inspect a macro series or release",
+            "Open an original report",
+            "Save research or configure a supported reminder"
+          ],
+          "handoff": [
+            "FND05",
+            "FND08",
+            "WS04",
+            "AUTO02"
+          ],
+          "gap": "Price history alone supplies neither macro fundamentals nor news. Each dataset and calendar needs a source, coverage and revision contract.",
+          "phase": "Research expansion"
+        },
+        {
+          "id": "FND11",
+          "name": "Asset-specific fundamentals",
+          "state": "Missing",
+          "surface": "Asset pages with distinct data models",
+          "base": "New crypto / fund / FX-rates / futures research increments",
+          "layout": [
+            "Crypto: supply, issuance/unlocks and supported network/funding data with methodology.",
+            "Funds: holdings, NAV and distributions; FX/rates: relevant economic series and rate context.",
+            "Futures: contract, expiry/roll and term structure. Retain source, date, units and missing-data rules throughout."
+          ],
+          "actions": [
+            "Choose a supported asset type",
+            "Inspect its relevant fundamentals",
+            "Open the matching original chart or cited research"
+          ],
+          "handoff": [
+            "FND01",
+            "FND08",
+            "FND10",
+            "WS04"
+          ],
+          "gap": "Universal architecture does not make one company-ratio template suitable for every asset class. Verify and release each asset model separately.",
+          "phase": "Research expansion"
+        }
+      ]
+    },
+    {
+      "id": "strategy",
+      "name": "Strategy Builder",
+      "purpose": "Create indicators or executable strategies, test them, inspect evidence and deliberately apply validated work to charts or paper environments.",
+      "boundary": "Indicator and Strategy are the two artifact kinds. A bot is a deployment of a strategy revision. Backtests, optimization trials and real trades remain different records.",
+      "screens": [
+        {
+          "id": "SB01",
+          "name": "Project library",
+          "state": "Missing",
+          "surface": "Dedicated Strategy Builder page",
+          "base": "/strategy-builder currently says the new builder is unavailable",
+          "layout": [
+            "Create Indicator or Create Strategy; search and reopen saved projects.",
+            "Show drafts, validated revisions, parameter sets and latest experiment.",
+            "Import/export, duplicate and archive without exposing legacy tool hosts."
+          ],
+          "actions": [
+            "Create/open a project",
+            "Resume an experiment",
+            "Open a saved report"
+          ],
+          "handoff": [
+            "SB02",
+            "SB05",
+            "SB06"
+          ],
+          "gap": "The old launchers were removed. A new project library is not implemented.",
+          "phase": "Core"
+        },
+        {
+          "id": "SB02",
+          "name": "Indicator/strategy authoring",
+          "state": "Reuse components",
+          "surface": "Project editor",
+          "base": "Existing ScriptPanel, compiler and source store are reuse points",
+          "layout": [
+            "Left: project files/dependencies; center: code or supported visual rules.",
+            "Right: typed parameters, plots and strategy settings; bottom: diagnostics/preview.",
+            "Draft/revision status and save/conflict recovery. Keep chart-side editing linked to the same project."
+          ],
+          "actions": [
+            "Save a draft",
+            "Validate and freeze a revision",
+            "Preview an indicator or define executable strategy rules"
+          ],
+          "handoff": [
+            "SB03",
+            "SB04",
+            "SB05",
+            "WS04"
+          ],
+          "gap": "Current chart scripts are not a durable versioned project/dependency library. Arbitrary code need not round-trip into visual blocks.",
+          "phase": "Core"
+        },
+        {
+          "id": "SB03",
+          "name": "Indicator preview and validation",
+          "state": "Reuse components",
+          "surface": "Editor preview / diagnostics",
+          "base": "Existing custom indicator registration and chart application",
+          "layout": [
+            "Selected dataset, typed inputs, overlay/pane outputs and reference values.",
+            "Warmup, missing bars, higher-timeframe availability and repaint behavior.",
+            "Show validation outcome and exact revision/parameters."
+          ],
+          "actions": [
+            "Preview output",
+            "Validate reference behavior",
+            "Apply to an original chart or use in a strategy"
+          ],
+          "handoff": [
+            "SB02",
+            "SB04",
+            "WS04"
+          ],
+          "gap": "An indicator has no trading P&L on its own. Add explicit strategy rules before performance testing.",
+          "phase": "Core"
+        },
+        {
+          "id": "SB04",
+          "name": "Strategy rules and trading assumptions",
+          "state": "Missing",
+          "surface": "Editor rules/settings panels",
+          "base": "Reuse compiler and executable-strategy classification",
+          "layout": [
+            "Entry/exit conditions, indicator dependencies, sizing, stops/targets and session rules.",
+            "Bar-close/next-open timing and supported fill policy.",
+            "Instrument economics, cost assumptions and clear validation errors."
+          ],
+          "actions": [
+            "Build supported visual rules or code",
+            "Validate execution semantics",
+            "Configure a baseline test"
+          ],
+          "handoff": [
+            "SB02",
+            "SB05"
+          ],
+          "gap": "A configurable collection of indicators is not yet an executable strategy.",
+          "phase": "Core"
+        },
+        {
+          "id": "SB05",
+          "name": "Backtest setup and experiment jobs",
+          "state": "Reuse components",
+          "surface": "Test setup + durable job view",
+          "base": "Existing chart-bound BacktestPanel / worker / backtestRun",
+          "layout": [
+            "Pin revision, parameters, instrument, dataset version, range and warmup.",
+            "Set costs, fill assumptions and resource budget.",
+            "Show queued/running/completed/failed/cancelled/interrupted states and recovery."
+          ],
+          "actions": [
+            "Choose saved data",
+            "Run/cancel a bounded experiment",
+            "Reopen its report after leaving the chart"
+          ],
+          "handoff": [
+            "SH01",
+            "SH02",
+            "SB06"
+          ],
+          "gap": "The reusable chart-bound engine is not a standalone offline dataset/job/report product.",
+          "phase": "Core"
+        },
+        {
+          "id": "SB06",
+          "name": "Saved performance report and trade drilldown",
+          "state": "Reuse components",
+          "surface": "Persistent experiment report",
+          "base": "Existing equity/drawdown/trade result components",
+          "layout": [
+            "Overview/assumptions, equity/drawdown, trades, costs/exposure, breakdowns and diagnostics.",
+            "Exact manifest, dataset range, engine and revision identity.",
+            "Click a simulated trade to inspect its original-chart context; return to the same report."
+          ],
+          "actions": [
+            "Inspect a baseline result",
+            "Export/reopen results",
+            "Compare or start a bounded validation study"
+          ],
+          "handoff": [
+            "WS04",
+            "SB07",
+            "SB08",
+            "SB09"
+          ],
+          "gap": "Current inspected result state is chart component state; durable reproducible reports and complete metric definitions are missing.",
+          "phase": "Core"
+        },
+        {
+          "id": "SB07",
+          "name": "Parameter optimization and candidate ledger",
+          "state": "Missing",
+          "surface": "Experiment study configuration + results",
+          "base": "New builder study workflow; reuse validated run engine",
+          "layout": [
+            "Parameter ranges/constraints, trial estimate and budget.",
+            "Every candidate, rejection/failure and scoring objective.",
+            "Performance/drawdown/cost/sample-size tradeoffs and parameter stability."
+          ],
+          "actions": [
+            "Run bounded grid/random search",
+            "Inspect all attempted trials",
+            "Save a parameter set against its exact revision"
+          ],
+          "handoff": [
+            "SB06",
+            "SB08",
+            "SB09"
+          ],
+          "gap": "Existing parameter inputs and portfolio allocation analytics do not implement strategy optimization.",
+          "phase": "Core"
+        },
+        {
+          "id": "SB08",
+          "name": "Out-of-sample and stress testing",
+          "state": "Missing",
+          "surface": "Validation study + comparative report",
+          "base": "P21 robustness work; existing pieces have narrower scope",
+          "layout": [
+            "Chronological train/validation/holdout and walk-forward definitions.",
+            "Supported cost/slippage/latency/market-period stresses and seeded resampling.",
+            "Scenario assumptions, degradation, failures and absolute results; distinguish execution reruns from return transformations."
+          ],
+          "actions": [
+            "Define a study",
+            "Compare baseline and scenarios",
+            "Record limitations and candidate decisions"
+          ],
+          "handoff": [
+            "SB06",
+            "SB07",
+            "SB09"
+          ],
+          "gap": "No complete arbitrary-strategy stress/walk-forward product exists; do not relabel fixed-allocation analytics as one.",
+          "phase": "Core"
+        },
+        {
+          "id": "SB09",
+          "name": "Compare, save and promote a candidate",
+          "state": "Missing",
+          "surface": "Candidate decision / explicit handoff",
+          "base": "New builder candidate workflow",
+          "layout": [
+            "Compare revision, data, costs and trial conditions before ranking.",
+            "Save a selected parameter set and the researcher’s explanation.",
+            "Separate Apply indicator, Inspect trades, Create paper run and Prepare bot deployment actions."
+          ],
+          "actions": [
+            "Apply a validated indicator to a chosen chart",
+            "Test a strategy in a paper environment",
+            "Prepare an eligible account-bound deployment"
+          ],
+          "handoff": [
+            "WS04",
+            "WS06",
+            "AUTO05"
+          ],
+          "gap": "Promotion is explicit and reversible at draft stage. A good backtest never grants live execution permission.",
+          "phase": "Core"
+        }
+      ]
+    },
+    {
+      "id": "workflows",
+      "name": "Workflows",
+      "purpose": "Automate repeatable tasks and operate their runs with explicit scope, logs and recovery.",
+      "boundary": "Keep Flow. It orchestrates triggers and actions; it is not an indicator editor or a substitute strategy tester.",
+      "screens": [
+        {
+          "id": "AUTO01",
+          "name": "Workflow library and useful templates",
+          "state": "Keep and connect",
+          "surface": "Existing list page",
+          "base": "/flow · FlowIndex.tsx",
+          "layout": [
+            "Keep saved workflow cards, import/export and active/draft state.",
+            "Group supported templates by user job: alerts, data refresh, reports and eligible trading actions.",
+            "Show bound environment/account and last run without claiming unsupported actions are ready."
+          ],
+          "actions": [
+            "Create/open a workflow",
+            "Duplicate/import a workflow",
+            "Inspect recent runs"
+          ],
+          "handoff": [
+            "AUTO02",
+            "AUTO04"
+          ],
+          "gap": "The engine/list exists. Research refresh and journal-sync templates require real underlying actions.",
+          "phase": "Core"
+        },
+        {
+          "id": "AUTO02",
+          "name": "Visual automation builder",
+          "state": "Keep and connect",
+          "surface": "Existing Flow graph editor",
+          "base": "/flow/editor/:id · FlowEditor.tsx",
+          "layout": [
+            "Keep node palette, graph canvas, node settings and execution logs.",
+            "Define trigger, inputs, conditions, action capabilities and target scope.",
+            "Link supported saved project/jobs instead of copying strategy code into another engine."
+          ],
+          "actions": [
+            "Build a schedule/event workflow",
+            "Validate its graph and bindings",
+            "Preview/test before activating"
+          ],
+          "handoff": [
+            "AUTO03",
+            "AUTO04",
+            "SET02"
+          ],
+          "gap": "Existing global user/API-key binding must evolve into explicit environment/account/project revision bindings.",
+          "phase": "Core"
+        },
+        {
+          "id": "AUTO03",
+          "name": "Test, permissions and activation",
+          "state": "Improve existing",
+          "surface": "Builder test/activation flow",
+          "base": "Existing Flow validation and lifecycle guards are reuse points",
+          "layout": [
+            "Show resolved account/environment, exact action permissions and expected effects.",
+            "Separate read-only preview from real action execution.",
+            "Make schedules, webhook credentials, approvals and activation status clear."
+          ],
+          "actions": [
+            "Validate/test safely",
+            "Choose enabled scope",
+            "Activate or keep a draft"
+          ],
+          "handoff": [
+            "AUTO02",
+            "AUTO04"
+          ],
+          "gap": "A generic Play button cannot hide execution authority or pretend an unimplemented read-only preview is a dry run.",
+          "phase": "Core"
+        },
+        {
+          "id": "AUTO04",
+          "name": "Runs, logs, approvals and recovery",
+          "state": "Keep and connect",
+          "surface": "Existing run/detail/approval surfaces",
+          "base": "Flow run logs and ActionCenter are reuse points",
+          "layout": [
+            "Trigger, scope, each step’s result, outputs and timestamps.",
+            "Failure, partial outcome, retry/cancel and current approval queue.",
+            "Link account fills to their book and research/data jobs to their own artifacts."
+          ],
+          "actions": [
+            "Inspect a run",
+            "Resolve approvals/failures",
+            "Retry only supported idempotent steps"
+          ],
+          "handoff": [
+            "AUTO01",
+            "AUTO02",
+            "WS09",
+            "SH02"
+          ],
+          "gap": "Need one visible execution history with step outcomes. Retrying an unknown trading submission must not duplicate an order.",
+          "phase": "Core"
+        },
+        {
+          "id": "AUTO05",
+          "name": "Strategy bot deployments and operations",
+          "state": "Reuse components",
+          "surface": "Runtime/deployment detail; linked from profile and builder",
+          "base": "Existing StrategiesPanel / OpenScript deployment and runner services",
+          "layout": [
+            "Frozen strategy revision, parameters, instrument/source and paper/demo/live account.",
+            "Running/stopped/error state, logs and account risk settings.",
+            "Separate Stop bot, Cancel orders and Close positions; closing a chart does not control backend lifetime."
+          ],
+          "actions": [
+            "Prepare a deployment from a candidate",
+            "Explicitly start/stop eligible runtime",
+            "Inspect its account activity and journal"
+          ],
+          "handoff": [
+            "SB09",
+            "WS03",
+            "WS05",
+            "WS09",
+            "AUTO04"
+          ],
+          "gap": "User-confirmed navigation home: Workflows → Deployments, with contextual Builder/profile/chart links. This is a separate runtime type, not a Flow graph. Existing runtimes and scheduler dependencies must be migrated safely.",
+          "phase": "Connected"
+        }
+      ]
+    },
+    {
+      "id": "settings",
+      "name": "Settings",
+      "purpose": "Configure account preferences, connection providers, developer access and the application without burying the daily trading/research jobs.",
+      "boundary": "Global provider setup belongs here. Portfolio-specific bindings remain behind that environment’s Open → Connections. Using a dataset should open a shared picker directly from the task.",
+      "screens": [
+        {
+          "id": "SET01",
+          "name": "Account and application preferences",
+          "state": "Working slice",
+          "surface": "Existing settings pages / tabs",
+          "base": "/settings and /profile",
+          "layout": [
+            "Keep account/security, alerts, appearance, email and existing system controls.",
+            "Make global versus portfolio settings clear.",
+            "Provide optional account setup and a return to the current work."
+          ],
+          "actions": [
+            "Change relevant preferences",
+            "Manage account security",
+            "Return to Settings or the previous work"
+          ],
+          "handoff": [
+            "SET02",
+            "SET04",
+            "SET05"
+          ],
+          "gap": "Configuration grouping is implemented. Some legacy controls still depend on a broker/app session; local-first access needs capability-specific migration.",
+          "phase": "Core"
+        },
+        {
+          "id": "SET02",
+          "name": "Connections and account/provider setup",
+          "state": "Improve existing",
+          "surface": "Connections & Data tabs + connector setup flow",
+          "base": "/settings/connections and profile Connections",
+          "layout": [
+            "Choose connection purpose: account history, market data, research data or execution.",
+            "Show provider/platform, observed status, supported permissions and account identity.",
+            "Separate global connection registration from per-environment source/account bindings."
+          ],
+          "actions": [
+            "Connect a supported crypto exchange, brokerage or terminal bridge",
+            "Grant only needed supported capabilities",
+            "Map an account/source to the intended environment/book"
+          ],
+          "handoff": [
+            "WS03",
+            "WS12",
+            "SH01",
+            "FND01"
+          ],
+          "gap": "Current app-wide broker credential form and browser-local profile account records are separate. Grouped navigation is not a universal connector implementation.",
+          "phase": "Core"
+        },
+        {
+          "id": "SET03",
+          "name": "Market history and data management",
+          "state": "Keep and connect",
+          "surface": "Existing Historify UI + coverage/source details",
+          "base": "/historify · Historify.tsx / DuckDB services",
+          "layout": [
+            "Keep watchlist/download jobs, schedules, catalog and CSV/Parquet import/export.",
+            "Add source, instrument identity, range, interval, quality and dataset version.",
+            "Provide task-specific Open in chart / Use in replay / Use in backtest links."
+          ],
+          "actions": [
+            "Import/download entitled data",
+            "Inspect gaps and version/coverage",
+            "Select an existing dataset for the current task"
+          ],
+          "handoff": [
+            "SH01",
+            "WS04",
+            "WS06",
+            "SB05"
+          ],
+          "gap": "Storage/import/download capabilities exist. Verified reusable datasets, broker-free local use and exact context handoffs still need integration.",
+          "phase": "Core"
+        },
+        {
+          "id": "SET04",
+          "name": "Developer API and integration access",
+          "state": "Working slice",
+          "surface": "Existing developer key controls",
+          "base": "/apikey",
+          "layout": [
+            "Keep developer access key management separate from broker credentials.",
+            "Explain which scripts/webhooks/integrations use this access.",
+            "Keep approval-mode and authorized integration configuration reachable."
+          ],
+          "actions": [
+            "Inspect/manage authorized developer access",
+            "Configure supported integrations",
+            "Return to Settings"
+          ],
+          "handoff": [
+            "AUTO02",
+            "AUTO04"
+          ],
+          "gap": "The page exists. Per-client least-privilege access and universal adapter setup are not established by one developer key.",
+          "phase": "Core"
+        },
+        {
+          "id": "SET05",
+          "name": "System, diagnostics and optional AI",
+          "state": "Working slice",
+          "surface": "Existing admin and Agent configuration pages",
+          "base": "/admin /agent/config and diagnostic/monitoring routes",
+          "layout": [
+            "Keep market calendars/timings, diagnostics, monitoring and applicable access controls.",
+            "Keep optional AI provider/model configuration and its explicit permissions.",
+            "Expose backup/restore, storage health and maintenance through the shared recovery surface."
+          ],
+          "actions": [
+            "Diagnose a failed job/connection",
+            "Configure optional assistance",
+            "Open local backup/recovery"
+          ],
+          "handoff": [
+            "SH02",
+            "SH03"
+          ],
+          "gap": "Administrative controls exist; an assistant is optional and never the source of invented market or company facts.",
+          "phase": "Core"
+        }
+      ]
+    },
+    {
+      "id": "shared",
+      "name": "Shared surfaces",
+      "purpose": "Provide reusable task-level pickers and recovery tools across every section.",
+      "boundary": "These are dialogs, drawers or shared pages reached from the user’s current task. They are not another top-level Tools directory.",
+      "screens": [
+        {
+          "id": "SH01",
+          "name": "Instrument, source and saved-data picker",
+          "state": "Missing",
+          "surface": "Shared task-aware picker",
+          "base": "Reuse existing instrument search and Historify catalog",
+          "layout": [
+            "Resolve the exact instrument/listing/contract and requested data capability.",
+            "Show saved/live options, coverage, freshness, entitlement and compatibility.",
+            "Keep the requested chart/replay/experiment context when setup or download is needed."
+          ],
+          "actions": [
+            "Choose compatible data",
+            "Import/download missing history",
+            "Return to the same pending task"
+          ],
+          "handoff": [
+            "WS04",
+            "WS06",
+            "SB05",
+            "FND02",
+            "SET02",
+            "SET03"
+          ],
+          "gap": "A free-text data-source label is not a dataset selection. A trading account is not mandatory for eligible local-data tasks.",
+          "phase": "Core"
+        },
+        {
+          "id": "SH02",
+          "name": "Activity, jobs and notifications",
+          "state": "Improve existing",
+          "surface": "Shared activity drawer / linked job details",
+          "base": "Reuse Historify jobs, Flow logs, diagnostics; unify ownership",
+          "layout": [
+            "Scoped queued/running/failed/stale work with last successful outcome.",
+            "Source/account/book/project/run identity and a route to the owning section.",
+            "Progress, supported cancel/retry, interrupted recovery and actionable notifications."
+          ],
+          "actions": [
+            "Track a sync, download, research refresh or experiment",
+            "Inspect the owning job",
+            "Recover without losing the original task"
+          ],
+          "handoff": [
+            "WS12",
+            "SET03",
+            "SB05",
+            "FND05",
+            "AUTO04"
+          ],
+          "gap": "Different modules have partial job/log UIs. They do not yet form one durable cross-module activity trail.",
+          "phase": "Core"
+        },
+        {
+          "id": "SH03",
+          "name": "Backup, restore and storage recovery",
+          "state": "Missing",
+          "surface": "Shared settings recovery flow",
+          "base": "Existing journal CSV export and backend databases are incomplete pieces",
+          "layout": [
+            "Choose a complete local backup with data/dependency manifest; exclude secrets by default.",
+            "Validate a restore, show conflicts and offer recovery before replacing records.",
+            "Include books, environments, chart layouts, research, projects and results under a defined policy."
+          ],
+          "actions": [
+            "Export a full backup",
+            "Validate/restore on a clean installation",
+            "Recover an interrupted migration"
+          ],
+          "handoff": [
+            "WS01",
+            "WS08",
+            "SB01",
+            "FND08",
+            "SET05"
+          ],
+          "gap": "A filtered trade CSV is not a complete backup. Durable ownership and migration rules are foundational P01/P02 work.",
+          "phase": "Core"
+        }
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "journal",
+      "name": "Journal only: record and improve trading done elsewhere",
+      "steps": [
+        "WS01",
+        "WS02",
+        "WS08",
+        "WS10",
+        "WS09"
+      ],
+      "optional": [
+        "WS04"
+      ],
+      "outcome": "A manual book is useful without chart data, a broker connection, bots or AI. Chart drilldown is optional."
+    },
+    {
+      "id": "sync",
+      "name": "Connected journal: import, catch up and reconcile",
+      "steps": [
+        "WS08",
+        "SET02",
+        "WS12",
+        "WS09"
+      ],
+      "optional": [
+        "WS11"
+      ],
+      "outcome": "One account’s source observations reconcile into its book; duplicate candidates and corrections preserve user notes. Statement import is an alternative initial source or a backfill when needed."
+    },
+    {
+      "id": "paper",
+      "name": "Discretionary paper/replay: learn from saved history",
+      "steps": [
+        "WS01",
+        "WS06",
+        "SH01",
+        "WS07",
+        "WS09"
+      ],
+      "outcome": "The original chart runs a dataset-bound paper session, saves its fills once and resumes after restart."
+    },
+    {
+      "id": "indicator",
+      "name": "Build an indicator and use it on the original chart",
+      "steps": [
+        "SB01",
+        "SB02",
+        "SB03",
+        "WS04"
+      ],
+      "outcome": "An exact validated indicator revision and parameter set attach to the chosen chart without submitting orders."
+    },
+    {
+      "id": "strategy",
+      "name": "Build, test, stress and paper-validate a strategy",
+      "steps": [
+        "SB01",
+        "SB02",
+        "SB04",
+        "SH01",
+        "SB05",
+        "SB06",
+        "SB08",
+        "SB09",
+        "WS06",
+        "WS09"
+      ],
+      "optional": [
+        "SB07"
+      ],
+      "outcome": "The candidate has saved reproducible evidence; research trials stay outside real-account journal P&L. Parameter search is a separate optional study, not a mandatory way to manufacture a winner."
+    },
+    {
+      "id": "research",
+      "name": "Research a company and retain the decision evidence",
+      "steps": [
+        "FND01",
+        "FND02",
+        "FND03",
+        "FND05",
+        "FND08"
+      ],
+      "optional": [
+        "WS04",
+        "WS09"
+      ],
+      "outcome": "Research is useful on its own. Optional chart and journal links retain the decision evidence; unsupported company relationships remain unavailable."
+    },
+    {
+      "id": "automation",
+      "name": "Automate a supported task and recover failures",
+      "steps": [
+        "AUTO01",
+        "AUTO02",
+        "AUTO03",
+        "AUTO04",
+        "SH02"
+      ],
+      "outcome": "The task runs with explicit capabilities, visible outcomes and supported recovery; activation never invents missing actions."
+    },
+    {
+      "id": "connected",
+      "name": "Connected discretionary trading",
+      "steps": [
+        "SET02",
+        "WS03",
+        "WS04",
+        "WS05",
+        "WS12",
+        "WS09"
+      ],
+      "outcome": "Eligible account-specific fills reach their own books. No strategy project or bot is required. Copying follows verified single-account execution."
+    },
+    {
+      "id": "bot",
+      "name": "Prepare and operate an account-bound strategy bot",
+      "steps": [
+        "SB09",
+        "SET02",
+        "AUTO05",
+        "AUTO04",
+        "WS12",
+        "WS09"
+      ],
+      "optional": [
+        "WS04",
+        "WS05"
+      ],
+      "outcome": "A strategy candidate becomes a separately configured deployment after capability and account/risk checks. The chart is an optional view; it does not control the runtime lifetime."
+    }
+  ],
+  "rules": [
+    "Preserve the original chart and journal presentation. Add workflow context and missing behavior in those screens.",
+    "A profile/portfolio is an environment inside Workspace; a journal book is a record owner; an account is an external or simulated identity. They are not aliases.",
+    "Each connected book belongs to exactly one account; manual records use separate books. Copy destinations each journal their own account fills.",
+    "Users may use just journal, chart, paper trading, strategy research or fundamentals. Optional modules cannot impose unrelated broker or AI setup.",
+    "Market data, account-history access and execution permission are separate. Saved configuration is not observed health.",
+    "Manual replay, automated backtests, optimization trials and running bots have separate lifecycles and records.",
+    "A saved research/project/report revision is not rewritten when newer data or code arrives.",
+    "Closing a chart changes a view, not a running bot or local sync destination. Closing the local engine stops local workers unless a separate background service is explicitly enabled.",
+    "All cross-section links carry authoritative entity/account/book/dataset/revision context and preserve the return location. Unsupported mapping gets a recovery action, not a default ticker.",
+    "No feature or P00 milestone is complete merely because a route, tab, form, backend utility or review screen exists."
+  ],
+  "gaps": [
+    [
+      "Book/account/environment ownership",
+      "The journal UI is good, but it is still profile-scoped persistence; the independent book model and migration rules are unfinished."
+    ],
+    [
+      "The whole trade lifecycle",
+      "Open/edit/close/correct, statement import, read-only sync and annotation-preserving reconciliation need connected screens and backend behavior."
+    ],
+    [
+      "Data selection and paper truth",
+      "Saved candles, exact instrument identity, version/coverage and a durable simulated account must connect to the original chart."
+    ],
+    [
+      "The Strategy Builder product",
+      "A library, editor, saved experiments/reports, parameter studies, robustness and candidate handoff are absent as one product despite reusable engines."
+    ],
+    [
+      "The Fundamentals product",
+      "Search, company pages, statements, reports, research notes and sourced relationships have no complete implementation."
+    ],
+    [
+      "Runtime/account scope",
+      "Existing chart dock and Flow resolve legacy global contexts; portfolio configuration does not establish per-account authority or copying."
+    ],
+    [
+      "Durability and recovery",
+      "Books, chart layouts, sources, research, projects, jobs/results and backups need coherent ownership and restore guarantees."
+    ],
+    [
+      "UI states and discoverability",
+      "Every screen needs useful first-use, pending, partial, error, stale, offline, permission and return paths; missing controls must lead to recovery."
+    ]
+  ],
+  "decisions": [
+    "User-confirmed primary tab order: Workspace, Fundamentals, Strategy Builder, Workflows. All four remain directly visible; Settings and shared resources stay contextual.",
+    "Use the current Chart / Journal / Open model. Add a first-use Journal only job without forcing it to be a live trading account.",
+    "Start Fundamentals with sourced company overview, statements and original reports; treat relationship intelligence and other asset classes as staged expansions.",
+    "User-confirmed runtime placement: Workflows → Deployments, linked from a strategy candidate, profile Overview and chart. A deployment is not converted into a Flow graph.",
+    "Apply the confirmed one-active-connected-book/account rule and conservative legacy classification in P00_DECISIONS. P01/P02 implement identity, migration and chart-workspace association contracts without guessing old record ownership."
+  ]
+}

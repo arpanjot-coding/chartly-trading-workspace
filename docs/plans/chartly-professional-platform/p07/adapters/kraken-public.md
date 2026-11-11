@@ -1,0 +1,9 @@
+# Kraken public access subplan
+
+Owner: Chartly maintainers. Adapter `kraken-public`, version `p07-read-only-v1`, remote data-only transport. [Actual public conformance](../evidence/kraken-public-conformance.json), [access summary](../evidence/provider-access-preflight.json).
+
+A credential-free bounded server-time request succeeded. Its readiness remains prototype; no account, quote, history, research or execution capability is certified. The static endpoint cannot be replaced by a caller-provided URL. The shared HTTP client uses an explicit ten-second timeout, rejects redirects, limits response bytes to 16 KiB and closes the streaming response on every path. Rate limiting is returned with bounded retry guidance rather than an automatic request loop.
+
+Authenticated account work belongs to the crypto-family adapter plan. Kraken documents [wallet account IDs](https://docs.kraken.com/api-reference/account-data/list-wallet-accounts), [key permission observations](https://docs.kraken.com/api-reference/account-data/get-api-key-info), [private authentication](https://docs.kraken.com/exchange/guides/rest/authentication) and [trade history](https://docs.kraken.com/api-reference/account-data/get-trades-history). A future authenticated adapter must observe the chosen wallet identity, actual read grants, nonce behavior, pagination/retention and corrections. A typed account name or public time response cannot replace this proof.
+
+The provider documents [separate public/private/trading quotas](https://support.kraken.com/articles/206548367-what-are-the-api-rate-limits-). This access spike made only bounded public reads; no private API key or account was available/used for certification. No demo/live execution or protective-order claim is made. P08 must obtain permitted account access and pass its own conformance/identity/history recovery cases.

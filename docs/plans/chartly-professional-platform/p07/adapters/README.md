@@ -1,0 +1,16 @@
+# P07 adapter support and access evidence
+
+3 November 2026. Adapter owner: Chartly maintainers. Framework version `p07-read-only-v1`. The static factory exposes read-only probes and history observations; it has no submit/cancel/protection interface. Legacy broker plugins retain their existing separate boundaries. [Ordered implementation](../IMPLEMENTATION_PLAN.md), [subplan template](SUBPLAN_TEMPLATE.md), [certification template](CERTIFICATION_TEMPLATE.json).
+
+- [Diagnostic](diagnostic.md): deterministic synthetic account and fault fixtures. Its evidence can certify only the diagnostic provider.
+- [MetaTrader 5](mt5.md): actual selected Windows demo account identity and bounded raw deal access verified. Native market timestamps were about two hours ahead of host UTC; UTC-aligned data and broad journal conversion remain unverified.
+- [Kraken public](kraken-public.md): actual credential-free server-time reachability observed. No authenticated exchange account or market-data capability is certified by that response.
+- [Zerodha](zerodha.md): official account/auth/history prerequisites recorded and unauthenticated reachability observed. Private account access remains blocked pending a permitted developer app/account.
+
+Root owns registry capability evidence, permissions and configuration generations. A typed account/server, enabled switch, public response, restored metadata or synthetic report never grants external account health or trading authority. A supported matrix cell must identify its exact adapter/version/environment, measured observation, tested scope and limits. Freshness and account/credential changes require re-observation; P11 still owns execution.
+
+Factory configuration is allowlisted data: diagnostic account/fault enums; MT5's exact selected existing executable path and symbol; empty public/brokerage-access configuration. No arbitrary URL, import path, executable, password field or supplied function is accepted. MT5 uses the existing terminal session and always shuts down its Python IPC attachment, not the terminal. Native SDK initialization requires a native Windows executable path; the selected running process is checked immediately before attachment. Terminal exit racing that check remains an upstream `initialize` behavior: no deliberate launch/login is implemented, and the adapter refuses an absent process.
+
+Resource proof: [native 100-read audit](../evidence/mt5-native-resource-audit.json) measured 251 → 251 handles after five warmups, 77,775 retained traced bytes and 1,428,470 peak bytes over 100 actual read-only attach/probe/shutdown iterations. The mocked SDK covers another 200 success/error/history cleanup paths; these are controlled error tests, not failures injected into the user's real terminal. HTTP probes use the existing shared bounded client and close every streaming response on success/error. Factory state and the keyed attachment lock do not accumulate account/request keys.
+
+No private account name, full login, ticket, balance, credential or raw deal is included in portable certification artifacts. Full observed identity and raw activity may be handled only in the owner's private local registry/history API. Workspace recovery must restore references/history without secrets or active authority; reverify before reuse.

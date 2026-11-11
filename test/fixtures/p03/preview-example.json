@@ -1,0 +1,324 @@
+{
+  "format": "chartly-statement-preview",
+  "version": 1,
+  "sourceHash": "ac2f8d940ccd0e121b2076f122fbda67306ae4ba796390277b355554c56089e8",
+  "mapping": {
+    "version": 1,
+    "name": "Universal executions",
+    "columns": {
+      "eventId": "eventId",
+      "eventType": "eventType",
+      "positionId": "positionId",
+      "occurredAt": "occurredAt",
+      "symbol": "symbol",
+      "side": "side",
+      "quantity": "quantity",
+      "price": "price",
+      "commission": "commission",
+      "currency": "currency"
+    },
+    "timezone": "Europe/London",
+    "currency": "USD",
+    "quantityUnit": "units",
+    "pnlMultiplier": "1",
+    "missingCostPolicy": "declared-zero",
+    "delimiter": ",",
+    "decimalSeparator": ".",
+    "thousandsSeparator": "",
+    "costConvention": "positive",
+    "allowMixedCurrencies": false
+  },
+  "context": {
+    "provider": "fixture-csv",
+    "accountKey": "canonical-account-1",
+    "bookId": "book-fixture-1",
+    "portfolioId": 1,
+    "accountId": 1,
+    "currency": "USD"
+  },
+  "headers": [
+    "eventId",
+    "eventType",
+    "positionId",
+    "occurredAt",
+    "symbol",
+    "side",
+    "quantity",
+    "price",
+    "commission",
+    "currency"
+  ],
+  "rows": [
+    {
+      "rowNumber": 2,
+      "action": "insert",
+      "errors": [],
+      "eventKey": "event_5fa8a1caf6d577ed11455a36e70d952047d330f4eb931cd6",
+      "event": {
+        "version": 1,
+        "provider": "fixture-csv",
+        "accountKey": "canonical-account-1",
+        "bookId": "book-fixture-1",
+        "portfolioId": 1,
+        "eventId": "entry-1",
+        "eventKey": "event_5fa8a1caf6d577ed11455a36e70d952047d330f4eb931cd6",
+        "type": "entry",
+        "currency": "USD",
+        "quantityUnit": "units",
+        "source": {
+          "rowNumber": 2,
+          "sourceHash": "ac2f8d940ccd0e121b2076f122fbda67306ae4ba796390277b355554c56089e8",
+          "timezone": "Europe/London",
+          "missingCostPolicy": "declared-zero",
+          "raw": {
+            "eventId": "entry-1",
+            "eventType": "entry",
+            "positionId": "partial-1",
+            "occurredAt": "2026-11-02T09:00:00Z",
+            "symbol": "EXAMPLE",
+            "side": "Buy",
+            "quantity": "10",
+            "price": "100",
+            "commission": "2",
+            "currency": "USD"
+          }
+        },
+        "accountId": 1,
+        "positionId": "partial-1",
+        "positionKey": "position_3b3c4e14ce27738e19637114b581fb5e5bf0f317deabcb4d",
+        "commission": "2",
+        "quantity": "10",
+        "price": "100",
+        "fees": "0",
+        "swap": "0",
+        "pnlMultiplier": "1",
+        "occurredAt": "2026-11-02T09:00:00.000000Z",
+        "symbol": "EXAMPLE",
+        "side": "Buy",
+        "canonicalHash": "5390aac88cc698b348347ed0f987004eb873fb278df0746b5b28bf6d800f101a"
+      }
+    },
+    {
+      "rowNumber": 3,
+      "action": "insert",
+      "errors": [],
+      "eventKey": "event_a47154c7670d6e70509fb14e622f7b11656af54b1632c162",
+      "event": {
+        "version": 1,
+        "provider": "fixture-csv",
+        "accountKey": "canonical-account-1",
+        "bookId": "book-fixture-1",
+        "portfolioId": 1,
+        "eventId": "exit-1",
+        "eventKey": "event_a47154c7670d6e70509fb14e622f7b11656af54b1632c162",
+        "type": "exit",
+        "currency": "USD",
+        "quantityUnit": "units",
+        "source": {
+          "rowNumber": 3,
+          "sourceHash": "ac2f8d940ccd0e121b2076f122fbda67306ae4ba796390277b355554c56089e8",
+          "timezone": "Europe/London",
+          "missingCostPolicy": "declared-zero",
+          "raw": {
+            "eventId": "exit-1",
+            "eventType": "exit",
+            "positionId": "partial-1",
+            "occurredAt": "2026-11-02T10:00:00Z",
+            "symbol": "EXAMPLE",
+            "side": "Sell",
+            "quantity": "4",
+            "price": "110",
+            "commission": "1",
+            "currency": "USD"
+          }
+        },
+        "accountId": 1,
+        "positionId": "partial-1",
+        "positionKey": "position_3b3c4e14ce27738e19637114b581fb5e5bf0f317deabcb4d",
+        "commission": "1",
+        "quantity": "4",
+        "price": "110",
+        "fees": "0",
+        "swap": "0",
+        "pnlMultiplier": "1",
+        "occurredAt": "2026-11-02T10:00:00.000000Z",
+        "symbol": "EXAMPLE",
+        "side": "Sell",
+        "canonicalHash": "dcde00ec7f797b96b04c138ed53a18c2b9b880283b8c91efb28f1bdece1bb691"
+      }
+    }
+  ],
+  "events": [
+    {
+      "version": 1,
+      "provider": "fixture-csv",
+      "accountKey": "canonical-account-1",
+      "bookId": "book-fixture-1",
+      "portfolioId": 1,
+      "eventId": "entry-1",
+      "eventKey": "event_5fa8a1caf6d577ed11455a36e70d952047d330f4eb931cd6",
+      "type": "entry",
+      "currency": "USD",
+      "quantityUnit": "units",
+      "source": {
+        "rowNumber": 2,
+        "sourceHash": "ac2f8d940ccd0e121b2076f122fbda67306ae4ba796390277b355554c56089e8",
+        "timezone": "Europe/London",
+        "missingCostPolicy": "declared-zero",
+        "raw": {
+          "eventId": "entry-1",
+          "eventType": "entry",
+          "positionId": "partial-1",
+          "occurredAt": "2026-11-02T09:00:00Z",
+          "symbol": "EXAMPLE",
+          "side": "Buy",
+          "quantity": "10",
+          "price": "100",
+          "commission": "2",
+          "currency": "USD"
+        }
+      },
+      "accountId": 1,
+      "positionId": "partial-1",
+      "positionKey": "position_3b3c4e14ce27738e19637114b581fb5e5bf0f317deabcb4d",
+      "commission": "2",
+      "quantity": "10",
+      "price": "100",
+      "fees": "0",
+      "swap": "0",
+      "pnlMultiplier": "1",
+      "occurredAt": "2026-11-02T09:00:00.000000Z",
+      "symbol": "EXAMPLE",
+      "side": "Buy",
+      "canonicalHash": "5390aac88cc698b348347ed0f987004eb873fb278df0746b5b28bf6d800f101a"
+    },
+    {
+      "version": 1,
+      "provider": "fixture-csv",
+      "accountKey": "canonical-account-1",
+      "bookId": "book-fixture-1",
+      "portfolioId": 1,
+      "eventId": "exit-1",
+      "eventKey": "event_a47154c7670d6e70509fb14e622f7b11656af54b1632c162",
+      "type": "exit",
+      "currency": "USD",
+      "quantityUnit": "units",
+      "source": {
+        "rowNumber": 3,
+        "sourceHash": "ac2f8d940ccd0e121b2076f122fbda67306ae4ba796390277b355554c56089e8",
+        "timezone": "Europe/London",
+        "missingCostPolicy": "declared-zero",
+        "raw": {
+          "eventId": "exit-1",
+          "eventType": "exit",
+          "positionId": "partial-1",
+          "occurredAt": "2026-11-02T10:00:00Z",
+          "symbol": "EXAMPLE",
+          "side": "Sell",
+          "quantity": "4",
+          "price": "110",
+          "commission": "1",
+          "currency": "USD"
+        }
+      },
+      "accountId": 1,
+      "positionId": "partial-1",
+      "positionKey": "position_3b3c4e14ce27738e19637114b581fb5e5bf0f317deabcb4d",
+      "commission": "1",
+      "quantity": "4",
+      "price": "110",
+      "fees": "0",
+      "swap": "0",
+      "pnlMultiplier": "1",
+      "occurredAt": "2026-11-02T10:00:00.000000Z",
+      "symbol": "EXAMPLE",
+      "side": "Sell",
+      "canonicalHash": "dcde00ec7f797b96b04c138ed53a18c2b9b880283b8c91efb28f1bdece1bb691"
+    }
+  ],
+  "tradeProjections": [
+    {
+      "positionKey": "position_3b3c4e14ce27738e19637114b581fb5e5bf0f317deabcb4d",
+      "positionId": "partial-1",
+      "sourceEventKeys": [
+        "event_5fa8a1caf6d577ed11455a36e70d952047d330f4eb931cd6",
+        "event_a47154c7670d6e70509fb14e622f7b11656af54b1632c162"
+      ],
+      "provider": "fixture-csv",
+      "accountKey": "canonical-account-1",
+      "bookId": "book-fixture-1",
+      "portfolioId": 1,
+      "symbol": "EXAMPLE",
+      "direction": "Buy",
+      "currency": "USD",
+      "quantityUnit": "units",
+      "openedAt": "2026-11-02T09:00:00.000000Z",
+      "closedAt": null,
+      "remainingQuantity": "6",
+      "closedQuantity": "4",
+      "result": "Open",
+      "eventType": "trade",
+      "amounts": {
+        "grossPnl": "40",
+        "commission": "1.8",
+        "swap": "0",
+        "fees": "0",
+        "netPnl": "38.2",
+        "quantity": "10",
+        "entryPrice": "100",
+        "exitPrice": "110",
+        "riskAmount": null
+      },
+      "realizations": [
+        {
+          "id": "event_a47154c7670d6e70509fb14e622f7b11656af54b1632c162",
+          "closedAt": "2026-11-02T10:00:00.000000Z",
+          "quantity": "4",
+          "grossPnl": "40",
+          "commission": "1.8",
+          "swap": "0",
+          "fees": "0",
+          "netPnl": "38.2",
+          "exitPrice": "110",
+          "kind": "exit",
+          "sourceEventKey": "event_a47154c7670d6e70509fb14e622f7b11656af54b1632c162"
+        }
+      ],
+      "costAllocation": "fifo_proportional_18dp_half_even",
+      "accountId": 1
+    }
+  ],
+  "cashflows": [],
+  "totals": {
+    "byCurrency": {
+      "USD": {
+        "grossPnl": "40",
+        "commission": "1.8",
+        "swap": "0",
+        "fees": "0",
+        "netPnl": "38.2",
+        "deposits": "0",
+        "withdrawals": "0",
+        "unallocatedFees": "0"
+      }
+    },
+    "scope": "merged provider/account/book history, not only the uploaded file"
+  },
+  "counts": {
+    "insert": 2,
+    "unchanged": 0,
+    "correction": 0,
+    "conflict": 0,
+    "error": 0
+  },
+  "positionErrors": [],
+  "canCommit": true,
+  "requiresCorrectionConfirmation": false,
+  "calculationPolicy": {
+    "moneyScale": 18,
+    "rounding": "half_even",
+    "costs": "net = gross - commission - fees + signed swap",
+    "missingCosts": "unknown unless explicitly declared-zero; reported P&L remains source-authoritative",
+    "executionAllocation": "FIFO; explicit position IDs; same-time executions require sequence"
+  }
+}

@@ -1,0 +1,1329 @@
+[
+  {
+    "type": "LocalOwner",
+    "value": {
+      "schemaVersion": 1,
+      "id": "owner_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Local owner"
+    }
+  },
+  {
+    "type": "Workspace",
+    "value": {
+      "schemaVersion": 1,
+      "id": "workspace_local_001",
+      "ownerId": "owner_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Local workspace",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    }
+  },
+  {
+    "type": "JournalBook",
+    "value": {
+      "schemaVersion": 1,
+      "id": "book_manual_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Manual book",
+      "kind": "manual",
+      "state": "active",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    }
+  },
+  {
+    "type": "Account",
+    "value": {
+      "schemaVersion": 1,
+      "id": "account_external_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "kind": "external",
+      "mode": "broker_demo",
+      "providerId": "provider-one",
+      "venue": "demo-server",
+      "externalIdentity": "12345",
+      "currency": "USD",
+      "identityState": "verified",
+      "state": "active"
+    }
+  },
+  {
+    "type": "JournalBook",
+    "value": {
+      "schemaVersion": 1,
+      "id": "book_connected_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Demo book",
+      "kind": "connected",
+      "state": "active",
+      "accountId": "account_external_001",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    }
+  },
+  {
+    "type": "Profile",
+    "value": {
+      "schemaVersion": 1,
+      "id": "profile_local_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Review",
+      "kind": "journal",
+      "state": "active",
+      "currency": "USD",
+      "timezone": "Europe/London",
+      "primaryBookId": "book_manual_001"
+    }
+  },
+  {
+    "type": "SourceConnection",
+    "value": {
+      "schemaVersion": 1,
+      "id": "source_local_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "providerId": "provider-one",
+      "adapterVersion": "1.0.0",
+      "kind": "remote",
+      "accountId": "account_external_001",
+      "configurationState": "configured",
+      "health": "unknown"
+    }
+  },
+  {
+    "type": "CapabilityManifest",
+    "value": {
+      "schemaVersion": 1,
+      "id": "manifest_local_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "sourceId": "source_local_001",
+      "adapterVersion": "1.0.0",
+      "environment": "broker_demo",
+      "capabilities": {
+        "accountHistory": {
+          "state": "supported",
+          "evidenceId": "evidence_demo_001",
+          "verifiedAt": "2026-11-02T10:00:00Z"
+        },
+        "orderSubmit": {
+          "state": "unknown"
+        }
+      }
+    }
+  },
+  {
+    "type": "Instrument",
+    "value": {
+      "schemaVersion": 1,
+      "id": "instrument_btc_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "assetClass": "spot",
+      "name": "BTC/USD",
+      "baseCurrency": "BTC",
+      "quoteCurrency": "USD",
+      "quantityUnit": "base_asset",
+      "quantityStep": "0.00000001",
+      "priceTick": "0.01",
+      "multiplier": "1",
+      "calendarId": "continuous_24_7",
+      "timezone": "UTC",
+      "quantityScale": 8,
+      "priceScale": 2
+    }
+  },
+  {
+    "type": "Quantity",
+    "value": {
+      "schemaVersion": 1,
+      "id": "quantity_local_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "instrumentId": "instrument_btc_001",
+      "value": "0.12500000",
+      "unit": "base_asset"
+    }
+  },
+  {
+    "type": "Issuer",
+    "value": {
+      "schemaVersion": 1,
+      "id": "issuer_us_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Fixture Corporation",
+      "country": "US",
+      "identifiers": [
+        {
+          "namespace": "SEC-CIK",
+          "key": "0000000001"
+        }
+      ]
+    }
+  },
+  {
+    "type": "Instrument",
+    "value": {
+      "schemaVersion": 1,
+      "id": "instrument_equity_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "assetClass": "equity",
+      "name": "Fixture common stock",
+      "quoteCurrency": "USD",
+      "quantityUnit": "share",
+      "quantityStep": "1",
+      "priceTick": "0.01",
+      "multiplier": "1",
+      "calendarId": "fixture_us_equity",
+      "timezone": "America/New_York",
+      "quantityScale": 0,
+      "priceScale": 2
+    }
+  },
+  {
+    "type": "Listing",
+    "value": {
+      "schemaVersion": 1,
+      "id": "listing_us_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "instrumentId": "instrument_equity_001",
+      "issuerId": "issuer_us_001",
+      "venue": "fixture-venue",
+      "symbol": "FIX",
+      "currency": "USD",
+      "validFrom": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "type": "ProviderSymbol",
+    "value": {
+      "schemaVersion": 1,
+      "id": "symbol_provider_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "sourceId": "source_local_001",
+      "instrumentId": "instrument_btc_001",
+      "symbol": "BTCUSD",
+      "validFrom": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "type": "ChartDocumentReference",
+    "value": {
+      "schemaVersion": 1,
+      "id": "chart_document_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "storageNamespace": "oa-trading:legacy-demo",
+      "nativeDocumentId": "chart-original-1",
+      "catalogRevision": 4,
+      "profileId": "profile_local_001",
+      "bookId": "book_manual_001"
+    }
+  },
+  {
+    "type": "Account",
+    "value": {
+      "schemaVersion": 1,
+      "id": "account_paper_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "kind": "simulated",
+      "mode": "paper_replay",
+      "currency": "USD",
+      "identityState": "verified",
+      "state": "active"
+    }
+  },
+  {
+    "type": "JournalBook",
+    "value": {
+      "schemaVersion": 1,
+      "id": "book_paper_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Paper",
+      "kind": "paper",
+      "state": "active",
+      "accountId": "account_paper_001",
+      "currency": "USD",
+      "timezone": "UTC"
+    }
+  },
+  {
+    "type": "SourceConnection",
+    "value": {
+      "schemaVersion": 1,
+      "id": "source_file_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "providerId": "local-file",
+      "adapterVersion": "1",
+      "kind": "file",
+      "configurationState": "configured",
+      "health": "unknown"
+    }
+  },
+  {
+    "type": "ExecutionDestination",
+    "value": {
+      "schemaVersion": 1,
+      "id": "destination_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "sourceId": "source_local_001",
+      "manifestId": "manifest_local_001",
+      "instrumentId": "instrument_btc_001",
+      "nativeSymbol": "BTCUSD",
+      "mode": "broker_demo",
+      "riskPolicyId": "policy_risk_001",
+      "arming": "disarmed",
+      "eligibility": "unknown"
+    }
+  },
+  {
+    "type": "OrderIntent",
+    "value": {
+      "schemaVersion": 1,
+      "id": "intent_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "instrumentId": "instrument_btc_001",
+      "destinationId": "destination_demo_001",
+      "mode": "broker_demo",
+      "side": "buy",
+      "orderType": "market",
+      "quantity": {
+        "value": "0.1",
+        "unit": "base_asset"
+      },
+      "idempotencyKey": "decision-one/demo/account-one"
+    }
+  },
+  {
+    "type": "ChildCommand",
+    "value": {
+      "schemaVersion": 1,
+      "id": "command_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "intentId": "intent_demo_001",
+      "accountId": "account_external_001",
+      "destinationId": "destination_demo_001",
+      "mode": "broker_demo",
+      "idempotencyKey": "decision-one/demo/account-one",
+      "status": "acknowledged",
+      "nativeOrderId": "native-order-1"
+    }
+  },
+  {
+    "type": "BrokerAcknowledgement",
+    "value": {
+      "schemaVersion": 1,
+      "id": "ack_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "commandId": "command_demo_001",
+      "accountId": "account_external_001",
+      "outcome": "accepted",
+      "nativeOrderId": "native-order-1",
+      "observedAt": "2026-11-02T10:00:00Z"
+    }
+  },
+  {
+    "type": "Decision",
+    "value": {
+      "schemaVersion": 1,
+      "id": "decision_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "hypothesis": "Fixture only",
+      "accountIds": [
+        "account_external_001"
+      ]
+    }
+  },
+  {
+    "type": "ExecutionFill",
+    "value": {
+      "schemaVersion": 1,
+      "id": "fill_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "sourceId": "source_local_001",
+      "instrumentId": "instrument_btc_001",
+      "providerId": "provider-one",
+      "externalEventId": "native-fill-1",
+      "nativeOrderId": "native-order-1",
+      "side": "buy",
+      "quantity": {
+        "value": "0.04",
+        "unit": "base_asset"
+      },
+      "price": "50000.00",
+      "currency": "USD",
+      "occurredAt": "2026-11-02T10:00:00Z",
+      "receivedAt": "2026-11-02T10:00:00Z",
+      "decisionId": "decision_demo_001"
+    }
+  },
+  {
+    "type": "ExecutionFill",
+    "value": {
+      "schemaVersion": 1,
+      "id": "fill_demo_002",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "sourceId": "source_local_001",
+      "instrumentId": "instrument_btc_001",
+      "providerId": "provider-one",
+      "externalEventId": "native-fill-2",
+      "nativeOrderId": "native-order-1",
+      "side": "buy",
+      "quantity": {
+        "value": "0.06",
+        "unit": "base_asset"
+      },
+      "price": "50000.00",
+      "currency": "USD",
+      "occurredAt": "2026-11-02T10:00:00Z",
+      "receivedAt": "2026-11-02T10:00:00Z",
+      "decisionId": "decision_demo_001"
+    }
+  },
+  {
+    "type": "FeeAdjustment",
+    "value": {
+      "schemaVersion": 1,
+      "id": "fee_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "fillId": "fill_demo_001",
+      "amount": {
+        "value": "-2.00",
+        "currency": "USD"
+      },
+      "kind": "commission",
+      "sourceId": "source_local_001",
+      "externalEventId": "native-fee-1"
+    }
+  },
+  {
+    "type": "CashMovement",
+    "value": {
+      "schemaVersion": 1,
+      "id": "cash_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "amount": {
+        "value": "1000.00",
+        "currency": "USD"
+      },
+      "kind": "deposit",
+      "occurredAt": "2026-11-02T10:00:00Z",
+      "sourceId": "source_local_001",
+      "externalEventId": "deposit-1"
+    }
+  },
+  {
+    "type": "TradeAggregate",
+    "value": {
+      "schemaVersion": 1,
+      "id": "trade_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "instrumentId": "instrument_btc_001",
+      "fillIds": [
+        "fill_demo_001",
+        "fill_demo_002"
+      ],
+      "aggregationPolicy": "hedging_position",
+      "status": "open",
+      "openedAt": "2026-11-02T10:00:00Z",
+      "feesKnown": false
+    }
+  },
+  {
+    "type": "Review",
+    "value": {
+      "schemaVersion": 1,
+      "id": "review_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "bookId": "book_connected_001",
+      "tradeId": "trade_demo_001",
+      "decisionId": "decision_demo_001",
+      "notes": "Review cannot change a fill",
+      "tags": [
+        "fixture"
+      ],
+      "status": "draft"
+    }
+  },
+  {
+    "type": "DatasetVersion",
+    "value": {
+      "schemaVersion": 1,
+      "id": "dataset_btc_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "instrumentId": "instrument_btc_001",
+      "sourceId": "source_file_001",
+      "checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "interval": "1m",
+      "rangeStart": "2026-01-01T00:00:00Z",
+      "rangeEnd": "2026-02-01T00:00:00Z",
+      "priceBasis": "raw",
+      "timezone": "UTC",
+      "calendarId": "continuous_24_7",
+      "quality": "verified",
+      "coverageReceiptId": "receipt_data_001"
+    }
+  },
+  {
+    "type": "PracticeProject",
+    "value": {
+      "schemaVersion": 1,
+      "id": "practice_project_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Discretionary practice",
+      "hypothesis": "Practice a setup"
+    }
+  },
+  {
+    "type": "RunManifest",
+    "value": {
+      "schemaVersion": 1,
+      "id": "run_paper_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "projectId": "practice_project_001",
+      "accountId": "account_paper_001",
+      "bookId": "book_paper_001",
+      "datasetVersionId": "dataset_btc_001",
+      "instrumentId": "instrument_btc_001",
+      "mode": "paper_replay",
+      "engine": {
+        "name": "fixture-engine",
+        "version": "1",
+        "capabilityId": "engine_support_001"
+      },
+      "startingCash": {
+        "value": "10000.00",
+        "currency": "USD"
+      },
+      "rangeStart": "2026-01-01T00:00:00Z",
+      "rangeEnd": "2026-02-01T00:00:00Z",
+      "costModelId": "cost_model_001",
+      "fillPolicyId": "fill_policy_001",
+      "seed": 7
+    }
+  },
+  {
+    "type": "Checkpoint",
+    "value": {
+      "schemaVersion": 1,
+      "id": "checkpoint_paper_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "runId": "run_paper_001",
+      "playhead": "2026-01-01T00:00:00Z",
+      "ledgerSequence": 0,
+      "stateChecksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "stateArtifactId": "artifact_state_001"
+    }
+  },
+  {
+    "type": "ArtifactProject",
+    "value": {
+      "schemaVersion": 1,
+      "id": "project_indicator_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Fixture indicator",
+      "kind": "indicator",
+      "language": "openscript",
+      "state": "active"
+    }
+  },
+  {
+    "type": "ArtifactRevision",
+    "value": {
+      "schemaVersion": 1,
+      "id": "revision_indicator_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "projectId": "project_indicator_001",
+      "kind": "indicator",
+      "checksum": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sourceArtifactId": "artifact_source_001",
+      "language": "openscript",
+      "compilerVersion": "0.8.1",
+      "dependencies": [],
+      "validationReceiptId": "receipt_compile_001"
+    }
+  },
+  {
+    "type": "ParameterSet",
+    "value": {
+      "schemaVersion": 1,
+      "id": "parameters_indicator_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "artifactRevisionId": "revision_indicator_001",
+      "values": {
+        "length": "14"
+      },
+      "origin": "default"
+    }
+  },
+  {
+    "type": "IndicatorAttachment",
+    "value": {
+      "schemaVersion": 1,
+      "id": "attachment_chart_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "chartDocumentId": "chart_document_001",
+      "artifactRevisionId": "revision_indicator_001",
+      "parameterSetId": "parameters_indicator_001"
+    }
+  },
+  {
+    "type": "ArtifactProject",
+    "value": {
+      "schemaVersion": 1,
+      "id": "project_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Fixture strategy",
+      "kind": "strategy",
+      "language": "openscript",
+      "state": "active"
+    }
+  },
+  {
+    "type": "ArtifactRevision",
+    "value": {
+      "schemaVersion": 1,
+      "id": "revision_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "projectId": "project_strategy_001",
+      "kind": "strategy",
+      "checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sourceArtifactId": "artifact_source_002",
+      "language": "openscript",
+      "compilerVersion": "0.8.1",
+      "dependencies": [
+        {
+          "revisionId": "revision_indicator_001",
+          "checksum": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "validationReceiptId": "receipt_compile_002"
+    }
+  },
+  {
+    "type": "ParameterSet",
+    "value": {
+      "schemaVersion": 1,
+      "id": "parameters_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "artifactRevisionId": "revision_strategy_001",
+      "values": {
+        "length": "14"
+      },
+      "origin": "manual"
+    }
+  },
+  {
+    "type": "Experiment",
+    "value": {
+      "schemaVersion": 1,
+      "id": "experiment_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "artifactRevisionId": "revision_strategy_001",
+      "parameterSetId": "parameters_strategy_001",
+      "datasetVersionId": "dataset_btc_001",
+      "instrumentId": "instrument_btc_001",
+      "engine": {
+        "name": "fixture-engine",
+        "version": "1",
+        "capabilityId": "engine_support_001"
+      },
+      "rangeStart": "2026-01-01T00:00:00Z",
+      "rangeEnd": "2026-02-01T00:00:00Z",
+      "warmupStart": "2026-01-01T00:00:00Z",
+      "startingCash": {
+        "value": "10000.00",
+        "currency": "USD"
+      },
+      "costModelId": "cost_model_001",
+      "fillPolicyId": "fill_policy_001",
+      "seed": 42
+    }
+  },
+  {
+    "type": "Trial",
+    "value": {
+      "schemaVersion": 1,
+      "id": "trial_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "experimentId": "experiment_strategy_001",
+      "parameterSetId": "parameters_strategy_001",
+      "status": "queued"
+    }
+  },
+  {
+    "type": "EvaluationSplit",
+    "value": {
+      "schemaVersion": 1,
+      "id": "split_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "experimentId": "experiment_strategy_001",
+      "trainingStart": "2026-01-01T00:00:00Z",
+      "trainingEnd": "2026-01-10T00:00:00Z",
+      "validationStart": "2026-01-10T00:00:00Z",
+      "validationEnd": "2026-01-20T00:00:00Z",
+      "holdoutStart": "2026-01-20T00:00:00Z",
+      "holdoutEnd": "2026-02-01T00:00:00Z"
+    }
+  },
+  {
+    "type": "StressScenario",
+    "value": {
+      "schemaVersion": 1,
+      "id": "stress_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "experimentId": "experiment_strategy_001",
+      "kind": "costs",
+      "method": "causal_rerun",
+      "parameters": {
+        "spreadMultiplier": "2"
+      },
+      "seed": 42
+    }
+  },
+  {
+    "type": "ValidationRecord",
+    "value": {
+      "schemaVersion": 1,
+      "id": "validation_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "artifactRevisionId": "revision_strategy_001",
+      "parameterSetId": "parameters_strategy_001",
+      "experimentIds": [
+        "experiment_strategy_001"
+      ],
+      "decision": "research_only",
+      "limitations": "Synthetic fixtures; no execution authorization"
+    }
+  },
+  {
+    "type": "DeploymentRevision",
+    "value": {
+      "schemaVersion": 1,
+      "id": "deployment_strategy_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "artifactRevisionId": "revision_strategy_001",
+      "parameterSetId": "parameters_strategy_001",
+      "destinationId": "destination_demo_001",
+      "validationRecordId": "validation_strategy_001",
+      "mode": "broker_demo",
+      "runtimeVersion": "fixture-1"
+    }
+  },
+  {
+    "type": "DocumentVersion",
+    "value": {
+      "schemaVersion": 1,
+      "id": "document_company_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "issuerId": "issuer_us_001",
+      "sourceId": "source_file_001",
+      "nativeDocumentId": "filing-2025",
+      "checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "publishedAt": "2025-11-01T10:00:00Z",
+      "availableAt": "2025-11-01T10:05:00Z",
+      "retrievedAt": "2026-11-02T10:00:00Z",
+      "sourceUrl": "https://example.org/fixture-filing"
+    }
+  },
+  {
+    "type": "FactObservation",
+    "value": {
+      "schemaVersion": 1,
+      "id": "fact_company_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "issuerId": "issuer_us_001",
+      "documentVersionId": "document_company_001",
+      "metricId": "revenue",
+      "value": "123456789.00",
+      "unit": "currency",
+      "currency": "USD",
+      "periodKind": "duration",
+      "periodStart": "2025-07-01",
+      "periodEnd": "2025-09-30",
+      "fiscalYear": 2025,
+      "fiscalPeriod": "Q1",
+      "reportingBasis": "US-GAAP",
+      "citation": "page:4/table:income/row:revenue",
+      "publishedAt": "2025-11-01T10:00:00Z",
+      "availableAt": "2025-11-01T10:05:00Z",
+      "retrievedAt": "2026-11-02T10:00:00Z"
+    }
+  },
+  {
+    "type": "DerivedMetric",
+    "value": {
+      "schemaVersion": 1,
+      "id": "metric_company_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "issuerId": "issuer_us_001",
+      "inputFactIds": [
+        "fact_company_001"
+      ],
+      "formulaId": "revenue_growth",
+      "formulaVersion": "1",
+      "unavailableReason": "missing_input",
+      "unit": "ratio",
+      "availableAt": "2025-11-01T10:05:00Z"
+    }
+  },
+  {
+    "type": "NotebookSnapshot",
+    "value": {
+      "schemaVersion": 1,
+      "id": "notebook_company_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "title": "Company investigation",
+      "asOf": "2026-11-02T10:00:00Z",
+      "documentVersionIds": [
+        "document_company_001"
+      ],
+      "factIds": [
+        "fact_company_001"
+      ],
+      "derivedMetricIds": [
+        "metric_company_001"
+      ],
+      "notes": "Original evidence retained",
+      "annotationKind": "user",
+      "checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "type": "SourceObservation",
+    "value": {
+      "schemaVersion": 1,
+      "id": "observation_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "sourceId": "source_local_001",
+      "providerId": "provider-one",
+      "externalEventId": "native-fill-1",
+      "payloadChecksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "rawArtifactId": "artifact_raw_001",
+      "occurredAt": "2026-11-02T10:00:00Z",
+      "receivedAt": "2026-11-02T10:00:00Z"
+    }
+  },
+  {
+    "type": "CanonicalExecution",
+    "value": {
+      "schemaVersion": 1,
+      "id": "canonical_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "fillId": "fill_demo_001",
+      "observationIds": [
+        "observation_demo_001"
+      ],
+      "reconciliationPolicyId": "policy_reconcile_001",
+      "identityState": "verified"
+    }
+  },
+  {
+    "type": "AccountSourceLink",
+    "value": {
+      "schemaVersion": 1,
+      "id": "source_link_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "sourceId": "source_local_001",
+      "verificationReceiptId": "receipt_identity_001",
+      "capability": "history_read",
+      "state": "active"
+    }
+  },
+  {
+    "type": "SyncCursor",
+    "value": {
+      "schemaVersion": 1,
+      "id": "cursor_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountSourceLinkId": "source_link_001",
+      "observedThrough": "2026-11-02T10:00:00Z",
+      "overlapPolicyId": "policy_overlap_001"
+    }
+  },
+  {
+    "type": "SourceCoverage",
+    "value": {
+      "schemaVersion": 1,
+      "id": "coverage_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountSourceLinkId": "source_link_001",
+      "rangeStart": "2026-01-01T00:00:00Z",
+      "rangeEnd": "2026-02-01T00:00:00Z",
+      "status": "partial",
+      "gaps": [
+        {
+          "start": "2026-01-15T00:00:00Z",
+          "end": "2026-01-16T00:00:00Z"
+        }
+      ]
+    }
+  },
+  {
+    "type": "SyncJob",
+    "value": {
+      "schemaVersion": 1,
+      "id": "sync_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountSourceLinkId": "source_link_001",
+      "status": "partial",
+      "rangeStart": "2026-01-01T00:00:00Z",
+      "rangeEnd": "2026-02-01T00:00:00Z",
+      "cursorId": "cursor_demo_001",
+      "coverageId": "coverage_demo_001",
+      "idempotencyKey": "sync/account/source/window"
+    }
+  },
+  {
+    "type": "ReconciliationConflict",
+    "value": {
+      "schemaVersion": 1,
+      "id": "conflict_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountId": "account_external_001",
+      "observationIds": [
+        "observation_demo_001"
+      ],
+      "kind": "amount",
+      "status": "unresolved"
+    }
+  },
+  {
+    "type": "ScopedQuery",
+    "value": {
+      "schemaVersion": 1,
+      "id": "query_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "accountIds": [],
+      "bookIds": [],
+      "profileIds": [],
+      "rangeStart": "2026-01-01T00:00:00Z",
+      "rangeEnd": "2026-02-01T00:00:00Z",
+      "timezone": "Europe/London",
+      "currencyPolicy": "native_only",
+      "reviewStatus": "all",
+      "pageSize": 50
+    }
+  },
+  {
+    "type": "MetricResult",
+    "value": {
+      "schemaVersion": 1,
+      "id": "result_metric_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "queryId": "query_demo_001",
+      "metricId": "profit_factor",
+      "unit": "ratio",
+      "sampleSize": 0,
+      "unavailableReason": "empty_sample",
+      "formulaVersion": "1",
+      "denominatorPolicy": "closed-trades-only; zero-loss denominator unavailable",
+      "scope": "account"
+    }
+  },
+  {
+    "type": "EventEnvelope",
+    "value": {
+      "schemaVersion": 1,
+      "id": "event_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "contextKind": "account",
+      "eventId": "event_native_001",
+      "correlationId": "correlation_demo_001",
+      "accountId": "account_external_001",
+      "sourceId": "source_local_001",
+      "mode": "broker_demo",
+      "producerVersion": "fixture-1",
+      "occurredAt": "2026-11-02T10:00:00Z",
+      "receivedAt": "2026-11-02T10:00:00Z",
+      "payloadType": "ExecutionFill",
+      "payloadId": "fill_demo_001"
+    }
+  },
+  {
+    "type": "CommandEnvelope",
+    "value": {
+      "schemaVersion": 1,
+      "id": "envelope_demo_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "commandId": "command_native_001",
+      "correlationId": "correlation_demo_001",
+      "accountId": "account_external_001",
+      "mode": "broker_demo",
+      "producerVersion": "fixture-1",
+      "occurredAt": "2026-11-02T10:00:00Z",
+      "idempotencyKey": "demo-command-one",
+      "payloadType": "OrderIntent",
+      "payloadId": "intent_demo_001"
+    }
+  },
+  {
+    "type": "ManualTrade",
+    "value": {
+      "schemaVersion": 1,
+      "id": "manual_trade_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "bookId": "book_manual_001",
+      "symbolLabel": "BTC/USD (manually entered)",
+      "side": "buy",
+      "quantity": {
+        "value": "0.1",
+        "unit": "base_asset"
+      },
+      "openedAt": "2026-11-02T10:00:00Z",
+      "status": "open",
+      "notes": "Manual assertion, not a broker fill"
+    }
+  },
+  {
+    "type": "JournalEntry",
+    "value": {
+      "schemaVersion": 1,
+      "id": "entry_manual_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "bookId": "book_manual_001",
+      "manualTradeId": "manual_trade_001"
+    }
+  },
+  {
+    "type": "JournalEntry",
+    "value": {
+      "schemaVersion": 1,
+      "id": "entry_connected_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "bookId": "book_connected_001",
+      "tradeId": "trade_demo_001"
+    }
+  },
+  {
+    "type": "Dataset",
+    "value": {
+      "schemaVersion": 1,
+      "id": "dataset_logical_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Local BTC minutes",
+      "instrumentId": "instrument_btc_001",
+      "sourceId": "source_file_001",
+      "latestVersionId": "dataset_btc_001",
+      "state": "active"
+    }
+  },
+  {
+    "type": "Instrument",
+    "value": {
+      "schemaVersion": 1,
+      "id": "instrument_future_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "assetClass": "future",
+      "name": "Fixture future",
+      "quoteCurrency": "USD",
+      "quantityUnit": "contract",
+      "quantityStep": "1",
+      "priceTick": "0.25",
+      "multiplier": "5",
+      "calendarId": "fixture_futures",
+      "timezone": "America/Chicago",
+      "quantityScale": 0,
+      "priceScale": 2
+    }
+  },
+  {
+    "type": "InstrumentContract",
+    "value": {
+      "schemaVersion": 1,
+      "id": "contract_future_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "instrumentId": "instrument_future_001",
+      "underlyingInstrumentId": "instrument_btc_001",
+      "expiry": "2027-03-19T14:30:00Z",
+      "settlementCurrency": "USD",
+      "settlement": "cash",
+      "contractMultiplier": "5"
+    }
+  },
+  {
+    "type": "Asset",
+    "value": {
+      "schemaVersion": 1,
+      "id": "asset_bitcoin_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Bitcoin",
+      "kind": "crypto_asset"
+    }
+  }
+]

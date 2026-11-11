@@ -1,0 +1,19 @@
+meta {
+  name: chart_update
+  type: http
+  seq: 42
+}
+
+post {
+  url: http://127.0.0.1:5000/api/v1/chart
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "apikey": "{{api_key}}",
+      "tv_theme": "dark",
+      "tv_chart_layout": "{\"timeframe\":\"1D\"}"
+  }
+}

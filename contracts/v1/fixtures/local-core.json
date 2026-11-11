@@ -1,0 +1,182 @@
+[
+  {
+    "type": "LocalOwner",
+    "value": {
+      "schemaVersion": 1,
+      "id": "owner_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Local owner"
+    }
+  },
+  {
+    "type": "Workspace",
+    "value": {
+      "schemaVersion": 1,
+      "id": "workspace_local_001",
+      "ownerId": "owner_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Local workspace",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    }
+  },
+  {
+    "type": "JournalBook",
+    "value": {
+      "schemaVersion": 1,
+      "id": "book_manual_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Manual book",
+      "kind": "manual",
+      "state": "active",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    }
+  },
+  {
+    "type": "Account",
+    "value": {
+      "schemaVersion": 1,
+      "id": "account_external_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "kind": "external",
+      "mode": "broker_demo",
+      "providerId": "provider-one",
+      "venue": "demo-server",
+      "externalIdentity": "12345",
+      "currency": "USD",
+      "identityState": "verified",
+      "state": "active"
+    }
+  },
+  {
+    "type": "JournalBook",
+    "value": {
+      "schemaVersion": 1,
+      "id": "book_connected_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Demo book",
+      "kind": "connected",
+      "state": "active",
+      "accountId": "account_external_001",
+      "currency": "USD",
+      "timezone": "Europe/London"
+    }
+  },
+  {
+    "type": "Profile",
+    "value": {
+      "schemaVersion": 1,
+      "id": "profile_local_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "name": "Review",
+      "kind": "journal",
+      "state": "active",
+      "currency": "USD",
+      "timezone": "Europe/London",
+      "primaryBookId": "book_manual_001"
+    }
+  },
+  {
+    "type": "SourceConnection",
+    "value": {
+      "schemaVersion": 1,
+      "id": "source_local_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "providerId": "provider-one",
+      "adapterVersion": "1.0.0",
+      "kind": "remote",
+      "accountId": "account_external_001",
+      "configurationState": "configured",
+      "health": "unknown"
+    }
+  },
+  {
+    "type": "CapabilityManifest",
+    "value": {
+      "schemaVersion": 1,
+      "id": "manifest_local_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "sourceId": "source_local_001",
+      "adapterVersion": "1.0.0",
+      "environment": "broker_demo",
+      "capabilities": {
+        "accountHistory": {
+          "state": "supported",
+          "evidenceId": "evidence_demo_001",
+          "verifiedAt": "2026-11-02T10:00:00Z"
+        },
+        "orderSubmit": {
+          "state": "unknown"
+        }
+      }
+    }
+  },
+  {
+    "type": "Instrument",
+    "value": {
+      "schemaVersion": 1,
+      "id": "instrument_btc_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "assetClass": "spot",
+      "name": "BTC/USD",
+      "baseCurrency": "BTC",
+      "quoteCurrency": "USD",
+      "quantityUnit": "base_asset",
+      "quantityStep": "0.00000001",
+      "priceTick": "0.01",
+      "multiplier": "1",
+      "calendarId": "continuous_24_7",
+      "timezone": "UTC",
+      "quantityScale": 8,
+      "priceScale": 2
+    }
+  },
+  {
+    "type": "Quantity",
+    "value": {
+      "schemaVersion": 1,
+      "id": "quantity_local_001",
+      "ownerId": "owner_local_001",
+      "workspaceId": "workspace_local_001",
+      "revision": 1,
+      "createdAt": "2026-11-02T10:00:00Z",
+      "updatedAt": "2026-11-02T10:00:00Z",
+      "instrumentId": "instrument_btc_001",
+      "value": "0.12500000",
+      "unit": "base_asset"
+    }
+  }
+]

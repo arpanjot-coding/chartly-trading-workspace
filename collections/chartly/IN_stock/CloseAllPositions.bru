@@ -1,0 +1,19 @@
+meta {
+  name: CloseAllPositions
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://127.0.0.1:5000/api/v1/closeposition
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "apikey": "{{api_key}}",
+      "strategy": "Test Strategy"
+    
+  }
+}

@@ -1,0 +1,25 @@
+meta {
+  name: SplitOrder
+  type: http
+  seq: 18
+}
+
+post {
+  url: http://127.0.0.1:5000/api/v1/splitorder
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "apikey": "{{api_key}}",
+      "strategy": "Test Strategy",
+      "exchange": "NSE",
+      "symbol": "YESBANK",
+      "action": "SELL",
+      "quantity": "105",
+      "splitsize": "20",
+      "pricetype": "MARKET",
+      "product": "MIS"
+  }
+}

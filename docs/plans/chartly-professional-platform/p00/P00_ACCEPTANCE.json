@@ -1,0 +1,148 @@
+{
+  "version": 3,
+  "date": "2026-11-02",
+  "owner": "Codex",
+  "status": "complete",
+  "packageComplete": true,
+  "userDecisionsConfirmed": true,
+  "userScreenReviewAccepted": true,
+  "userDecisionEvidence": "User replied: Use these decisions \u2014 one active connected book/account, separate manual books, profiles/environments, bot deployments under Workflows.",
+  "automatedDesignTests": {
+    "command": "node --test docs/plans/chartly-professional-platform/p00/p00-review.test.mjs",
+    "passed": 32,
+    "failed": 0,
+    "scope": "Fictional design fixtures only"
+  },
+  "browserChecks": {
+    "walkthroughs": 7,
+    "screenLayouts": 46,
+    "representativeStateCombinations": 72,
+    "narrowWidth": 360,
+    "productionActions": false
+  },
+  "tasks": [
+    {
+      "id": "P00-T01",
+      "state": "done",
+      "evidence": [
+        "P00_DECISIONS.md"
+      ]
+    },
+    {
+      "id": "P00-T02",
+      "state": "done",
+      "evidence": [
+        "P00_DECISIONS.md",
+        "APP_WORKFLOW_BLUEPRINT.md"
+      ]
+    },
+    {
+      "id": "P00-T03",
+      "state": "done",
+      "evidence": [
+        "P00_DECISIONS.md",
+        "P00_SCREEN_CONTRACTS.md"
+      ]
+    },
+    {
+      "id": "P00-T04",
+      "state": "done",
+      "evidence": [
+        "P00_SCREEN_CONTRACTS.md",
+        "original-screen-review/index.html"
+      ]
+    },
+    {
+      "id": "P00-T05",
+      "state": "done",
+      "evidence": [
+        "p00-screen-contracts.json",
+        "p00-review.test.mjs"
+      ]
+    },
+    {
+      "id": "P00-T06",
+      "state": "done",
+      "evidence": [
+        "P00_DECISIONS.md",
+        "p00-review-model.mjs"
+      ]
+    },
+    {
+      "id": "P00-T07",
+      "state": "done",
+      "evidence": [
+        "P00_DECISIONS.md"
+      ]
+    },
+    {
+      "id": "P00-T08",
+      "state": "done",
+      "evidence": [
+        "P00_ACCEPTANCE.md",
+        "p00-review.test.mjs"
+      ]
+    },
+    {
+      "id": "P00-T09",
+      "state": "done",
+      "evidence": [
+        "P00_DECISIONS.md",
+        "p00-review.test.mjs"
+      ]
+    },
+    {
+      "id": "P00-T10",
+      "state": "done",
+      "evidence": [
+        "P00_DECISIONS.md",
+        "p00-review-model.mjs",
+        "p00-review.test.mjs"
+      ]
+    },
+    {
+      "id": "P00-T11",
+      "state": "done",
+      "evidence": [
+        "P00_DECISIONS.md",
+        "P00_SCREEN_CONTRACTS.md",
+        "p00-review.test.mjs"
+      ]
+    },
+    {
+      "id": "P00-T12",
+      "state": "done",
+      "evidence": [
+        "P00_DECISIONS.md",
+        "p00-review.test.mjs",
+        "../p20/IMPLEMENTATION_PLAN.md",
+        "../p21/IMPLEMENTATION_PLAN.md"
+      ]
+    },
+    {
+      "id": "P00-T13",
+      "state": "done",
+      "evidence": [
+        "P00_ACCEPTANCE.md",
+        "original-screen-review/index.html"
+      ]
+    }
+  ],
+  "artifactHashes": {
+    "p00-screen-contracts.json": "9d4b5e2d8fd1c49cf6477379dbf4018b6fe4df2939df6c69e6f1185aa8cf1b78",
+    "p00-review-model.mjs": "f0f02294a1513bcc39c215d97890c9cfc221d7e7fd4f7718d697f1f04ff189c7",
+    "p00-review.test.mjs": "6a7dfef9fccffb87ee7cd3715759dc79fb610e5a08772a5f5c0229ef550a442b",
+    "P00_DECISIONS.md": "ba57ef01548248ee0426a545b04ec21ee258b58fb59f72c8374a0f94fa712b57"
+  },
+  "userScreenReviewEvidence": "User explicitly replied: Approve P00 design baseline \u2014 to the final original-screen/layout and three-storyboard acceptance question.",
+  "acceptedDate": "2026-11-02",
+  "acceptanceScope": "Design baseline only; no unimplemented production feature or adapter certification accepted.",
+  "supplementalUserClarifications": [
+    {
+      "date": "2026-11-02",
+      "decision": "Primary navigation order: Workspace, Fundamentals, Strategy Builder, Workflows; four direct tabs, no More dropdown for Strategy Builder.",
+      "source": "Explicit follow-up user request after P00 design acceptance.",
+      "scope": "Navigation refinement; research functionality remains unimplemented."
+    }
+  ]
+}
