@@ -204,7 +204,7 @@ jobs:
             --worker ${{ matrix.worker }} --env-file .env --proxy-port 8799 \
             --proxy ${{ matrix.proxy }} --pid $! --stop-within ${{ matrix.stop-within }} \
             --log gunicorn.log
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: gunicorn-boot-${{ matrix.worker }}-${{ matrix.mode }}-py${{ matrix.python-version }}
@@ -426,7 +426,7 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run build
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: frontend-dist-node${{ matrix.node-version }}
           path: frontend/dist/
@@ -454,7 +454,7 @@ jobs:
       - run: npm ci
       - run: npm run test:run
       - run: npm run test:coverage
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: coverage-report-node${{ matrix.node-version }}
           path: frontend/coverage/
@@ -479,7 +479,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run e2e -- --project=chromium
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report
@@ -538,7 +538,7 @@ jobs:
           curl --fail --silent --show-error --max-time 1 "$CHARTLY_E2E_BASE_URL/_smoke/ready"
           cd frontend
           npm run e2e -- --project=chromium --retries=0 built-app-smoke.spec.ts home.spec.ts
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: built-app-smoke-report
@@ -714,7 +714,7 @@ jobs:
 
       - name: Upload digest
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: digests-${{ matrix.suffix }}
           path: /tmp/digests/*
