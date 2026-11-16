@@ -58,7 +58,7 @@ export default function NotFound() {
           <Button variant="ghost" size="sm" asChild>
             <Link to="/download">
               <Download className="h-4 w-4 mr-2" />
-              Download
+              Install Chartly
             </Link>
           </Button>
         </div>

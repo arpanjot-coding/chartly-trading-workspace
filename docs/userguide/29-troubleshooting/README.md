@@ -459,9 +459,8 @@ Chartly is community-driven:
 
 | Channel | Use For | Link |
 |---------|---------|------|
-| GitHub Issues | Bug reports, feature requests | github.com/marketcalls/chartly/issues |
-| Discord | Community support, questions | chartly.in/discord |
-| Documentation | How-to guides | docs.chartly.in |
+| GitHub Issues | Bug reports, feature requests | [Chartly issues](https://github.com/arpanjot-coding/chartly-trading-workspace/issues) |
+| Documentation | How-to guides | [Chartly user guide](../README.md) |
 
 ### Useful Commands
 

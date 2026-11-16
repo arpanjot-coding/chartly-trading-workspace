@@ -103,6 +103,6 @@ For a public landing page build of this checkout, set `CHARTLY_PUBLIC_SITE_URL` 
 
 See the [contributing guide](CONTRIBUTING.md) for local verification and pull requests. Run `npm run test:run` and `npm run build` from `frontend`. Run the relevant backend tests with `uv run pytest` from the repository root. Follow the [security policy](SECURITY.md) for private vulnerability reports. [GitHub Actions](https://github.com/arpanjot-coding/chartly-trading-workspace/actions/workflows/ci.yml)
 
-## License and credits
+## License
 
-Chartly is distributed under the [GNU Affero General Public License v3.0](License.md). It is derived from [OpenAlgo](https://github.com/marketcalls/openalgo) by Marketcalls and contributors. Dependencies retain their respective licenses.
+Chartly is maintained in this repository and distributed under the [GNU Affero General Public License v3.0](License.md). See the [source and license notices](NOTICE.md) for details.

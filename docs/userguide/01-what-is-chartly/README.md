@@ -284,10 +284,9 @@ Ready to begin? Here's your path:
 
 | Resource | Link |
 |----------|------|
-| **GitHub** | github.com/marketcalls/chartly |
-| **Documentation** | docs.chartly.in |
+| **GitHub** | [Chartly source repository](https://github.com/arpanjot-coding/chartly-trading-workspace) |
+| **Documentation** | [Chartly user guide](../README.md) |
 | **API Reference** | [Maintained REST API documentation](../../api/README.md) |
-| **Discord Community** | Join for support and discussions |
 
 ## Summary
 
