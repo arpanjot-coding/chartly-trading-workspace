@@ -238,6 +238,6 @@ def test_personal_native_setup_remains_read_only_and_metadata_is_public(personal
             "action": "create",
             "payload": {"providerId": "mt5", "label": "Terminal", "configuration": {}},
         },
-        headers=csrf(client),
+        headers={**csrf(client), "Origin": "http://localhost", "Sec-Fetch-Site": "same-origin"},
     )
     assert response.status_code == 200 and response.json["readOnlySetup"] is True

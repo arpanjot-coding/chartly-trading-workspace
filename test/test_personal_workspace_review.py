@@ -130,7 +130,7 @@ def test_named_nonoperator_cannot_attach_native_by_supplying_personal_flags(revi
             "action": "create",
             "payload": {"providerId": "mt5", "label": "Terminal", "configuration": {}},
         },
-        headers=csrf(client),
+        headers={**csrf(client), "Origin": "http://localhost", "Sec-Fetch-Site": "same-origin"},
     )
     assert response.status_code == 403
     assert response.json["error"]["code"] == "connector.operator_required"

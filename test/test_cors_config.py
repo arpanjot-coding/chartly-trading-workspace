@@ -1,8 +1,3 @@
-import importlib.util
-import sys
-from pathlib import Path
-from types import ModuleType
-
 import pytest
 from flask import Blueprint, Flask
 from flask_cors import cross_origin
@@ -267,46 +262,40 @@ def test_decorated_blueprint_uses_each_apps_policy(monkeypatch):
 
 @pytest.mark.parametrize("enabled", ["FALSE", "TRUE"])
 @pytest.mark.parametrize("method", ["POST", "OPTIONS"])
-def test_oitracker_blueprint_respects_policy_without_bypassing_auth(monkeypatch, enabled, method):
+def test_pnltracker_blueprint_respects_policy_without_bypassing_auth(monkeypatch, enabled, method):
     # Import the real blueprint and session decorator, isolating only database
     # and broker services. Neither OPTIONS nor unauthenticated POST may use them.
+    from blueprints import pnltracker
+
     def unexpected_service_call(*args, **kwargs):
         pytest.fail(
             "Preflight and unauthenticated requests must not reach broker/database services"
         )
 
-    auth_db = ModuleType("database.auth_db")
-    auth_db.get_api_key_for_tradingview = unexpected_service_call
-    service = ModuleType("services.oi_tracker_service")
-    service.calculate_max_pain = unexpected_service_call
-    service.get_oi_data = unexpected_service_call
-    monkeypatch.setitem(sys.modules, "database.auth_db", auth_db)
-    monkeypatch.setitem(sys.modules, "services.oi_tracker_service", service)
-    path = Path(__file__).resolve().parents[1] / "blueprints" / "oitracker.py"
-    spec = importlib.util.spec_from_file_location("cors_test_oitracker", path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    monkeypatch.setattr(pnltracker, "get_auth_token", unexpected_service_call)
+    monkeypatch.setattr(pnltracker, "get_api_key_for_tradingview", unexpected_service_call)
+    monkeypatch.setattr(pnltracker, "get_tradebook", unexpected_service_call)
+    monkeypatch.setattr(pnltracker, "get_history", unexpected_service_call)
 
     monkeypatch.setenv("CORS_ENABLED", enabled)
     monkeypatch.setenv("CORS_ALLOWED_ORIGINS", "https://allowed.example")
     app = create_test_app()
     app.config["SECRET_KEY"] = "test-only-cors-key"
-    app.register_blueprint(module.oitracker_bp)
+    app.register_blueprint(pnltracker.pnltracker_bp)
 
-    for endpoint in ("/oitracker/api/oi-data", "/oitracker/api/maxpain"):
-        response = app.test_client().open(
-            endpoint,
-            method=method,
-            json={},
-            headers={
-                "Origin": "https://allowed.example",
-                "Access-Control-Request-Method": "POST",
-            },
-        )
-        assert response.status_code == (200 if method == "OPTIONS" else 401)
-        if method == "POST":
-            assert response.json["error"] == "session_expired"
-        if enabled == "TRUE":
-            assert response.headers["Access-Control-Allow-Origin"] == "https://allowed.example"
-        else:
-            assert not cors_headers(response)
+    response = app.test_client().open(
+        "/pnltracker/api/pnl",
+        method=method,
+        json={},
+        headers={
+            "Origin": "https://allowed.example",
+            "Access-Control-Request-Method": "POST",
+        },
+    )
+    assert response.status_code == (200 if method == "OPTIONS" else 401)
+    if method == "POST":
+        assert response.json["error"] == "session_expired"
+    if enabled == "TRUE":
+        assert response.headers["Access-Control-Allow-Origin"] == "https://allowed.example"
+    else:
+        assert not cors_headers(response)

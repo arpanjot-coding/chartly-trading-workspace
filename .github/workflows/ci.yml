@@ -426,12 +426,6 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run build
-      - uses: actions/upload-artifact@v6
-        with:
-          name: frontend-dist-node${{ matrix.node-version }}
-          path: frontend/dist/
-          if-no-files-found: error
-          retention-days: 7
 
   # Frontend unit tests
   frontend-test:
@@ -455,6 +449,7 @@ jobs:
       - run: npm run test:run
       - run: npm run test:coverage
       - uses: actions/upload-artifact@v6
+        continue-on-error: true
         with:
           name: coverage-report-node${{ matrix.node-version }}
           path: frontend/coverage/
@@ -481,27 +476,23 @@ jobs:
       - run: npm run e2e -- --project=chromium
       - uses: actions/upload-artifact@v6
         if: failure()
+        continue-on-error: true
         with:
           name: playwright-report
           path: frontend/playwright-report/
           retention-days: 7
 
-  # Serve the exact Node 22 build that commit-dist will publish.
+  # Build and serve on the same runner so smoke tests do not depend on artifact storage.
   frontend-built-smoke:
     needs: frontend-build
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
-      actions: read
     steps:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@v8
-        with:
-          name: frontend-dist-node22
-          path: ${{ runner.temp }}/chartly-smoke-dist
       - uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
@@ -513,10 +504,11 @@ jobs:
           check-latest: true
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
-      - name: Install the browser test runner
+      - name: Build and install Chromium
         working-directory: frontend
         run: |
           npm ci
+          npm run build
           npx playwright install --with-deps chromium
       - name: Exercise the built app through Flask
         env:
@@ -524,7 +516,7 @@ jobs:
           CHARTLY_E2E_BASE_URL: http://127.0.0.1:5181
         run: |
           .venv/bin/python -m scripts.built_app_smoke \
-            --dist "$RUNNER_TEMP/chartly-smoke-dist" --work-dir "$RUNNER_TEMP" \
+            --dist frontend/dist --work-dir "$RUNNER_TEMP" \
             > "$RUNNER_TEMP/chartly-smoke.log" 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true; wait "$server_pid" 2>/dev/null || true' EXIT
@@ -539,7 +531,15 @@ jobs:
           cd frontend
           npm run e2e -- --project=chromium --retries=0 built-app-smoke.spec.ts home.spec.ts
       - uses: actions/upload-artifact@v6
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.CHARTLY_COMMIT_FRONTEND_DIST == 'true'
+        with:
+          name: frontend-dist-node22
+          path: frontend/dist/
+          if-no-files-found: error
+          retention-days: 7
+      - uses: actions/upload-artifact@v6
         if: failure()
+        continue-on-error: true
         with:
           name: built-app-smoke-report
           path: |
