@@ -126,25 +126,32 @@ def test_dist_publishing_consumes_the_same_artifact_as_the_flask_smoke():
     smoke = jobs["frontend-built-smoke"]
     publish = jobs["commit-dist"]
 
-    def download(job):
-        return next(
-            step["with"] for step in job["steps"] if "download-artifact@" in step.get("uses", "")
-        )
+    smoke_steps = smoke["steps"]
+    run_smoke = next(
+        s for s in smoke_steps if s.get("name") == "Exercise the built app through Flask"
+    )
+    upload = next(s for s in smoke_steps if s.get("with", {}).get("name") == "frontend-dist-node22")
+    download = next(
+        s["with"] for s in publish["steps"] if "download-artifact@" in s.get("uses", "")
+    )
 
     assert smoke["needs"] == "frontend-build"
-    assert download(smoke) == download(publish)
-    assert download(smoke)["name"] == "frontend-dist-node22"
-    assert not {"repository", "run-id", "github-token"} & download(smoke).keys()
-    assert smoke["permissions"] == {"contents": "read", "actions": "read"}
+    assert any(
+        "npm run build" in s.get("run", "") for s in smoke_steps[: smoke_steps.index(run_smoke)]
+    )
+    assert not any("download-artifact@" in s.get("uses", "") for s in smoke_steps)
+    assert smoke_steps.index(run_smoke) < smoke_steps.index(upload)
+    assert "upload-artifact@" in upload["uses"]
+    assert upload["with"]["path"] == "frontend/dist/"
+    assert upload["if"] == publish["if"]
+    assert download["name"] == upload["with"]["name"]
+    assert not {"repository", "run-id", "github-token"} & download.keys()
+    assert smoke["permissions"] == {"contents": "read"}
     assert "frontend-built-smoke" in publish["needs"]
     assert "frontend-built-smoke" in jobs["docker-build"]["needs"]
-    step = next(
-        step
-        for step in smoke["steps"]
-        if step.get("name") == "Exercise the built app through Flask"
-    )
-    assert step["env"]["CHARTLY_BUILT_SMOKE"] == "1"
-    assert step["env"]["CHARTLY_E2E_BASE_URL"].startswith("http://127.0.0.1:")
-    assert "scripts.built_app_smoke" in step["run"]
-    assert "--retries=0 built-app-smoke.spec.ts" in step["run"]
+    assert run_smoke["env"]["CHARTLY_BUILT_SMOKE"] == "1"
+    assert run_smoke["env"]["CHARTLY_E2E_BASE_URL"].startswith("http://127.0.0.1:")
+    assert "scripts.built_app_smoke" in run_smoke["run"]
+    assert "--dist frontend/dist " in run_smoke["run"]
+    assert "--retries=0 built-app-smoke.spec.ts" in run_smoke["run"]
     assert "npm run build" not in _script(publish)
