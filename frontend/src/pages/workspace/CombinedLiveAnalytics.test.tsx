@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { emptyTraderTables } from '@/lib/trader/browserSnapshot'
 import { COMBINED_SELECTION_KEY, combinedSelectionKey } from '@/lib/trader/combinedSelection'
 import type { JournalTrade, TraderPortfolio } from '@/lib/trader/db'
+import { formatMoney } from '@/lib/trader/metrics'
 import { useTraderData } from '@/lib/trader/useTraderData'
 import CombinedLiveAnalytics from './CombinedLiveAnalytics'
 
@@ -96,6 +97,7 @@ function mount(records = trades) {
   return userEvent.setup()
 }
 const analysis = () => screen.getByRole('region', { name: 'Selected portfolio analysis' })
+const usd = (value: number) => formatMoney(value, 'USD')
 
 beforeEach(() => {
   localStorage.clear()
@@ -197,7 +199,7 @@ describe('combined portfolio selection in the original page', () => {
         }),
       ])
       const kpis = within(screen.getByRole('region', { name: 'Combined key metrics' }))
-      expect(kpis.getByText('Net P&L').parentElement).toHaveTextContent('+US$40.00')
+      expect(kpis.getByText('Net P&L').parentElement).toHaveTextContent(`+${usd(40)}`)
       expect(kpis.getByText('Net P&L').parentElement).toHaveTextContent(
         '0 completed positions · 1 open · 1 realized exits'
       )
@@ -209,15 +211,15 @@ describe('combined portfolio selection in the original page', () => {
       const cells = within(symbolRow).getAllByRole('cell')
       expect(cells[1]).toHaveTextContent(/^1$/)
       expect(cells[2]).toHaveTextContent(/^100%$/)
-      expect(cells[3]).toHaveTextContent('+US$50.00')
+      expect(cells[3]).toHaveTextContent(`+${usd(50)}`)
       await user.selectOptions(screen.getByLabelText('Reporting timezone'), 'America/New_York')
       await user.click(screen.getByRole('button', { name: 'Review day 2026-10-31' }))
       expect(screen.getByText(/Reviewing 2026-10-31/)).toBeInTheDocument()
-      expect(kpis.getByText('Net P&L').parentElement).toHaveTextContent('+US$40.00')
+      expect(kpis.getByText('Net P&L').parentElement).toHaveTextContent(`+${usd(40)}`)
       const position = within(analysis())
         .getAllByRole('row', { name: /PARTIALUSD/ })
         .find((row) => within(row).queryByRole('link', { name: 'Alpha', exact: true }))!
-      expect(position).toHaveTextContent('+US$40.00')
+      expect(position).toHaveTextContent(`+${usd(40)}`)
       expect(position).not.toHaveTextContent('999')
       const target = new URL(
         within(position).getByRole('link', { name: 'Alpha', exact: true }).getAttribute('href')!,
@@ -244,7 +246,7 @@ describe('combined portfolio selection in the original page', () => {
     expect(
       within(screen.getByRole('region', { name: 'Combined key metrics' })).getByText('Net P&L')
         .parentElement
-    ).toHaveTextContent('+US$10.00')
+    ).toHaveTextContent(`+${usd(10)}`)
   })
   it('scopes all result families, KPIs and the equity chart to included portfolios', async () => {
     const user = mount()
@@ -263,11 +265,11 @@ describe('combined portfolio selection in the original page', () => {
     }
     expect(results.getAllByText('ALPHAUSD', { exact: true }).length).toBeGreaterThan(0)
     const kpis = within(screen.getByRole('region', { name: 'Combined key metrics' }))
-    expect(kpis.getByText('Net P&L').parentElement).toHaveTextContent('+US$100.00')
-    expect(kpis.getByText('Expectancy').parentElement).toHaveTextContent('+US$100.00')
+    expect(kpis.getByText('Net P&L').parentElement).toHaveTextContent(`+${usd(100)}`)
+    expect(kpis.getByText('Expectancy').parentElement).toHaveTextContent(`+${usd(100)}`)
     expect(kpis.getByText('Win rate').parentElement).toHaveTextContent('100.0%')
-    expect(kpis.getByText('Max drawdown').parentElement).toHaveTextContent('US$0.00')
-    expect(kpis.getByText('Execution costs').parentElement).toHaveTextContent('+US$3.00')
+    expect(kpis.getByText('Max drawdown').parentElement).toHaveTextContent(usd(0))
+    expect(kpis.getByText('Execution costs').parentElement).toHaveTextContent(`+${usd(3)}`)
     expect(kpis.getByText('Avg duration').parentElement).toHaveTextContent('1h')
     const chart = results.getByRole('img', { name: 'Combined cumulative profit and loss curve' })
     expect(chart).toHaveTextContent('2026-10-01')

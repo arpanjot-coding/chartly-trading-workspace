@@ -8,7 +8,7 @@ import os
 import re
 from pathlib import Path
 
-from flask import Blueprint, abort, request, send_file, send_from_directory
+from flask import Blueprint, abort, make_response, request, send_file, send_from_directory
 
 react_bp = Blueprint("react", __name__)
 
@@ -73,7 +73,7 @@ def is_react_frontend_available():
 def serve_react_app():
     """Serve the React app's index.html."""
     if not is_react_frontend_available():
-        return (
+        response = make_response(
             """
         <html>
         <head><title>Chartly - Frontend Not Available</title></head>
@@ -82,17 +82,17 @@ def serve_react_app():
             <p>The React frontend is not available. To build it:</p>
             <pre style="background: #f4f4f4; padding: 16px; border-radius: 8px;">
 cd frontend
-npm install
+npm ci
 npm run build</pre>
-            <p>Or use the pre-built version from the repository.</p>
         </body>
         </html>
         """,
             503,
         )
 
-    shell = FRONTEND_DIST / "app.html"
-    response = _serve_frontend_html(shell if shell.is_file() else FRONTEND_DIST / "index.html")
+    else:
+        shell = FRONTEND_DIST / "app.html"
+        response = _serve_frontend_html(shell if shell.is_file() else FRONTEND_DIST / "index.html")
     response.headers["X-Robots-Tag"] = "noindex"
     return response
 

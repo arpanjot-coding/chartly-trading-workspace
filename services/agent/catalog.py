@@ -499,6 +499,12 @@ def get_provider(provider: str) -> ProviderInfo | None:
     return None
 
 
+def _chat_picker_model(provider: str, model: ModelInfo) -> bool:
+    if provider == "chatgpt":
+        return model.is_chat and model.supports_function_calling is True
+    return model.is_chat
+
+
 def list_models(provider: str, *, chat_only: bool = True) -> list[ModelInfo]:
     """List a provider's models, enriched from `litellm.model_cost`.
 
@@ -509,7 +515,8 @@ def list_models(provider: str, *, chat_only: bool = True) -> list[ModelInfo]:
             rerank and moderation entries that share a provider with the chat
             ones. A model with no cost entry has no known mode and is kept,
             because the catalogue is advisory and several real providers have no
-            priced models at all.
+            priced models at all. The ChatGPT subscription picker requires
+            capability metadata that identifies support for tool calls.
 
     Returns:
         The provider's models in LiteLLM's own order. Empty for an unknown
@@ -518,9 +525,10 @@ def list_models(provider: str, *, chat_only: bool = True) -> list[ModelInfo]:
         worth offering is decided by :func:`list_providers`.
     """
     _build()
-    models = (_models or {}).get(_clean(provider), ())
+    provider_id = _clean(provider)
+    models = (_models or {}).get(provider_id, ())
     if chat_only:
-        return [model for model in models if model.is_chat]
+        return [model for model in models if _chat_picker_model(provider_id, model)]
     return list(models)
 
 
@@ -855,7 +863,7 @@ def _read_providers(
             provider_kind=_provider_kind(pid),
             needs_key=pid not in _KEYLESS_PROVIDERS,
             needs_base_url=pid in _BASE_URL_PROVIDERS,
-            model_count=sum(1 for model in models if model.is_chat),
+            model_count=sum(1 for model in models if _chat_picker_model(pid, model)),
             total_model_count=len(models),
         )
     return tuple(sorted(built.values(), key=lambda info: info.display_name.casefold()))

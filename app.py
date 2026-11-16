@@ -257,13 +257,8 @@ def create_app():
     else:
         app.config["WTF_CSRF_TIME_LIMIT"] = None  # No time limit if empty
 
-    # Register RESTx API blueprint first
-    # Register React frontend blueprint FIRST for migrated routes
-    # Register React frontend routes
-    if is_react_frontend_available():
-        app.register_blueprint(react_bp)
-        logger.debug("React frontend enabled (frontend/dist found)")
-    else:
+    app.register_blueprint(react_bp)
+    if not is_react_frontend_available():
         logger.warning("React frontend not available - run 'npm run build' in frontend/")
 
     app.register_blueprint(api_v1_bp)
@@ -624,10 +619,13 @@ def create_app():
     @app.errorhandler(500)
     def internal_server_error(e):
         """Custom handler for 500 Internal Server Error"""
-        from flask import redirect
+        from flask import redirect, request
 
         # Log the error
         logger.error(f"Server Error: {e}")
+
+        if request.path == "/error" or not is_react_frontend_available():
+            return "Internal server error.", 500
 
         # Redirect to React error page
         return redirect("/error")

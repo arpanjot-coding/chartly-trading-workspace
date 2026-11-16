@@ -54,7 +54,8 @@ jobs:
           uv run pytest test/test_log_location.py test/test_navigation_update.py \
             test/test_domain_contracts.py test/test_domain_legacy.py \
             test/test_domain_repository.py test/test_domain_backup.py \
-            test/test_local_account_access.py test/test_user_identity_migration.py \
+            test/test_local_account_access.py test/test_chartly_startup_config.py \
+            test/test_user_identity_migration.py \
             test/test_local_data_api.py test/test_workspace_storage.py \
             test/test_workspace_recovery.py test/test_workspace_worker.py \
             test/test_journal_import.py test/test_journal_service.py \
@@ -176,6 +177,17 @@ jobs:
           if [ "${{ matrix.python-version }}" = "3.12" ]; then
             uv pip install "eventlet==0.41.2"
           fi
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          check-latest: true
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build the frontend for the server smoke test
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
       - name: Throwaway .env
         run: |
           cp .sample.env .env
@@ -183,7 +195,7 @@ jobs:
           PEPPER=$(.venv/bin/python -c 'import secrets; print(secrets.token_hex(32))')
           sed -i "s|^APP_KEY *=.*|APP_KEY = '$APP_KEY'|; s|^API_KEY_PEPPER *=.*|API_KEY_PEPPER = '$PEPPER'|" .env
           sed -i "s|^FLASK_PORT *=.*|FLASK_PORT = '5099'|; s|^WEBSOCKET_PORT *=.*|WEBSOCKET_PORT = '8799'|; s|^ZMQ_PORT *=.*|ZMQ_PORT = '5599'|" .env
-          sed -i "s|^HOST_SERVER *=.*|HOST_SERVER = 'http://127.0.0.1:5099'|; s|^REDIRECT_URL *=.*|REDIRECT_URL = 'http://127.0.0.1:5099/zerodha/callback'|" .env
+          sed -i "s|^HOST_SERVER *=.*|HOST_SERVER = 'http://127.0.0.1:5099'|" .env
           echo "CHARTLY_WORKER_CLASS = '${{ matrix.worker }}'" >> .env
           mkdir -p db log
       - name: Boot through the launcher and run the smoke
@@ -426,12 +438,6 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run build
-      - uses: actions/upload-artifact@v6
-        with:
-          name: frontend-dist-node${{ matrix.node-version }}
-          path: frontend/dist/
-          if-no-files-found: error
-          retention-days: 7
 
   # Frontend unit tests
   frontend-test:
@@ -455,6 +461,7 @@ jobs:
       - run: npm run test:run
       - run: npm run test:coverage
       - uses: actions/upload-artifact@v6
+        continue-on-error: true
         with:
           name: coverage-report-node${{ matrix.node-version }}
           path: frontend/coverage/
@@ -481,27 +488,23 @@ jobs:
       - run: npm run e2e -- --project=chromium
       - uses: actions/upload-artifact@v6
         if: failure()
+        continue-on-error: true
         with:
           name: playwright-report
           path: frontend/playwright-report/
           retention-days: 7
 
-  # Serve the exact Node 22 build that commit-dist will publish.
+  # Build and serve on the same runner so smoke tests do not depend on artifact storage.
   frontend-built-smoke:
     needs: frontend-build
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
-      actions: read
     steps:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@v8
-        with:
-          name: frontend-dist-node22
-          path: ${{ runner.temp }}/chartly-smoke-dist
       - uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
@@ -513,10 +516,11 @@ jobs:
           check-latest: true
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
-      - name: Install the browser test runner
+      - name: Build and install Chromium
         working-directory: frontend
         run: |
           npm ci
+          npm run build
           npx playwright install --with-deps chromium
       - name: Exercise the built app through Flask
         env:
@@ -524,7 +528,7 @@ jobs:
           CHARTLY_E2E_BASE_URL: http://127.0.0.1:5181
         run: |
           .venv/bin/python -m scripts.built_app_smoke \
-            --dist "$RUNNER_TEMP/chartly-smoke-dist" --work-dir "$RUNNER_TEMP" \
+            --dist frontend/dist --work-dir "$RUNNER_TEMP" \
             > "$RUNNER_TEMP/chartly-smoke.log" 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true; wait "$server_pid" 2>/dev/null || true' EXIT
@@ -539,7 +543,15 @@ jobs:
           cd frontend
           npm run e2e -- --project=chromium --retries=0 built-app-smoke.spec.ts home.spec.ts
       - uses: actions/upload-artifact@v6
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.CHARTLY_COMMIT_FRONTEND_DIST == 'true'
+        with:
+          name: frontend-dist-node22
+          path: frontend/dist/
+          if-no-files-found: error
+          retention-days: 7
+      - uses: actions/upload-artifact@v6
         if: failure()
+        continue-on-error: true
         with:
           name: built-app-smoke-report
           path: |

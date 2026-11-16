@@ -66,6 +66,7 @@ def test_one_hundred_chart_captures_release_connections_and_avoid_metadata_image
     event.listen(storage.engine, "connect", opened)
     event.listen(storage.engine, "close", closed)
     event.listen(storage.engine, "before_cursor_execute", statement)
+    revision = storage.workspace()["revision"]
     process = psutil.Process()
     gc.collect()
     initial_handles, initial_rss = handles(process), process.memory_info().rss
@@ -77,7 +78,7 @@ def test_one_hundred_chart_captures_release_connections_and_avoid_metadata_image
             row = rows[index % len(rows)]
             if index % 10 == 0:
                 with pytest.raises(WorkspaceError, match="invalid_image"):
-                    attach(storage, row, content="not a PNG")
+                    attach(storage, row, revision=revision, content="not a PNG")
                 counters["invalidImages"] += 1
                 with pytest.raises(WorkspaceError, match="revision_conflict"):
                     attach(storage, row, revision=0)
@@ -91,11 +92,10 @@ def test_one_hundred_chart_captures_release_connections_and_avoid_metadata_image
 
                     isolated.setattr(storage, "_save_receipt", fail)
                     with pytest.raises(RuntimeError, match="Interrupted"):
-                        attach(storage, row)
+                        attach(storage, row, revision=revision)
                 assert storage.workspace() == previous
                 counters["rolledBackPublications"] += 1
             request_id = uuid4().hex
-            revision = storage.workspace()["revision"]
             result = attach(
                 storage,
                 row,
@@ -118,6 +118,7 @@ def test_one_hundred_chart_captures_release_connections_and_avoid_metadata_image
             phase = "metadata"
             metadata = storage.workspace()
             assert all("base64" not in asset for asset in metadata["attachments"].values())
+            revision = metadata["revision"]
             counters["metadataReads"] += 1
             phase = "asset"
             blob = storage.attachment(result["result"]["attachmentId"], "journal_origin_01")

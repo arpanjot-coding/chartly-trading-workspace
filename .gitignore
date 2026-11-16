@@ -67,6 +67,9 @@ db/backups/
 !all_symbols.csv
 !data/qtyfreeze.csv
 !docs/migration/*.csv
+!/test/fixtures/p03/universal-partial.csv
+!/test/fixtures/p03/universal-summary.csv
+!/test/fixtures/p04/normalized-history.csv
 
 # Environments 
 .env 

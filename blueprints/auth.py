@@ -244,17 +244,19 @@ def get_csrf_token():
 def get_broker_config():
     """Return broker configuration for React SPA.
 
-    broker_name is always returned (needed to display the broker login button).
-    broker_api_key and redirect_url are only returned when authenticated.
+    A local-only installation has no broker configuration. The API key is
+    returned only when authenticated.
     """
-    REDIRECT_URL = os.getenv("REDIRECT_URL")
+    REDIRECT_URL = os.getenv("REDIRECT_URL", "")
 
     # Extract broker name from redirect URL
     match = re.search(r"/([^/]+)/callback$", REDIRECT_URL)
     broker_name = match.group(1) if match else None
 
-    if not broker_name:
-        return jsonify({"status": "error", "message": "Broker not configured"}), 500
+    if not broker_name or broker_name == "<broker>":
+        return jsonify(
+            {"status": "success", "broker_name": None, "broker_api_key": None, "redirect_url": None}
+        )
 
     # Return full config only for authenticated users
     if "user" in session:
