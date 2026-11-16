@@ -482,30 +482,9 @@ kubectl apply -f k8s/deployment.yaml
 
 The repository includes GitHub Actions workflow (`.github/workflows/ci.yml`):
 
-**On Push to Main:**
-1. Runs linting and tests
-2. Builds Docker image
-3. Scans for vulnerabilities
-4. Pushes to Docker Hub (if secrets configured)
+Use the local build above to install Chartly from this repository. GitHub Actions builds and smoke-tests Docker images on pull requests created from branches in this repository.
 
-**To Use CI/CD:**
-1. Add Docker Hub credentials to GitHub Secrets:
-   - `DOCKERHUB_USERNAME`
-   - `DOCKERHUB_TOKEN`
-
-2. Push to main branch:
-   ```bash
-   git add .
-   git commit -m "feat: update docker build"
-   git push origin main
-   ```
-
-3. Check GitHub Actions tab for build status
-
-4. Pull the built image:
-   ```bash
-   docker pull marketcalls/chartly:latest
-   ```
+To publish images from your own repository, set the `CHARTLY_PUBLISH_DOCKER` repository variable to `true` and add the `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` secrets. A successful push to `main` publishes the image to the configured Docker Hub account.
 
 ## Resources
 

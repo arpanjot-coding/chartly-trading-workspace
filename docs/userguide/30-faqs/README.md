@@ -126,10 +126,8 @@ Yes. Strategy isolation and host capacity still matter; use unique strategy name
 
 ## Support
 
-- Documentation: docs.chartly.in
-- GitHub issues: github.com/marketcalls/chartly/issues
-- GitHub discussions: github.com/marketcalls/chartly/discussions
-- Community: chartly.in/discord
+- [Chartly user guide](../README.md)
+- [Chartly issues](https://github.com/arpanjot-coding/chartly-trading-workspace/issues)
 
 When reporting a bug, include the Chartly version, deployment method, reproduction steps, relevant redacted logs, and the expected versus actual behavior. Never attach `.env`, API keys, broker credentials, or session tokens.
 

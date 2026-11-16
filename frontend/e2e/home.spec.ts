@@ -64,6 +64,19 @@ test('opens the trading workspace from the product homepage', async ({ page }) =
   await expect(page.getByRole('heading', { name: 'Trading profiles' })).toBeVisible()
 })
 
+test('links to Chartly’s own source and setup from the install page', async ({ page }) => {
+  const repository = 'https://github.com/arpanjot-coding/chartly-trading-workspace'
+  await page.goto('/faq')
+  await page.getByRole('link', { name: 'Install Chartly' }).click()
+  await expect(page).toHaveURL(/\/download$/)
+  await expect(page.getByRole('heading', { name: 'Install Chartly' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Setup guide' })).toHaveAttribute(
+    'href',
+    `${repository}#quick-start`
+  )
+  await expect(page.getByRole('link', { name: 'View source' })).toHaveAttribute('href', repository)
+})
+
 test('serves public content in HTML and keeps the workspace shell out of search', async ({ request }) => {
   test.skip(process.env.CHARTLY_BUILT_SMOKE !== '1', 'Requires the built frontend served by Flask')
 

@@ -186,7 +186,7 @@ export default function Faq() {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <Download className="h-5 w-5" />
-                    Download
+                    Install Chartly
                   </Link>
                 </div>
               </SheetContent>
@@ -220,7 +220,7 @@ export default function Faq() {
           {/* Right side */}
           <div className="flex items-center gap-2">
             <Link to="/download">
-              <Button size="sm">Download</Button>
+              <Button size="sm">Install Chartly</Button>
             </Link>
             <Button
               variant="ghost"
