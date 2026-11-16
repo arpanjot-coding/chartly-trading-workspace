@@ -31,11 +31,13 @@ dependencies = [
   "debugpy==1.8.21",
   "decorator==5.3.1",
   "Deprecated==1.3.1",
-  "dnspython==2.8.0",
+  "dnspython==2.9.2",
   "duckdb==1.5.5",
   "email-validator==2.3.0",
   "executing==2.2.1",
   "fastjsonschema==2.22.2",
+  # LiteLLM uses filelock indirectly. Keep installs on the patched release.
+  "filelock==4.2.1",
   "Flask==3.1.3",
   "Flask-Bcrypt==1.0.1",
   "Flask-Cors==6.0.5",
@@ -62,7 +64,7 @@ dependencies = [
   "itsdangerous==2.2.0",
   "jedi==0.20.0",
   "Jinja2==3.1.6",
-  "joserfc==1.7.4",
+  "joserfc==1.7.6",
   "jsonschema==4.26.0",
   "jsonschema-specifications==2023.12.1",
   "jupyter-client==8.9.1",
@@ -77,7 +79,7 @@ dependencies = [
   "matplotlib-inline==0.2.2",
   "mcp==1.30.0",
   "mdurl==0.1.2",
-  "msgpack==1.2.2",
+  "msgpack==1.2.3",
   "narwhals==2.25.0",
   "nbformat==5.11.1",
   "nest-asyncio==1.6.0",
@@ -137,16 +139,19 @@ dependencies = [
   "requests==2.34.2",
   "rich==13.7.1",
   "rpds-py==0.30.0",
-  "setuptools==83.0.0",
+  "setuptools==84.1.0",
   "simple-websocket==1.1.0",
   "simplejson==3.20.2",
   "six==1.17.0",
   "sniffio==1.3.1",
+  # Beautiful Soup's selector engine is pinned so fresh and legacy installs
+  # both include the 4.0 security fix.
+  "soupsieve==4.0",
   "SQLAlchemy==2.0.52",
   "sse-starlette==3.4.8",
   "stack-data==0.6.3",
   "starlette==1.6.0",
-  "tornado==6.5.10",
+  "tornado==6.6.1",
   "traitlets==5.16.1",
   "typing-extensions>=4.12.2",
   "typing-inspection>=0.4.1",
@@ -165,13 +170,13 @@ dependencies = [
   "zipp==3.23.1",
   "opengreeks>=0.2.0",
   "openstatz==0.4.1",
-  "litellm==1.104.0",
+  "litellm==1.108.3",
   "agno==3.0.5",
   "ddgs>=9.16.0",
 ]
 
 [build-system]
-requires = ["setuptools>=69", "wheel"]
+requires = ["setuptools>=84.1.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 # Ruff - Fast Python linter and formatter
