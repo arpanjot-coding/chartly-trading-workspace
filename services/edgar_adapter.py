@@ -22,6 +22,7 @@ from services.research_domain import (
     fact_identity,
 )
 from services.workspace_storage import dumps, opaque
+from utils.real_threading import Lock
 
 MAX_RESPONSE_BYTES = 16 * 1024 * 1024
 MAX_FACTS = 200000
@@ -41,18 +42,22 @@ class RateBudget:
         self.capacity = float(burst)
         self.tokens = float(burst)
         self._last = None
+        self._lock = Lock()
 
     def wait_for_token(self, now):
-        if self._last is None:
+        with self._lock:
+            if self._last is not None:
+                # Concurrent callers can sample the clock out of lock order.
+                now = max(now, self._last)
+                self.tokens = min(self.capacity, self.tokens + (now - self._last) * self.rate)
             self._last = now
-        self.tokens = min(
-            self.capacity, self.tokens + max(0.0, now - self._last) * self.rate
-        )
-        self._last = now
-        if self.tokens >= 1:
-            self.tokens -= 1
-            return 0.0
-        return (1 - self.tokens) / self.rate
+            if self.tokens >= 1:
+                self.tokens -= 1
+                return 0.0
+            return (1 - self.tokens) / self.rate
+
+
+_SEC_RATE_BUDGET = RateBudget()
 
 
 def _production_transport(method, url, headers):
@@ -86,7 +91,9 @@ class EdgarClient:
         self._transport = transport or _production_transport
         self._clock = clock
         self._sleeper = sleeper
-        self._budget = rate_budget or RateBudget()
+        if rate_budget is None:
+            rate_budget = _SEC_RATE_BUDGET if transport is None else RateBudget()
+        self._budget = rate_budget
         self._max_attempts = max_attempts
         self.requests = 0
 
@@ -94,9 +101,9 @@ class EdgarClient:
         last_status = None
         for attempt in range(self._max_attempts):
             wait = self._budget.wait_for_token(self._clock())
-            if wait > 0:
+            while wait > 0:
                 self._sleeper(wait)
-                self._budget.wait_for_token(self._clock())
+                wait = self._budget.wait_for_token(self._clock())
             self.requests += 1
             try:
                 status, headers, body = self._transport(

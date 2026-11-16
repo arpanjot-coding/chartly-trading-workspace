@@ -12,7 +12,10 @@ loaded broker master-contract module; this tripwire keeps the list complete.
 from __future__ import annotations
 
 import ast
+import sys
 from pathlib import Path
+from types import ModuleType
+from unittest.mock import Mock
 
 from utils import db_sessions
 
@@ -49,10 +52,21 @@ def test_every_database_scoped_session_is_swept():
     )
 
 
-def test_broker_master_contract_sessions_are_found_by_name():
-    # Loaded broker modules are swept without being listed; the naming rule
-    # is what makes that work, so pin it.
-    sample = sorted((REPO / "broker").glob("*/database/master_contract_db.py"))
-    assert sample, "no broker master contract modules found"
-    for path in sample[:5]:
+def test_broker_master_contract_sessions_are_found_by_name(monkeypatch):
+    # Plugin-free source checkouts must still prove the runtime discovery rule.
+    master = ModuleType("broker.fixture.database.master_contract_db")
+    master.db_session = Mock()
+    other = ModuleType("broker.fixture.database.other")
+    other.db_session = Mock()
+    for module in (master, other):
+        monkeypatch.setitem(sys.modules, module.__name__, module)
+    monkeypatch.setattr(db_sessions, "_broker_scan", (None, ()))
+
+    db_sessions.remove_all_scoped_sessions()
+
+    master.db_session.remove.assert_called_once_with()
+    other.db_session.remove.assert_not_called()
+
+    # Validate the attribute convention for any installed plugins as well.
+    for path in (REPO / "broker").glob("*/database/master_contract_db.py"):
         assert "db_session" in _scoped_sessions_in(path), path

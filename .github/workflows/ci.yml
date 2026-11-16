@@ -54,7 +54,8 @@ jobs:
           uv run pytest test/test_log_location.py test/test_navigation_update.py \
             test/test_domain_contracts.py test/test_domain_legacy.py \
             test/test_domain_repository.py test/test_domain_backup.py \
-            test/test_local_account_access.py test/test_user_identity_migration.py \
+            test/test_local_account_access.py test/test_chartly_startup_config.py \
+            test/test_user_identity_migration.py \
             test/test_local_data_api.py test/test_workspace_storage.py \
             test/test_workspace_recovery.py test/test_workspace_worker.py \
             test/test_journal_import.py test/test_journal_service.py \
@@ -176,6 +177,17 @@ jobs:
           if [ "${{ matrix.python-version }}" = "3.12" ]; then
             uv pip install "eventlet==0.41.2"
           fi
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          check-latest: true
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: Build the frontend for the server smoke test
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
       - name: Throwaway .env
         run: |
           cp .sample.env .env
@@ -183,7 +195,7 @@ jobs:
           PEPPER=$(.venv/bin/python -c 'import secrets; print(secrets.token_hex(32))')
           sed -i "s|^APP_KEY *=.*|APP_KEY = '$APP_KEY'|; s|^API_KEY_PEPPER *=.*|API_KEY_PEPPER = '$PEPPER'|" .env
           sed -i "s|^FLASK_PORT *=.*|FLASK_PORT = '5099'|; s|^WEBSOCKET_PORT *=.*|WEBSOCKET_PORT = '8799'|; s|^ZMQ_PORT *=.*|ZMQ_PORT = '5599'|" .env
-          sed -i "s|^HOST_SERVER *=.*|HOST_SERVER = 'http://127.0.0.1:5099'|; s|^REDIRECT_URL *=.*|REDIRECT_URL = 'http://127.0.0.1:5099/zerodha/callback'|" .env
+          sed -i "s|^HOST_SERVER *=.*|HOST_SERVER = 'http://127.0.0.1:5099'|" .env
           echo "CHARTLY_WORKER_CLASS = '${{ matrix.worker }}'" >> .env
           mkdir -p db log
       - name: Boot through the launcher and run the smoke

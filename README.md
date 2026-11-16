@@ -70,7 +70,7 @@ uv run --no-sync app.py
 
 </details>
 
-Open [http://127.0.0.1:5000/](http://127.0.0.1:5000/), choose **Open Workspace**, and complete first-run setup. A broker account is optional for local journals and CSV-based replay. [Installation guide](docs/userguide/04-installation/README.md) · [Docker build guide](docs/docker/DOCKER_BUILD_GUIDE.md)
+Open [http://127.0.0.1:5000/](http://127.0.0.1:5000/), choose **Open Workspace**, and create a local account. Chartly generates per-install security keys on first run. A broker account is optional for local journals and CSV-based replay. [Installation guide](docs/userguide/04-installation/README.md) · [Docker build guide](docs/docker/DOCKER_BUILD_GUIDE.md)
 
 ### Run your first replay
 

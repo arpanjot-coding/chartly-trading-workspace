@@ -4,6 +4,7 @@ import json
 
 import pytest
 
+from services import edgar_adapter
 from services.edgar_adapter import EdgarClient, RateBudget, ingest_company
 from services.research_domain import ResearchError
 from services.research_ingestion import ResearchIngestionJobs
@@ -102,6 +103,42 @@ def test_user_agent_is_mandatory_and_rate_budget_math():
     assert budget.wait_for_token(0.0) == 0.0
     assert budget.wait_for_token(0.0) == pytest.approx(0.1)
     assert budget.wait_for_token(0.1) == 0.0
+
+
+def test_out_of_order_clock_samples_do_not_refill_the_same_time_twice():
+    budget = RateBudget(rate_per_second=4, burst=1)
+    assert budget.wait_for_token(1.0) == 0
+    assert budget.wait_for_token(0.5) == 0.25
+    assert budget.wait_for_token(1.0) == 0.25
+
+
+def test_production_clients_share_rate_budget_and_retry_if_token_was_taken(monkeypatch):
+    budget = RateBudget(rate_per_second=4, burst=1)
+    monkeypatch.setattr(edgar_adapter, "_SEC_RATE_BUDGET", budget)
+    now = 0.0
+    requests = []
+
+    def fake_transport(*_args):
+        requests.append(now)
+        return 200, {}, b"{}"
+
+    def sleep(delay):
+        nonlocal now
+        now += delay
+        if now == 0.25:
+            # Another caller acquires the next token while this caller waits.
+            assert other.submissions("789019") == {}
+
+    def client():
+        return EdgarClient(
+            user_agent="ChartlyTest admin@example.test", clock=lambda: now, sleeper=sleep
+        )
+
+    monkeypatch.setattr(edgar_adapter, "_production_transport", fake_transport)
+    first, other = client(), client()
+    assert first.submissions("789019") == {}
+    assert first.submissions("789019") == {}
+    assert requests == [0.0, 0.25, 0.5]
 
 
 def test_retry_honours_429_then_succeeds():

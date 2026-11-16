@@ -5,3 +5,7 @@
 # scripts, so they are kept LF too.
 *.sh text eol=lf
 install/lib/*.py text eol=lf
+
+# Import acceptance checks hash the original bytes of the synthetic fixtures.
+test/fixtures/p03/*.csv text eol=lf
+test/fixtures/p04/*.csv text eol=lf
